@@ -13,6 +13,7 @@ class User(models.Model):
         """
         Returns True if self.username consists of only the following:
         lower/upper english letters, numbers, spaces, hyphens, underscores.
+        Also, the length of self.username must be >= 5 and <= 14
         """
         # should use a regex, just using a string for now
         DESIRABLES: str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -_"
@@ -21,15 +22,20 @@ class User(models.Model):
             if char not in DESIRABLES:
                 return False
 
-        return True
+        return 5 <= len(self.username) <= 14
 
     def is_unique_username(self) -> bool:
         """
         Returns True if self.username is not associated with another
         User in the database.
         """
-        # an empty set should be returned if the username DNE
-        return len(User.objects.filter(username=self.username)) != 0
+        # DoesNotExist should be raised if the query returns nothing
+        # TODO: come back, I may be misinterpreting queries
+        try:
+            User.objects.get(username=self.username)
+        except self.DoesNotExist:
+            return True
+        return False
 
     def is_valid_display_name(self) -> bool:
         """
