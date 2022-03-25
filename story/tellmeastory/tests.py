@@ -46,6 +46,31 @@ class UserRegistrationTests(TestCase):
 
         return
 
+    def test_valid_display_name(self) -> None:
+        """
+        is_valid_display_name() should return False if the desired
+        display name does not have a length of 5 <= name <= 20.
+        """
+        invalid_too_short: str = ":)"
+        invalid_too_long: str = "Not smile because that would be too short"
+        valid: str = "God Himself"
+
+        short: User = User(display_name=invalid_too_short)
+        long: User = User(display_name=invalid_too_long)
+        good: User = User(display_name=valid)
+
+        self.assertIs(short.is_valid_display_name(), False)
+        self.assertIs(long.is_valid_display_name(), False)
+        self.assertIs(good.is_valid_display_name(), True)
+
+        return
+
+    # this may be more suited to some account functionality--
+    # stub for now
+    def test_change_display_name(self) -> None:
+        self.assertIs(True, True)
+        return
+
     # this is more suited for registration fields.
     # we should just NEVER store the unhashed password ANYWHERE.
     # keeping it here for now
