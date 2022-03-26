@@ -72,65 +72,6 @@ class UserRegistrationModelTests(TestCase):
         self.assertIs(True, True)
         return
 
-    # this is more suited for registration fields.
-    # we should just NEVER store the unhashed password ANYWHERE.
-    # keeping it here for now
-    # TODO: migrate to registration view tests
-    def test_password_is_secure(self) -> None:
-        """
-        is_strong_password() should return False if the desired
-        password does not contain a symbol, uppercase letter, lowercase letter,
-        a number, and does not have a length >= 6.
-        """
-
-        # stubbing this for now
-        """
-        weak_pass_no_upper: str = "!1aaaa"
-        weak_pass_no_lower: str = "!1AAAA"
-        weak_pass_no_number: str = "!Aaaaa"
-        weak_pass_no_symbol: str = "1Aaaaa"
-        weak_pass_too_short: str = "!A1a"
-        strong_pass: str = "!1AaHello"
-
-        no_upper: User = User(password=weak_pass_no_upper)
-        no_lower: User = User(password=weak_pass_no_lower)
-        no_number: User = User(password=weak_pass_no_number)
-        no_symbol: User = User(password=weak_pass_no_symbol)
-        too_short: User = User(password=weak_pass_too_short)
-        strong: User = User(password=strong_pass)
-
-        self.assertIs(no_upper.is_strong_password(), False)
-        self.assertIs(no_lower.is_strong_password(), False)
-        self.assertIs(no_number.is_strong_password(), False)
-        self.assertIs(no_symbol.is_strong_password(), False)
-        self.assertIs(too_short.is_strong_password(), False)
-        self.assertIs(strong.is_strong_password(), True)
-        """
-        self.assertIs(True, True)
-        return
-
-    # for the same reasoning above,
-    # TODO: migrate to registration view tests
-    def test_password_is_hashed(self) -> None:
-        """
-        We want to store the SHA512 hash digest of a user's password.
-        We are not salting it because we don't really care!
-        ... For now.
-        """
-
-        # stubbing this for now
-        """
-        name: str = "Hello"
-        password: str = "!1AaHello"
-        user: User = User(username=name, password=password)
-        user.save()
-
-        retrieved: User = User.objects.filter(username=name)
-        self.assertIs(retrieved.password == password, False)
-        """
-        self.assertIs(True, True)
-        return
-
 class UserRegistrationViewTests(TestCase):
     def test_blank_registration_page(self) -> None:
         """
@@ -147,6 +88,7 @@ class UserRegistrationViewTests(TestCase):
         """
         Enter a valid username, password, and display name into each field.
         Should redirect to /story/login/ and the User should be in the db.
+        The input password should be hashed, so it will not be equal to what is in the db.
         In this case, User.username can, but should not, == User.display_name.
         """
         inp_name: str = "Spongebob"
@@ -169,6 +111,8 @@ class UserRegistrationViewTests(TestCase):
         self.assertNotEqual(new_user, None)
         self.assertEqual(new_user.username, inp_name)
         self.assertEqual(new_user.display_name, inp_dname)
+        self.assertNotEqual(new_user.password, inp_pass)
+        self.assertEqual(new_user.password, sha512(inp_pass.encode("utf-8")).hexdigest())
 
         return
 
@@ -176,6 +120,7 @@ class UserRegistrationViewTests(TestCase):
         """
         Enter a valid username and password into their fields.
         Should redirect to /story/login/ and the User should be in the db.
+        The input password should be hashed, so it will not be equal to what is in the db.
         In this case, User.username == User.display_name.
         """
         inp_name: str = "Spongebob"
@@ -196,6 +141,8 @@ class UserRegistrationViewTests(TestCase):
         self.assertNotEqual(new_user, None)
         self.assertEqual(new_user.username, inp_name)
         self.assertEqual(new_user.display_name, inp_name)
+        self.assertNotEqual(new_user.password, inp_pass)
+        self.assertEqual(new_user.password, sha512(inp_pass.encode("utf-8")).hexdigest())
 
         return
 
