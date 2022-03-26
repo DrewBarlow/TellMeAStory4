@@ -66,12 +66,6 @@ class UserRegistrationModelTests(TestCase):
 
         return
 
-    # this may be more suited to some account functionality--
-    # stub for now
-    def test_change_display_name(self) -> None:
-        self.assertIs(True, True)
-        return
-
 class UserRegistrationViewTests(TestCase):
     def test_blank_registration_page(self) -> None:
         """
