@@ -2,7 +2,7 @@
 <h2>Login to your Story Account</h2>
 
 <!-- TODO: Break between fields... it's ugly rn -->
-<form action="/login/" method="post">
+<form action="/story/login/" method="post">
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Login">

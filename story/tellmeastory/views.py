@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from .forms import LoginForm, RegisterForm
+from .models import User
 
 # temp, obviously
 def index(req) -> HttpResponse:
@@ -12,7 +13,7 @@ def login(req) -> HttpResponse:
         form: LoginForm = LoginForm(req.POST)
 
         if form.is_valid():
-            return HttpResponseRedirect("/index/")  # temp redirect
+            return HttpResponseRedirect("/story/index/")  # temp redirect
 
     else:
         form: LoginForm = LoginForm()
@@ -25,7 +26,13 @@ def register(req) -> HttpResponse:
         form: RegisterForm = RegisterForm(req.POST)
 
         if form.is_valid():
-            return HttpResponseRedirect("/login/")
+            # TODO: VALIDATE USER/PASS
+            new_user: User = User(
+                username=form["username"],
+                password=form["password"],
+                display_name=["display_name"]
+            )
+            return HttpResponseRedirect("/story/login/")
 
     else:
         form: RegisterForm = RegisterForm()
