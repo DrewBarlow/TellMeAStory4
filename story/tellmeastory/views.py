@@ -32,8 +32,10 @@ def register(req) -> HttpResponse:
             # display_name is optional--
             # if one isn't specified, default the username
             display_name: str = form["display_name"].value()
-            if not len(display_name):
+            if display_name is None or not len(display_name):
                 display_name = form["username"].value()
+
+            # TODO: validate password and hash it
 
             new_user: User = User(
                 username=form["username"].value(),
