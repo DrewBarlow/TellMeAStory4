@@ -2,7 +2,7 @@ from django.test import TestCase
 from hashlib import sha512
 from .models import User
 
-class UserRegistrationTests(TestCase):
+class UserRegistrationModelTests(TestCase):
     def test_valid_username(self) -> None:
         """
         is_valid_username() should return False if the desired
@@ -129,3 +129,48 @@ class UserRegistrationTests(TestCase):
         """
         self.assertIs(True, True)
         return
+
+class UserRegistrationViewTests(TestCase):
+    def test_registration_all_fields(self) -> None:
+        """
+        Enter a valid username, password, and display name into each field.
+        Should redirect to /story/login/ and the User should be in the db.
+        In this case, User.username can, but should not, == User.display_name.
+        """
+        return
+
+    def test_registration_no_display_name(self) -> None:
+        """
+        Enter a valid username and password into their fields.
+        Should redirect to /story/login/ and the User should be in the db.
+        In this case, User.username == User.display_name.
+        """
+        return
+
+    def test_bad_username(self) -> None:
+        """
+        Enter an invalid username (too short, too long, bad chars) into the field.
+        Should redirect to the same page (/story/register/).
+        A message should be present indicating "Invalid username."
+        User should not in the db.
+        """
+        return
+
+    def test_dup_username(self) -> None:
+        """
+        Enter a username that is already reserved into the field.
+        Should redirect to the same page (/story/register/).
+        A message should be present indicating "Username is already taken."
+        User should not be in the db.
+        """
+        return
+
+    def test_bad_display_name(self) -> None:
+        """
+        Enter an invalid display name (too short, too long) into the field.
+        Should redirect to the same page (/story/register/).
+        A message should be present indiciating "Invalid display name."
+        User should not be in the db.
+        """
+        return
+
