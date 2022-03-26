@@ -1,5 +1,7 @@
 <!-- https://docs.djangoproject.com/en/4.0/topics/forms/ -->
 <h2>Login to your Story Account</h2>
+
+<!-- TODO: Break between fields... it's ugly rn -->
 <form action="/login/" method="post">
     {% csrf_token %}
     {{ form }}
