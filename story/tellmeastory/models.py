@@ -1,10 +1,10 @@
-from django.db import models
+from django.db.models import CharField, Model
 
 # Create your models here.
-class User(models.Model):
-    username: str = models.CharField(max_length=200)
-    password: str = models.CharField(max_length=512)
-    display_name: str = models.CharField(max_length=200)
+class User(Model):
+    username: CharField = CharField(max_length=200)
+    password: CharField = CharField(max_length=512)
+    display_name: CharField = CharField(max_length=200)
 
     def __str__(self):
         return self.username
