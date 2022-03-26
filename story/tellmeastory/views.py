@@ -22,20 +22,42 @@ def login(req) -> HttpResponse:
 
 # https://docs.djangoproject.com/en/4.0/topics/forms/
 def register(req) -> HttpResponse:
+    form: RegisterForm = None
+    err_msg: str = None
+
     if req.method == "POST":
-        form: RegisterForm = RegisterForm(req.POST)
+        form = RegisterForm(req.POST)
 
         if form.is_valid():
-            # TODO: VALIDATE USER/PASS
+            # display_name is optional--
+            # if one isn't specified, default the username
+            display_name: str = form["display_name"].value()
+            if not len(display_name):
+                display_name = form["username"].value()
+
             new_user: User = User(
-                username=form["username"],
-                password=form["password"],
-                display_name=["display_name"]
+                username=form["username"].value(),
+                password=form["password"].value(),
+                display_name=display_name
             )
-            return HttpResponseRedirect("/story/login/")
+
+            form = RegisterForm()
+            # TODO: Make these more informative?
+            if not new_user.is_valid_username():
+                err_msg = "Invalid username."
+            elif not new_user.is_unique_username():
+                err_msg = "Username is already taken."
+            elif not new_user.is_valid_display_name():
+                err_msg = "Invalid display name."
+            else:
+                new_user.save()
+                return HttpResponseRedirect("/story/login/")
 
     else:
-        form: RegisterForm = RegisterForm()
+        form = RegisterForm()
 
-    return render(req, "tellmeastory/register.html", {"form": form})
+    return render(req, "tellmeastory/register.html", {
+        "form": form,
+        "error_message": err_msg
+    })
 
