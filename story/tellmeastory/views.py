@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from hashlib import sha512
 from .forms import LoginForm, RegisterForm
 from .models import User
 
@@ -35,11 +36,11 @@ def register(req) -> HttpResponse:
             if display_name is None or not len(display_name):
                 display_name = form["username"].value()
 
-            # TODO: validate password and hash it
-
+            # hash the user's password for at least a bit of security
+            hashed_pw: str = sha512(form["password"].value().encode("utf-8")).hexdigest()
             new_user: User = User(
                 username=form["username"].value(),
-                password=form["password"].value(),
+                password=hashed_pw,
                 display_name=display_name
             )
 
