@@ -280,7 +280,7 @@ class UserLoginViewTests(TestCase):
         self.assertEqual(res.status_code, 302)
 
         # should eventually become /story/account/<their_username>
-        self.assertEqual(res.get("location"), "/story/index/")
+        self.assertEqual(res.get("location"), "/story/")
 
         # TODO: Check for session token
 

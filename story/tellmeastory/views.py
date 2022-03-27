@@ -28,17 +28,18 @@ def login(req) -> HttpResponse:
             user: User = None
             try:
                 user = User.objects.get(username=username)
-            except self.DoesNotExist:
+            except User.DoesNotExist:
                 err_msg = "No account with that username."
 
             # only validate password iff user account was found
-            if not err_msg and user.password == password:
-                # need a session token or something
+            if not err_msg:
+                if user.password == password:
+                    # need a session token or something
 
-                # TODO: redirect to /story/account/<username_here>
-                return HttpResponseRedirect("/story/index/")  # temp redirect
-            else:
-                err_msg = "Incorrect password."
+                    # TODO: redirect to /story/account/<username_here>
+                    return HttpResponseRedirect("/story/")  # temp redirect
+                else:
+                    err_msg = "Incorrect password."
 
     else:
         form: LoginForm = LoginForm()
