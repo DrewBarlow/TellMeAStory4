@@ -4,7 +4,7 @@ from hashlib import sha512
 from tellmeastory.models import User
 
 USERNAME: str = "hrrrrrngh"
-DISPLAY_NAME: str = "display name"
+DISPLAY_NAME: str = "olddname"
 ACC_URL: str = f"/story/account/{USERNAME}/"
 COOKIE_NAME: str = "StoryUserLoggedIn"
 
@@ -34,7 +34,7 @@ class UserNameChangeViewTests(TestCase):
         self.assertContains(res, DISPLAY_NAME)
         self.assertNotContains(res, "Successfully changed")
         self.assertNotContains(res, "Failed to change")
-        self.assertNotContains(res, "Change your display name")
+        self.assertContains(res, "New display name")
 
         return
 
@@ -50,7 +50,7 @@ class UserNameChangeViewTests(TestCase):
         self.assertContains(res, DISPLAY_NAME)
         self.assertNotContains(res, "Successfully changed")
         self.assertNotContains(res, "Failed to change")
-        self.assertContains(res, "Change your display name")
+        self.assertNotContains(res, "Change your display name")
 
         return
 
@@ -73,13 +73,9 @@ class UserNameChangeViewTests(TestCase):
         self.assertContains(res, "Successfully changed display name.")
         self.assertNotContains(res, "Failed to change display name.")
 
-        # the old display name should not be present
-        self.assertContains(res, new_dname)
-        self.assertNotContains(res, DISPLAY_NAME)
-
         # user should be updated
         user: User = None
-        try: User.objects.get(username=USERNAME)
+        try: user = User.objects.get(username=USERNAME)
         except: pass
 
         self.assertNotEqual(user, None)
@@ -97,7 +93,7 @@ class UserNameChangeViewTests(TestCase):
         """
         self.client.cookies[COOKIE_NAME] = USERNAME
 
-        new_dname: str = "jj"
+        new_dname: str = "this is wayyy too long hahahahahaha"
         res: HttpResponse = self.client.post(ACC_URL, data={
             "new_display_name": new_dname
         })
@@ -105,14 +101,11 @@ class UserNameChangeViewTests(TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertNotContains(res, "Successfully changed display name.")
         self.assertContains(res, "Failed to change display name.")
-
-        # the new display name should not be present
-        self.assertNotContains(res, new_dname)
         self.assertContains(res, DISPLAY_NAME)
 
         # user should not be updated
         user: User = None
-        try: User.objects.get(username=USERNAME)
+        try: user = User.objects.get(username=USERNAME)
         except: pass
 
         self.assertNotEqual(user, None)
