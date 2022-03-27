@@ -1,7 +1,9 @@
 <h2>TEMPORARY INDEX PAGE<h2>
 
 {% if session_token %}
-    <p><strong>LOGGED IN WITH SESSION TOKEN {{ session_token }}</strong><p>
+    <p><strong>LOGGED IN AS USER [{{ logged_in_username }}]</strong><p>
+    <br>
+    <p><strong>SESSION TOKEN: {{ session_token }}</strong><p>
 {% else %}
     <p><strong>NOT LOGGED IN</strong><p>
 {% endif %}

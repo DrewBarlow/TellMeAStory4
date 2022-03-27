@@ -7,12 +7,18 @@ from .models import User
 # temp, obviously
 def index(req) -> HttpResponse:
     session_token: str = None
+    logged_user: str = None
 
     # somehow identify a session token (cookie?)
-    # if <session_token_exists>: session_token = <the_token_string>
+    """
+    if <session_token_exists>:
+        session_token = <the_token_string>
+        logged_user = <user.username_associated_with_session_token>
+    """
 
     return render(req, "tellmeastory/index.html", {
-        "session_token": session_token
+        "session_token": session_token,
+        "logged_in_username": logged_user
     })
 
 # https://docs.djangoproject.com/en/4.0/topics/forms/
