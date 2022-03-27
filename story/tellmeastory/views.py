@@ -1,5 +1,5 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
 from .forms import LoginForm, RegisterForm
 from .models import User
@@ -19,6 +19,13 @@ def index(req: HttpRequest) -> HttpResponse:
     return render(req, "tellmeastory/index.html", {
         "session_token": session_token,
         "logged_in_username": logged_user
+    })
+
+# account stub for now
+def account(req: HttpRequest, username: str) -> HttpResponse:
+    user: User = get_object_or_404(User, username=username)
+    return render(req, "tellmeastory/account.html", {
+        "user": user
     })
 
 # https://docs.djangoproject.com/en/4.0/topics/forms/
@@ -50,7 +57,7 @@ def login(req: HttpRequest) -> HttpResponse:
                     # need a session token or something
 
                     # TODO: redirect to /story/account/<username_here>
-                    return HttpResponseRedirect("/story/")  # temp redirect
+                    return HttpResponseRedirect(f"/story/account/{username}")
                 else:
                     err_msg = "Incorrect password."
 
