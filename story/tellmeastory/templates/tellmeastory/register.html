@@ -3,7 +3,7 @@
 
 <form action="/story/register/" method="post">
     {% csrf_token %}
-    {{ form|linebreaks }}
+    {{ form.as_p }}
     <input type="submit" value="Register">
     <br>
     {% if error_message %}
