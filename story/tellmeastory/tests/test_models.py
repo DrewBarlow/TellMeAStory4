@@ -12,7 +12,7 @@ class UserModelTests(TestCase):
         invalid_name_bang: str = "Woah!"
         invalid_name_short: str = "hey"
         invalid_name_long: str = "0123456789TenEleven"
-        valid_name: str = "God Himself"
+        valid_name: str = "GodHimself"
 
         bang: User = User(username=invalid_name_bang)
         short: User = User(username=invalid_name_short)

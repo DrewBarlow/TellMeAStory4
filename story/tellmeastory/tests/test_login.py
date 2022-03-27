@@ -26,11 +26,10 @@ class UserLoginViewTests(TestCase):
     def test_login_all_fields(self) -> None:
         """
         Successful login should give the user some kind of session token.
-        The user should be redirected to /story/index/, though this will-
-            eventually becomes /story/account/<their_username>.
+        The user should be redirected to /story/account/<their_username>/.
         """
         # insert an existing user into the db to retrieve
-        inp_name: str = "Ben Johnson"
+        inp_name: str = "BenJohnson"
         inp_pass: str = "#1Aaaaa"
         johnson: User = insert_registered_user(inp_name, inp_pass)
 
@@ -42,9 +41,7 @@ class UserLoginViewTests(TestCase):
 
         # HTTP 302 -> Redirect (Found)
         self.assertEqual(res.status_code, 302)
-
-        # should eventually become /story/account/<their_username>
-        self.assertEqual(res.get("location"), "/story/")
+        self.assertEqual(res.get("location"), f"/story/account/{inp_name}")
 
         # TODO: Check for session token
 
