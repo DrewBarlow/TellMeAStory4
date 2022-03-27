@@ -5,7 +5,7 @@ from tellmeastory.models import User
 
 USERNAME: str = "hrrrrrngh"
 DISPLAY_NAME: str = "display name"
-ACC_URL: str = f"/story/account/{USERNAME}"
+ACC_URL: str = f"/story/account/{USERNAME}/"
 COOKIE_NAME: str = "StoryUserLoggedIn"
 
 hash_pw = lambda pw: sha512(pw.encode("utf-8")).hexdigest()
