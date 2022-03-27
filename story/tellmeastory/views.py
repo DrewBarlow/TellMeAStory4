@@ -6,18 +6,10 @@ from .models import User
 
 # temp, obviously
 def index(req: HttpRequest) -> HttpResponse:
-    session_token: str = None
-    logged_user: str = None
-
-    # somehow identify a session token (cookie?)
-    """
-    if <session_token_exists>:
-        session_token = <the_token_string>
-        logged_user = <user.username_associated_with_session_token>
-    """
+    # if the user has a cookie, they've already logged in
+    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
 
     return render(req, "tellmeastory/index.html", {
-        "session_token": session_token,
         "logged_in_username": logged_user
     })
 
@@ -54,10 +46,16 @@ def login(req: HttpRequest) -> HttpResponse:
             # only validate password iff user account was found
             if not err_msg:
                 if user.password == password:
-                    # need a session token or something
+                    # using a cookie here...
+                    # super spoofable. Too bad!
+                    # cookie will be valid until the browser is closed (i.e. max_age=None)
+                    res: HttpResponse = HttpResponseRedirect(f"/story/account/{username}")
+                    res.set_cookie(
+                        "StoryUserLoggedIn",
+                        username
+                    )
 
-                    # TODO: redirect to /story/account/<username_here>
-                    return HttpResponseRedirect(f"/story/account/{username}")
+                    return res
                 else:
                     err_msg = "Incorrect password."
 
