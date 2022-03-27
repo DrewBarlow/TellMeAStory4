@@ -10,16 +10,39 @@ def index(req) -> HttpResponse:
 
 # https://docs.djangoproject.com/en/4.0/topics/forms/
 def login(req) -> HttpResponse:
+    form: LoginForm = None
+    err_msg: str = None
+
     if req.method == "POST":
         form: LoginForm = LoginForm(req.POST)
 
         if form.is_valid():
-            return HttpResponseRedirect("/story/index/")  # temp redirect
+            username: str = form["username"].value().strip()
+            password: str = sha512(form["password"].value().encode("utf-8")).hexdigest()
+            form = LoginForm()
+
+            user: User = None
+            try:
+                user = User.objects.get(username=username)
+            except self.DoesNotExist:
+                err_msg = "No account with that username."
+
+            # only validate password iff user account was found
+            if not err_msg and user.password == password:
+                # need a session token or something
+
+                # redirect to /story/account/<username_here>
+                return HttpResponseRedirect("/story/index/")  # temp redirect
+            else:
+                err_msg = "Incorrect password."
 
     else:
         form: LoginForm = LoginForm()
 
-    return render(req, "tellmeastory/login.html", {"form": form})
+    return render(req, "tellmeastory/login.html", {
+        "form": form,
+        "error_message": err_msg
+    })
 
 # https://docs.djangoproject.com/en/4.0/topics/forms/
 def register(req) -> HttpResponse:
