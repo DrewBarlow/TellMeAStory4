@@ -7,10 +7,9 @@ class UserModelTests(TestCase):
     def test_valid_username(self) -> None:
         """
         is_valid_username() should return False if the desired
-        username contains anything other than lower/upper english letters,
+        username contains anyhing other than Unicode word chars,
         numbers, spaces, hyphens, or underscores.
         Similarly, the username should have a length of 5 <= name <= 14.
-        TODO: Make more inclusive for other languages.
         """
         invalid_name_bang: str = "Woah!"
         invalid_name_short: str = "hey"
@@ -270,7 +269,7 @@ class UserLoginViewTests(TestCase):
         inp_pass: str = "#1Aaaaa"
         johnson: User = insert_registered_user(inp_name, inp_pass)
 
-        # refer to views.login @ line 22 for why this is terrible :(
+        # refer to views.login @ line 35 for why this is terrible :(
         res: HttpResponse = self.client.post("/story/login/", data={
             "username": inp_name,
             "password": inp_pass
@@ -296,6 +295,7 @@ class UserLoginViewTests(TestCase):
         inp_name: str = "Berczynski"
         inp_pass: str = "AHHHHHH"
 
+        # refer to views.login @ line 35 for why this is terrible :(
         res: HttpResponse = self.client.post("/story/login/", data={
             "username": inp_name,
             "password": inp_pass
@@ -321,6 +321,7 @@ class UserLoginViewTests(TestCase):
         bad_pass: str = "sjlhf"
         mark: User = insert_registered_user(inp_name, inp_pass)
 
+        # refer to views.login @ line 35 for why this is terrible :(
         res: HttpResponse = self.client.post("/story/login/", data={
             "username": inp_name,
             "password": bad_pass
