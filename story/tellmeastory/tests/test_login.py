@@ -3,6 +3,8 @@ from django.test import TestCase
 from hashlib import sha512
 from tellmeastory.models import User
 
+COOKIE_NAME: str = "StoryUserLoggedIn"
+
 hash_pw = lambda pw: sha512(pw.encode("utf-8")).hexdigest()
 def insert_registered_user(username: str, password: str) -> User:
     return User.objects.create(
@@ -15,11 +17,13 @@ class UserLoginViewTests(TestCase):
     def test_blank_login_page(self) -> None:
         """
         Base login page should have no error messages present.
+        The user should not have a cookie here.
         """
         res: HttpResponse = self.client.get("/story/login/")
         self.assertEqual(res.status_code, 200)
         self.assertNotContains(res, "No account with that username.")
         self.assertNotContains(res, "Incorrect password.")
+        self.assertEqual(res.wsgi_request.COOKIES.get(COOKIE_NAME), None)
 
         return
 
@@ -43,7 +47,9 @@ class UserLoginViewTests(TestCase):
         self.assertEqual(res.status_code, 302)
         self.assertEqual(res.get("location"), f"/story/account/{inp_name}")
 
-        # TODO: Check for session token
+        # check to make sure we now have a cookie
+        idx_res: HttpResponse = self.client.get("/story/")
+        self.assertEqual(idx_res.wsgi_request.COOKIES.get(COOKIE_NAME), inp_name)
 
         return
 
@@ -68,7 +74,9 @@ class UserLoginViewTests(TestCase):
         self.assertEqual(res.has_header("location"), False)
         self.assertContains(res, "No account with that username.")
 
-        # TODO: Check for no session token
+        # check to make sure we do not have a cookie
+        idx_res: HttpResponse = self.client.get("/story/")
+        self.assertEqual(idx_res.wsgi_request.COOKIES.get(COOKIE_NAME), None)
 
         return
 
@@ -94,6 +102,8 @@ class UserLoginViewTests(TestCase):
         self.assertEqual(res.has_header("location"), False)
         self.assertContains(res, "Incorrect password.")
 
-        # TODO: Check for no session token
+        # check to make sure we do not have a cookie
+        idx_res: HttpResponse = self.client.get("/story/")
+        self.assertEqual(idx_res.wsgi_request.COOKIES.get(COOKIE_NAME), None)
 
         return
