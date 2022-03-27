@@ -6,7 +6,14 @@ from .models import User
 
 # temp, obviously
 def index(req) -> HttpResponse:
-    return HttpResponse("Tell Me a Story: TEMP INDEX")
+    session_token: str = None
+
+    # somehow identify a session token (cookie?)
+    # if <session_token_exists>: session_token = <the_token_string>
+
+    return render(req, "tellmeastory/index.html", {
+        "session_token": session_token
+    })
 
 # https://docs.djangoproject.com/en/4.0/topics/forms/
 def login(req) -> HttpResponse:
