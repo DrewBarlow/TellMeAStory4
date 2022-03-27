@@ -1,4 +1,5 @@
 from django.db.models import CharField, Model
+from re import fullmatch, Match
 
 # Create your models here.
 class User(Model):
@@ -12,17 +13,21 @@ class User(Model):
     def is_valid_username(self) -> bool:
         """
         Returns True if self.username consists of only the following:
-        lower/upper english letters, numbers, spaces, hyphens, underscores.
+        Unicode word characters, numbers, hyphens, underscores.
         Also, the length of self.username must be >= 5 and <= 14
         """
-        # should use a regex, just using a string for now
-        DESIRABLES: str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -_"
+        # strip to remove leading/trailing spaces
+        stripped_uname: str = self.username.strip()
 
-        for char in self.username:
-            if char not in DESIRABLES:
-                return False
+        # \w   : Unicode word chars, numbers
+        # (-_): Hyphens, underscores
+        # *    : Any number of times, 0 inclusive
+        PATTERN: str = r"[\w(-_)]*"
+        regex_match: Match = fullmatch(PATTERN, stripped_uname)
 
-        return 5 <= len(self.username) <= 14
+        # fullmatch returns a Match object if the string matches the pattern
+        # otherwise, it returns None
+        return (5 <= len(self.username) <= 14) and regex_match != None
 
     def is_unique_username(self) -> bool:
         """
@@ -42,9 +47,3 @@ class User(Model):
         Returns True if self.display_name has a length of >= 5 and <= 20.
         """
         return 5 <= len(self.display_name) <= 20
-
-    # should not be present here--
-    # refer to tests.py in UserRegistrationTests
-    #     at function test_password_is_secure()
-    def is_strong_password(self) -> bool:
-        return False
