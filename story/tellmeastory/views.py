@@ -1,11 +1,11 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from hashlib import sha512
 from .forms import LoginForm, RegisterForm
 from .models import User
 
 # temp, obviously
-def index(req) -> HttpResponse:
+def index(req: HttpRequest) -> HttpResponse:
     session_token: str = None
     logged_user: str = None
 
@@ -22,7 +22,7 @@ def index(req) -> HttpResponse:
     })
 
 # https://docs.djangoproject.com/en/4.0/topics/forms/
-def login(req) -> HttpResponse:
+def login(req: HttpRequest) -> HttpResponse:
     form: LoginForm = None
     err_msg: str = None
 
@@ -63,7 +63,7 @@ def login(req) -> HttpResponse:
     })
 
 # https://docs.djangoproject.com/en/4.0/topics/forms/
-def register(req) -> HttpResponse:
+def register(req: HttpRequest) -> HttpResponse:
     form: RegisterForm = None
     err_msg: str = None
 
