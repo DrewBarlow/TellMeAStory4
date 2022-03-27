@@ -18,6 +18,10 @@ def login(req) -> HttpResponse:
 
         if form.is_valid():
             username: str = form["username"].value().strip()
+
+            # im just now realizing this means we're sending a password in the clear...
+            # too bad!
+            # (just kidding... I'll fix this...)
             password: str = sha512(form["password"].value().encode("utf-8")).hexdigest()
             form = LoginForm()
 
@@ -31,7 +35,7 @@ def login(req) -> HttpResponse:
             if not err_msg and user.password == password:
                 # need a session token or something
 
-                # redirect to /story/account/<username_here>
+                # TODO: redirect to /story/account/<username_here>
                 return HttpResponseRedirect("/story/index/")  # temp redirect
             else:
                 err_msg = "Incorrect password."
