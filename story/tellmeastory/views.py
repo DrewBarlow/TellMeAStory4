@@ -1,8 +1,10 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, NameChangeForm, RegisterForm
 from .models import User
+
+COOKIE_NAME: str = "StoryUserLoggedIn"
 
 # temp, obviously
 def index(req: HttpRequest) -> HttpResponse:
@@ -16,8 +18,34 @@ def index(req: HttpRequest) -> HttpResponse:
 # account stub for now
 def account(req: HttpRequest, username: str) -> HttpResponse:
     user: User = get_object_or_404(User, username=username)
+    form: NameChangeForm = None
+    form_msg: str = None
+
+    if req.COOKIES.get(COOKIE_NAME) == username:
+        if req.method == "POST":
+            form = NameChangeForm(req.POST)
+
+            # update the User model and check if the new
+            # display name is valid
+            old_dname: str = user.display_name
+            user.display_name = form["new_display_name"].value().strip()
+
+            if user.is_valid_display_name():
+                user.save()
+                form_msg = "Successfully changed display name."
+            else:
+                user.display_name = old_dname
+                form_msg = "Failed to change display name."
+
+        else:
+            # just display the form if the cookie is present and
+            # we aren't trying to post data
+            form = NameChangeForm()
+
     return render(req, "tellmeastory/account.html", {
-        "user": user
+        "user": user,
+        "form": form,
+        "change_message": form_msg
     })
 
 # https://docs.djangoproject.com/en/4.0/topics/forms/
@@ -51,7 +79,7 @@ def login(req: HttpRequest) -> HttpResponse:
                     # cookie will be valid until the browser is closed (i.e. max_age=None)
                     res: HttpResponse = HttpResponseRedirect(f"/story/account/{username}")
                     res.set_cookie(
-                        "StoryUserLoggedIn",
+                        COOKIE_NAME,
                         username
                     )
 
