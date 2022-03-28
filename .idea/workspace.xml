@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/story/story/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/story/settings.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="develop" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="26weJCZ9d4utueu6FHpRuV3g67t" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="" />
+      <created>1648339003066</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1648339003066</updated>
+      <workItem from="1648339009509" duration="79000" />
+      <workItem from="1648339170291" duration="1103000" />
+      <workItem from="1648408191322" duration="1383000" />
+      <workItem from="1648413089304" duration="3352000" />
+      <workItem from="1648431637279" duration="8116000" />
+      <workItem from="1648481264765" duration="79000" />
+    </task>
+    <task id="LOCAL-00001" summary="made requirements document">
+      <created>1648431775201</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1648431775201</updated>
+    </task>
+    <task id="LOCAL-00002" summary="added Django version 4.0.3 to requirements">
+      <created>1648432939565</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1648432939565</updated>
+    </task>
+    <task id="LOCAL-00003" summary="updated index page to direct to story/">
+      <created>1648436797073</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1648436797073</updated>
+    </task>
+    <task id="LOCAL-00004" summary="added ProcFile for heroku">
+      <created>1648438348120</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1648438348120</updated>
+    </task>
+    <task id="LOCAL-00005" summary="updated requirements for heroku">
+      <created>1648438455917</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1648438455917</updated>
+    </task>
+    <task id="LOCAL-00006" summary="updated story settings.py for heroku URL">
+      <created>1648438638528</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1648438638528</updated>
+    </task>
+    <task id="LOCAL-00007" summary="updated landing page to temporary index page">
+      <created>1648438759345</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1648438759345</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/develop" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="made requirements document" />
+    <MESSAGE value="added Django version 4.0.3 to requirements" />
+    <MESSAGE value="updated index page to direct to story/" />
+    <MESSAGE value="added ProcFile for heroku" />
+    <MESSAGE value="updated requirements for heroku" />
+    <MESSAGE value="updated story settings.py for heroku URL" />
+    <MESSAGE value="updated landing page to temporary index page" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated landing page to temporary index page" />
+  </component>
+</project>
