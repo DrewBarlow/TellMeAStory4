@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/story/story/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/story/settings.py" afterDir="false" />
-    </list>
+    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="Heroku Settings" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -53,7 +51,7 @@
       <workItem from="1648408191322" duration="1383000" />
       <workItem from="1648413089304" duration="3352000" />
       <workItem from="1648431637279" duration="8116000" />
-      <workItem from="1648481264765" duration="79000" />
+      <workItem from="1648481264765" duration="139000" />
     </task>
     <task id="LOCAL-00001" summary="made requirements document">
       <created>1648431775201</created>
@@ -104,7 +102,21 @@
       <option name="project" value="LOCAL" />
       <updated>1648438759345</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Heroku Settings">
+      <created>1648481351429</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1648481351429</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Heroku Settings">
+      <created>1648481385801</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1648481385801</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -141,6 +153,7 @@
     <MESSAGE value="updated requirements for heroku" />
     <MESSAGE value="updated story settings.py for heroku URL" />
     <MESSAGE value="updated landing page to temporary index page" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated landing page to temporary index page" />
+    <MESSAGE value="Heroku Settings" />
+    <option name="LAST_COMMIT_MESSAGE" value="Heroku Settings" />
   </component>
 </project>
