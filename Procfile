@@ -1,2 +1,2 @@
 release: python story/manage.py migrate
-web: gunicorn cd story; story.wsgi --log-file -
+web: cd story; gunicorn story.wsgi --log-file -
