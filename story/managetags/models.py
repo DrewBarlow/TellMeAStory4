@@ -59,6 +59,7 @@ class Tag(models.Model):
         # Increment usage count and save to db
         self.usage_count = self.usage_count + 1
         self.save(update_fields="usage_count")
+
         # Return necessary details needed for the
         # connection of a Tag to a node.
         return {"name_text": self.name_text, "ID": self.ID, "id": self.id}
