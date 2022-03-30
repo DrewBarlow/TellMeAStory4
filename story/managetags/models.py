@@ -32,9 +32,10 @@ class Tag(models.Model):
         try:
             isOldTag = Tag.objects.get(name_text=self.name_text)
         except:
+            # Return True if Tag does not yet exist in db
             return True
-        finally:
-            return False
+        # Return False if Tag already exists in db
+        return False
 
     # Returns True if new tag is saved.
     # False, otherwise.
@@ -43,6 +44,7 @@ class Tag(models.Model):
         # tag to the database. Return True if
         # added or False if not added.
         if self.is_valid_name() and self.is_new_tag():
+            self.ID = Tag.objects.count()
             self.save()
             return True
         return False
@@ -50,7 +52,12 @@ class Tag(models.Model):
     # Returns True if name is found in a dictionary
     # given a language.
     def is_tag_name_in_dictionary(self) -> bool:
-        return False
+        try:
+            dictionary = Dict(self.language())
+            is_valid_word = dictionary.check(self.name_text)
+            return is_valid_word
+        except:
+            return False
 
     # Returns properties needed to add tag to a node and
     # increments usage count when used.
