@@ -102,3 +102,11 @@ class TagModelTests(TestCase):
         TagToInsert = Tag(name_text="name1", language="en_US")
         TagToInsert.add_new_tag()
         self.assertIs(TagToInsert.add_new_tag(), False)
+
+    # Tests the user input form for creating
+    # new tags.
+    def test_tag_creation_by_user_input(self):
+        name = "valid"
+        response = self.client.post("/story/addtags/create/", data={'tag_name': name})
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(Tag.objects.get(name_text=name))
