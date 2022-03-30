@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="Added forms for tag creation">
+    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="Added views for tag creation">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/managetags/templates/managetags/addtag.html" beforeDir="false" afterPath="$PROJECT_DIR$/story/managetags/templates/managetags/addtag.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/managetags/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/managetags/tests.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/story/managetags/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/managetags/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -69,7 +72,7 @@
       <workItem from="1648431637279" duration="8116000" />
       <workItem from="1648481264765" duration="139000" />
       <workItem from="1648492943374" duration="269000" />
-      <workItem from="1648598423522" duration="27281000" />
+      <workItem from="1648598423522" duration="30544000" />
     </task>
     <task id="LOCAL-00001" summary="made requirements document">
       <created>1648431775201</created>
@@ -330,7 +333,14 @@
       <option name="project" value="LOCAL" />
       <updated>1648665963587</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="Added views for tag creation">
+      <created>1648666022965</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1648666022965</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -360,7 +370,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added skeletons for Tag tests." />
     <MESSAGE value="Added skeletons for Tag model." />
     <MESSAGE value="Addede pyenchant in requirements.txt" />
     <MESSAGE value="Added valid Tag name test" />
@@ -385,6 +394,7 @@
     <MESSAGE value="Update urls for creating tag" />
     <MESSAGE value="Create forms for tag creation" />
     <MESSAGE value="Added forms for tag creation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added forms for tag creation" />
+    <MESSAGE value="Added views for tag creation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added views for tag creation" />
   </component>
 </project>

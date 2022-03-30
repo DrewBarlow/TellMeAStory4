@@ -5,7 +5,9 @@ from .forms import TagForm
 from .models import Tag  # Test Tag model
 
 # TODO: Remove temp prompt page
+# Create tag submission form view
 def prompt(request):
+    # Display all tags and prompt for new tag
     response = "Please enter a new tag name."
     tags = Tag.objects.filter()
     context = {
@@ -17,7 +19,7 @@ def prompt(request):
 
 # Create tag submission form view
 def create(request):
-    response = "Invalid Tag" # Default response is invalid tag since no tag is added
+    response = "Please enter a new tag name."  # Default response is invalid tag since no tag is added
     # Check for POST request for tag
     if request.method == 'POST':
         form = TagForm(request.POST)
