@@ -1,28 +1,65 @@
-from django.test import TestCase
-# TODO: from .models import Tag
+from django.test import TestCase # Django testing functionality
+from .models import Tag # Test Tag model
+from enchant import Dict # Test for known valid language
+
 # Create your tests here.
 class TagModelTests(TestCase):
-    def test_was_tag_name_correct(self):
-        # Returns False for tags created with incorrect
-        # names when given a name.
-        is_name_correct = False
+    # Returns False for tags created with incorrect
+    # names when given a name.
+    # Functions to test: is_valid_name
+    def test_was_tag_name_valid(self):
+        # Names must be greater than 2 chars
+        short: Tag = Tag(name_text="ab")
+        is_name_correct = short.is_valid_name()
         self.assertIs(is_name_correct, True)
+        # Names must not contain non-alphanumeric chars
+        end_space: Tag = Tag(name_text="name ")
+        is_name_correct = end_space.is_valid_name()
+        self.assertIs(is_name_correct, True)
+        # Names must not contain non-alphanumeric chars
+        middle_space: Tag = Tag(name_text="name name")
+        is_name_correct = middle_space.is_valid_name()
+        self.assertIs(is_name_correct, True)
+        # Names must not contain non-alphanumeric chars
+        non_alpha_num: Tag = Tag(name_text="nameAB(")
+        is_name_correct = non_alpha_num.is_valid_name()
+        self.assertIs(is_name_correct, True)
+        # Names must be alphanumeric with at least 3 chars
+        alpha_num: Tag = Tag(name_text="ab1")
+        is_name_correct = alpha_num.is_valid_name()
+        self.assertIs(is_name_correct, True)
+        return
 
-    def test_was_tag_ID_correct(self):
-        # Returns False for tags created with incorrect
-        # ID when given an ID.
-        is_ID_correct = False
-        self.assertIs(is_ID_correct, True)
-
+    # Returns False for tags that don't exist in the db
+    # after insertion.
+    # Functions to test: add_new_tag, add_tag_to_node
     def test_was_tag_added(self):
-        # Returns False for tags that don't exist in the db
-        # after insertion.
+
         tag_in_db = False
         self.assertIs(tag_in_db, True)
+        return
 
+    # Returns False for tags created with incorrect
+    # ID when given an ID.
+    # Functions to test: add_new_tag
+    def test_was_tag_ID_valid(self):
+
+        is_ID_correct = False
+        self.assertIs(is_ID_correct, True)
+        return
+
+    # Returns False when an invalid tag is
+    # inserted.
+    # Functions to test: add_tag_to_node, decrement_usage
+    def test_was_bad_tag_rejected(self):
+        return
+
+    # Returns False for tags that don't reject
+    # insertion when repeated.
+    # Functions to test: add_new_tag
     def test_was_tag_added_without_repeat(self):
-        # Returns False for tags that don't reject
-        # insertion when repeated.
+
         tag_in_db = False
         tag_repeated = False
         self.assertIs(tag_repeated, False)
+        return
