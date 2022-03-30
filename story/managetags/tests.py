@@ -1,9 +1,10 @@
-from django.test import TestCase # Django testing functionality
-from .models import Tag # Test Tag model
-from enchant import Dict # Test for known valid language
+from django.test import TestCase  # Django testing functionality
+from .models import Tag  # Test Tag model
+from enchant import Dict  # Test for known valid language
 
-# Create your tests here.
+
 class TagModelTests(TestCase):
+
     # Returns False for tags created with incorrect
     # names when given a name.
     # Functions to test: is_valid_name
@@ -36,7 +37,8 @@ class TagModelTests(TestCase):
     def test_was_tag_added(self):
         original_count = Tag.objects.count() # original count of Tags
 
-        # INSERT NEW VALID TAG
+        # INSERT NEW VALID TAG Note: Adding a tag checks for these conditions,
+        # but Tag model user must manage user input or Tag is rejected.
         TagToInsert = Tag(name_text="name123", language="en_US")
         # Step 1: Check for valid name
         self.assertIs(TagToInsert.is_valid_name(), True)
@@ -45,7 +47,8 @@ class TagModelTests(TestCase):
         # Step 3: Save Tag
         self.assertIs(TagToInsert.add_new_tag(), True)
 
-        new_count = Tag.objects.count() # new count of Tags after insertion
+        # Check if new count is correct
+        new_count = Tag.objects.count()  # new count of Tags after insertion
         tag_in_db = (new_count == original_count + 1)
         self.assertIs(tag_in_db, True)
         return
@@ -54,9 +57,20 @@ class TagModelTests(TestCase):
     # ID when given an ID.
     # Functions to test: add_new_tag
     def test_was_tag_ID_valid(self):
+        # INSERT NEW VALID TAG Note: Adding a tag checks for these conditions,
+        # but Tag model user must manage user input or Tag is rejected.
+        TagToInsert = Tag(name_text="name123", language="en_US")
+        # Step 1: Check for valid name
+        self.assertIs(TagToInsert.is_valid_name(), True)
+        # Step 2: Check if it exists
+        self.assertIs(TagToInsert.is_new_tag(), True)
+        # Step 3: Save Tag
+        self.assertIs(TagToInsert.add_new_tag(), True)
 
-        is_ID_correct = False
-        self.assertIs(is_ID_correct, True)
+        # Check if new Tag's ID is correct
+        new_count = Tag.objects.count()  # new count of Tags after insertion
+        tag_ID = (new_count == TagToInsert.ID)
+        self.assertIs(tag_ID, True)
         return
 
     # Returns False when an invalid tag is
