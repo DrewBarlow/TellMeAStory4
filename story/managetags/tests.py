@@ -10,19 +10,19 @@ class TagModelTests(TestCase):
         # Names must be greater than 2 chars
         short: Tag = Tag(name_text="ab")
         is_name_correct = short.is_valid_name()
-        self.assertIs(is_name_correct, True)
+        self.assertIs(is_name_correct, False)
         # Names must not contain non-alphanumeric chars
         end_space: Tag = Tag(name_text="name ")
         is_name_correct = end_space.is_valid_name()
-        self.assertIs(is_name_correct, True)
+        self.assertIs(is_name_correct, False)
         # Names must not contain non-alphanumeric chars
         middle_space: Tag = Tag(name_text="name name")
         is_name_correct = middle_space.is_valid_name()
-        self.assertIs(is_name_correct, True)
+        self.assertIs(is_name_correct, False)
         # Names must not contain non-alphanumeric chars
         non_alpha_num: Tag = Tag(name_text="nameAB(")
         is_name_correct = non_alpha_num.is_valid_name()
-        self.assertIs(is_name_correct, True)
+        self.assertIs(is_name_correct, False)
         # Names must be alphanumeric with at least 3 chars
         alpha_num: Tag = Tag(name_text="ab1")
         is_name_correct = alpha_num.is_valid_name()
@@ -65,7 +65,7 @@ class TagModelTests(TestCase):
 
         # Check if new Tag's ID is correct
         new_count = Tag.objects.count()  # new count of Tags after insertion
-        tag_ID = (new_count == TagToInsert.ID)
+        tag_ID = (new_count == TagToInsert.countID + 1)
         self.assertIs(tag_ID, True)
 
     # Returns False when an invalid tag is
@@ -80,15 +80,18 @@ class TagModelTests(TestCase):
 
         # Check if tag added to node can be decremented after
         # "rejection" where tag is desired to be removed.
+        TagToInsert = Tag(name_text="node", language="en_US")
+        TagToInsert.add_new_tag()
         TagToInsert.add_tag_to_node()
         self.assertIs((TagToInsert.decrement_usage() == 0), True)
 
         # Check if tag returns valid dictionary with
         # identifying properties.
         TagToInsert = Tag(name_text="valid", language="en_US")
+        TagToInsert.add_new_tag()
         insertDict = TagToInsert.add_tag_to_node()
         self.assertIs((insertDict["name_text"] == "valid"
-                       and insertDict["ID"] == Tag.objects.count() - 1
+                       and insertDict["countID"] == Tag.objects.count() - 1
                        and insertDict["id"] == TagToInsert.id), True)
 
     # Returns False for tags that don't reject
@@ -99,20 +102,3 @@ class TagModelTests(TestCase):
         TagToInsert = Tag(name_text="name1", language="en_US")
         TagToInsert.add_new_tag()
         self.assertIs(TagToInsert.add_new_tag(), False)
-
-    # Returns True if tag is known valid language
-    # based on its language. Note: tag may be valid
-    # regardless of result.
-    def test_is_language(self):
-        # Check if invalid US language is invalid
-        TagToInsert = Tag(name_text="fail", language="en_US")
-        self.assertIs(TagToInsert.is_tag_name_in_dictionary(), True)
-        # Check if valid US language is valid
-        TagToInsert = Tag(name_text="pass", language="en_US")
-        self.assertIs(TagToInsert.is_tag_name_in_dictionary(), True)
-        # Check if invalid US language is invalid
-        TagToInsert = Tag(name_text="fail1", language="en_US")
-        self.assertIs(TagToInsert.is_tag_name_in_dictionary(), True)
-        # Check if valid US language is valid
-        TagToInsert = Tag(name_text="new", language="en_US")
-        self.assertIs(TagToInsert.is_tag_name_in_dictionary(), True)
