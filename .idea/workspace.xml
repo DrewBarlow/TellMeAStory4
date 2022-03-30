@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="Added Heroku website url to README">
+    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="Added app to manage the tags of a node">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/managetags/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/managetags/tests.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +61,7 @@
       <workItem from="1648431637279" duration="8116000" />
       <workItem from="1648481264765" duration="139000" />
       <workItem from="1648492943374" duration="269000" />
-      <workItem from="1648598423522" duration="722000" />
+      <workItem from="1648598423522" duration="1772000" />
     </task>
     <task id="LOCAL-00001" summary="made requirements document">
       <created>1648431775201</created>
@@ -132,7 +133,14 @@
       <option name="project" value="LOCAL" />
       <updated>1648493091094</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Added app to manage the tags of a node">
+      <created>1648606970475</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1648606970475</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -171,6 +179,7 @@
     <MESSAGE value="updated landing page to temporary index page" />
     <MESSAGE value="Heroku Settings" />
     <MESSAGE value="Heroku Procfile file name change" />
-    <option name="LAST_COMMIT_MESSAGE" value="Heroku Procfile file name change" />
+    <MESSAGE value="Added app to manage the tags of a node" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added app to manage the tags of a node" />
   </component>
 </project>
