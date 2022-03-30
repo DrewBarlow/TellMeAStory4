@@ -29,7 +29,6 @@ class TagModelTests(TestCase):
         alpha_num: Tag = Tag(name_text="ab1")
         is_name_correct = alpha_num.is_valid_name()
         self.assertIs(is_name_correct, True)
-        return
 
     # Returns False for tags that don't exist in the db
     # after insertion.
@@ -51,7 +50,6 @@ class TagModelTests(TestCase):
         new_count = Tag.objects.count()  # new count of Tags after insertion
         tag_in_db = (new_count == original_count + 1)
         self.assertIs(tag_in_db, True)
-        return
 
     # Returns False for tags created with incorrect
     # ID when given an ID.
@@ -71,7 +69,6 @@ class TagModelTests(TestCase):
         new_count = Tag.objects.count()  # new count of Tags after insertion
         tag_ID = (new_count == TagToInsert.ID)
         self.assertIs(tag_ID, True)
-        return
 
     # Returns False when an invalid tag is
     # inserted.
@@ -87,7 +84,6 @@ class TagModelTests(TestCase):
         # "rejection" where tag is desired to be removed.
         TagToInsert.add_tag_to_node()
         self.assertIs((TagToInsert.decrement_usage() == 0), True)
-        return
 
     # Returns False for tags that don't reject
     # insertion when repeated.
@@ -97,4 +93,3 @@ class TagModelTests(TestCase):
         TagToInsert = Tag(name_text="name1", language="en_US")
         TagToInsert.add_new_tag()
         self.assertIs(TagToInsert.add_new_tag(), False)
-        return
