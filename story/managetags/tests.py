@@ -59,7 +59,7 @@ class TagModelTests(TestCase):
     def test_was_tag_ID_valid(self):
         # INSERT NEW VALID TAG Note: Adding a tag checks for these conditions,
         # but Tag model user must manage user input or Tag is rejected.
-        TagToInsert = Tag(name_text="name123", language="en_US")
+        TagToInsert = Tag(name_text="name12", language="en_US")
         # Step 1: Check for valid name
         self.assertIs(TagToInsert.is_valid_name(), True)
         # Step 2: Check if it exists
@@ -75,16 +75,26 @@ class TagModelTests(TestCase):
 
     # Returns False when an invalid tag is
     # inserted.
-    # Functions to test: add_tag_to_node, decrement_usage
+    # Functions to test: add_new_tag, add_tag_to_node, decrement_usage
     def test_was_bad_tag_rejected(self):
+        # INSERT NEW VALID TAG Note: Adding a tag checks for these conditions,
+        # but Tag model user must manage user input or Tag is rejected.
+        TagToInsert = Tag(name_text="name 123", language="en_US")
+        # Check if tag with invalid name is rejected
+        self.assertIs(TagToInsert.add_new_tag(), False)
+
+        # Check if tag added to node can be decremented after
+        # "rejection" where tag is desired to be removed.
+        TagToInsert.add_tag_to_node()
+        self.assertIs((TagToInsert.decrement_usage() == 0), True)
         return
 
     # Returns False for tags that don't reject
     # insertion when repeated.
     # Functions to test: add_new_tag
     def test_was_tag_added_without_repeat(self):
-
-        tag_in_db = False
-        tag_repeated = False
-        self.assertIs(tag_repeated, False)
+        # Check if tag that exists is rejected
+        TagToInsert = Tag(name_text="name1", language="en_US")
+        TagToInsert.add_new_tag()
+        self.assertIs(TagToInsert.add_new_tag(), False)
         return
