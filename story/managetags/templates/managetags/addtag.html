@@ -11,10 +11,10 @@
         <input type="submit" value="Create">
     </form>
     <p>
-        Existing Tags:
+        <br/> Existing Tags:
         <ol>
             {% for tag in tags %}
-                <br/> <li>{{ tag.name_text }}</li>
+                <li>{{ tag.name_text }}</li> <br/>
             {% endfor %}
         </ol>
     </p>
