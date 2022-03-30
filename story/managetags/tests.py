@@ -34,8 +34,19 @@ class TagModelTests(TestCase):
     # after insertion.
     # Functions to test: add_new_tag, add_tag_to_node
     def test_was_tag_added(self):
+        original_count = Tag.objects.count() # original count of Tags
 
-        tag_in_db = False
+        # INSERT NEW VALID TAG
+        TagToInsert = Tag(name_text="name123", language="en_US")
+        # Step 1: Check for valid name
+        self.assertIs(TagToInsert.is_valid_name(), True)
+        # Step 2: Check if it exists
+        self.assertIs(TagToInsert.is_new_tag(), True)
+        # Step 3: Save Tag
+        self.assertIs(TagToInsert.add_new_tag(), True)
+
+        new_count = Tag.objects.count() # new count of Tags after insertion
+        tag_in_db = (new_count == original_count + 1)
         self.assertIs(tag_in_db, True)
         return
 
