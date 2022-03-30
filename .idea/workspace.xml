@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="Added skeletons for Tag tests.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/managetags/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/managetags/models.py" afterDir="false" />
+    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="Added skeletons for Tag model.">
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +60,7 @@
       <workItem from="1648431637279" duration="8116000" />
       <workItem from="1648481264765" duration="139000" />
       <workItem from="1648492943374" duration="269000" />
-      <workItem from="1648598423522" duration="3375000" />
+      <workItem from="1648598423522" duration="3446000" />
     </task>
     <task id="LOCAL-00001" summary="made requirements document">
       <created>1648431775201</created>
@@ -147,7 +146,14 @@
       <option name="project" value="LOCAL" />
       <updated>1648608095410</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Added skeletons for Tag model.">
+      <created>1648609552479</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1648609552479</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -188,6 +194,7 @@
     <MESSAGE value="Heroku Procfile file name change" />
     <MESSAGE value="Added app to manage the tags of a node" />
     <MESSAGE value="Added skeletons for Tag tests." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added skeletons for Tag tests." />
+    <MESSAGE value="Added skeletons for Tag model." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added skeletons for Tag model." />
   </component>
 </project>
