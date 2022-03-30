@@ -1,7 +1,5 @@
 from django.test import TestCase  # Django testing functionality
 from .models import Tag  # Test Tag model
-from enchant import Dict  # Test for known valid language
-
 
 class TagModelTests(TestCase):
 
@@ -87,9 +85,9 @@ class TagModelTests(TestCase):
 
         # Check if tag returns valid dictionary with
         # identifying properties.
-        TagToInsert = Tag(name_text="name123", language="en_US")
+        TagToInsert = Tag(name_text="valid", language="en_US")
         insertDict = TagToInsert.add_tag_to_node()
-        self.assertIs((insertDict["name_text"] == "name123"
+        self.assertIs((insertDict["name_text"] == "valid"
                        and insertDict["ID"] == Tag.objects.count() - 1
                        and insertDict["id"] == TagToInsert.id), True)
 
@@ -101,3 +99,20 @@ class TagModelTests(TestCase):
         TagToInsert = Tag(name_text="name1", language="en_US")
         TagToInsert.add_new_tag()
         self.assertIs(TagToInsert.add_new_tag(), False)
+
+    # Returns True if tag is known valid language
+    # based on its language. Note: tag may be valid
+    # regardless of result.
+    def test_is_language(self):
+        # Check if invalid US language is invalid
+        TagToInsert = Tag(name_text="fail", language="en_US")
+        self.assertIs(TagToInsert.is_tag_name_in_dictionary(), True)
+        # Check if valid US language is valid
+        TagToInsert = Tag(name_text="pass", language="en_US")
+        self.assertIs(TagToInsert.is_tag_name_in_dictionary(), True)
+        # Check if invalid US language is invalid
+        TagToInsert = Tag(name_text="fail1", language="en_US")
+        self.assertIs(TagToInsert.is_tag_name_in_dictionary(), True)
+        # Check if valid US language is valid
+        TagToInsert = Tag(name_text="new", language="en_US")
+        self.assertIs(TagToInsert.is_tag_name_in_dictionary(), True)
