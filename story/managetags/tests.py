@@ -85,6 +85,14 @@ class TagModelTests(TestCase):
         TagToInsert.add_tag_to_node()
         self.assertIs((TagToInsert.decrement_usage() == 0), True)
 
+        # Check if tag returns valid dictionary with
+        # identifying properties.
+        TagToInsert = Tag(name_text="name123", language="en_US")
+        insertDict = TagToInsert.add_tag_to_node()
+        self.assertIs((insertDict["name_text"] == "name123"
+                       and insertDict["ID"] == Tag.objects.count() - 1
+                       and insertDict["id"] == TagToInsert.id), True)
+
     # Returns False for tags that don't reject
     # insertion when repeated.
     # Functions to test: add_new_tag
