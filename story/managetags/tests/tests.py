@@ -1,5 +1,5 @@
 from django.test import TestCase  # Django testing functionality
-from .models import Tag  # Test Tag model
+from managetags.models import Tag  # Test Tag model
 
 class TagModelTests(TestCase):
 
