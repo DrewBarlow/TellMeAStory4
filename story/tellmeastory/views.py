@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
 from .forms import LoginForm, NameChangeForm, RegisterForm
 from .models import User
+from .tests import test_map
 
 API_TOKEN = "pk.eyJ1IjoiamFzb25uYWNoIiwiYSI6ImNsMWN0Z2J0MTBhemozbXA2a2tzY2IzcXkifQ.HPGJe8U-0wuFJOcmlmUCJw"
 COOKIE_NAME: str = "StoryUserLoggedIn"
@@ -145,7 +146,7 @@ def map(req: HttpRequest) -> HttpResponse:
 
     DATA_TO_INSERT = []
 
-    # Temporary Data for Testing Purposes of the map
+    # THIS DATA IS TEMPORARY - Used only to visualize how stories will appear on the map - not apart of the story
     DATA_TO_INSERT.insert(0, [[-76.611, 39.301], "Story 1 Location"])
     DATA_TO_INSERT.insert(0, [[-76.864, 39.1935], "Story 2 Location"])
     DATA_TO_INSERT.insert(0, [[-77.10415, 39.00532], "Story 3 Location"])
