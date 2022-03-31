@@ -5,9 +5,9 @@ from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
 from .forms import LoginForm, NameChangeForm, RegisterForm
 from .models import User
-from .tests import test_map
+from .constants import *
 
-API_TOKEN = "pk.eyJ1IjoiamFzb25uYWNoIiwiYSI6ImNsMWN0Z2J0MTBhemozbXA2a2tzY2IzcXkifQ.HPGJe8U-0wuFJOcmlmUCJw"
+API_TOKEN = APIKEY
 COOKIE_NAME: str = "StoryUserLoggedIn"
 
 # temp, obviously
