@@ -10,7 +10,7 @@ To explore the project, visit [this Heroku link](https://tellmeastory4.herokuapp
 
 ### To run this project:
   1. Clone this repository or download and extract the source code.
-  2. Run `pip -r requirements.txt` to install the necessary dependencies.
+  2. Run `pip install -r requirements.txt` to install the necessary dependencies.
   3. Receive an API key from [MapBox](https://docs.mapbox.com/api/accounts/tokens/).
   4. Set `APIKEY = <your_key>` in `story/tellmeastory/constants.py`.
   5. Run `python story/manage.py runserver` and visit `localhost:8000`.
