@@ -24,7 +24,7 @@ def editPost(request, post_id):
 
 
 #Viewing the user's own posts
-def viewPosts(request):
+def viewPost(request):
 
 
     posts = models.Post.objects.all()

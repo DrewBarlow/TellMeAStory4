@@ -20,8 +20,7 @@
     </head>
 
     <body>
-        <button type="button" id = "create-story">Create Story!</button>
-        <button type="button" id = "view-story">View Story!</button>
+         <a href="http://127.0.0.1:8000/user_posts/" class = "fakeButton">View Personal Stories!</a>
 
 <script>
 
@@ -35,21 +34,7 @@ document.getElementById('view-story').addEventListener('click',function(){
 
 
 </script>
-        <button type="button">Report!</button>
-        <div class = "bg-modal-hidden" name = "story-owner-view">
-            <div class="modal-content">
-                <form action>
 
-
-                    Text: <p><span name = "viewText">Hello this is my current story!</span></p>
-                    <input type="submit" name="edit" value = "edit"></input>
-
-
-                    <input type="button" name ="delete" value = "delete"></input>
-                    <!-- Link database to the id and pull all of the users information-->
-                </form>
-            </div>
-        </div>
 
         <div class = "bg-modal-hidden" name = "story-owner-edit" >
             <div class="modal-content">
@@ -157,6 +142,13 @@ document.getElementById('edit').addEventListener('click',function(){
 
 .hidden {
     display: none;
+}
+
+.fakeButton {
+  background-color: #808080;
+  color: white;
+  padding: 15px 25px;
+
 }
 </style>
 
