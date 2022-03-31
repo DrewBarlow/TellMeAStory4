@@ -1,0 +1,23 @@
+{% block content %}
+
+<h1>Update Post</h1>
+
+<center>
+    <p>User ID: {{post.user_id}}</p>
+    <p>Post ID: {{post.post_id}}</p>
+<form action ="" method=POST>
+    {% csrf_token %}
+
+
+    {{form.as_p}}
+    <input type = "submit" value = "Save">
+
+
+</form>
+
+
+</center>
+
+
+{% endblock %}
+

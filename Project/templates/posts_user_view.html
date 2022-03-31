@@ -1,0 +1,16 @@
+{% block content %}
+
+<h1>Posts</h1>
+
+
+{%for post in posts%}
+    <strong>Post ID: {{ post }}</strong>
+
+    <ul>{{post.postText}}</ul>
+<a href="{%url 'updatePost' post.post_id%}">Edit <span class = tab></span></a></strong><a href="{%url 'deletePost' post.post_id%}">Delete</a></strong><br><br>
+{% endfor %}
+
+
+{% endblock %}
+
+
