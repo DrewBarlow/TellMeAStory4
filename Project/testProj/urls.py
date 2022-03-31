@@ -19,11 +19,19 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.InsertPost),
-    path('index/', views.index),
-    path('user_posts/', views.viewPost, name ="userPosts"),
+    #display homepage
+    path('', views.homepage),
+
+    #user's posts
+    path('myPosts/', views.viewPost, name ="userPosts"),
+
+    #edit post view
     path('editPost/<post_id>', views.editPost, name="updatePost"),
+
+    #delete post view (just deletes and redirects not an actual page)
     path('deletePost/<post_id>', views.deletePost, name="deletePost"),
+
+    #standard django admin path
     path('admin/', admin.site.urls),
 
 ]

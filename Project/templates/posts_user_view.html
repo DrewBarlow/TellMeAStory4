@@ -3,11 +3,12 @@
 <h1>Your Posts</h1>
 
 
-{%for post in posts%}
-    <strong>Post ID: {{ post }}</strong>
+{%for post in posts%} <!--loop through each object in the post database-->
+<strong>Post ID: {{ post }}</strong> <!--displays the post id each time (the primary key)-->
 
-    <ul>{{post.postText}}</ul>
-<a href="{%url 'updatePost' post.post_id%}">Edit <span class = tab></span></a></strong><a href="{%url 'deletePost' post.post_id%}">Delete</a></strong><br><br>
+<ul>{{post.postText}}</ul>  <!--display the text of the post-->
+<a href="{%url 'updatePost' post.post_id%}">Edit <span class = tab></span></a> <!--onclick move to the edit page-->
+</strong><a href="{%url 'deletePost' post.post_id%}">Delete</a></strong><br><br><!--deletes the entry from the database on click-->
 {% endfor %}
 
 

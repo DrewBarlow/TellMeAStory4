@@ -8,34 +8,20 @@
 <html>
 
 
+<!--Generate random id to simulate a user-->
+<head onload = "getUserId()">
+    <meta charset = "utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Home</title>
+</head>
 
-    <head onload = "getUserId()">
-       <meta charset = "utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Home</title>
-
-
-
-
-    </head>
-
-    <body>
-         <a href="http://127.0.0.1:8000/user_posts/" class = "fakeButton">View Personal Stories!</a>
-
-<script>
+<body>
+    <!--button redirects to the post of the current user-->
+    <a href="http://127.0.0.1:8000/user_posts/" class = "fakeButton">View Personal Stories!</a>
 
 
 
-document.getElementById('view-story').addEventListener('click',function(){
-    document.getElementsByName("story-owner-view")[0].className = "bg-modal-view";
- });
-
-
-
-
-</script>
-
-
+        <!--BRAINSTORMING STUFF IGNORE-->
         <div class = "bg-modal-hidden" name = "story-owner-edit" >
             <div class="modal-content">
                 <form method = "POST">
@@ -50,6 +36,7 @@ document.getElementById('view-story').addEventListener('click',function(){
             </div>
         </div>
 
+        <!--BRAINSTORMING STUFF IGNORE-->
         <div class = "bg-modal-hidden" name = "story-owner-create" >
             <div class="modal-content">
                 <form method = "POST">
@@ -68,32 +55,32 @@ document.getElementById('view-story').addEventListener('click',function(){
             </div>
         </div>
 
-<script>
+    <!--Generating a random post id-->
+    <script>
 
-                            document.getElementById('create-story').addEventListener('click',function(){
-                            document.getElementsByName("story-owner-create")[0].className = "bg-modal-view";
-                            let s4 = () => {
-                                return 'xxxxxx-xxxxx-xxxxx-xxxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(de) {
-                                var random = Math.random() * 16 | 0, ve = de == 'x' ? random : (random & 0x3 | 0x8);
-                                return ve.toString(16);
-                                });
-                            }
-                            id = s4();
-                            document.getElementsByName("post_id")[0].textContent = id;
-                            document.getElementsByName("post_id")[1].textContent = id;
+        document.getElementById('create-story').addEventListener('click',function(){
+        document.getElementsByName("story-owner-create")[0].className = "bg-modal-view";
+        let s4 = () => {
+            return 'xxxxxx-xxxxx-xxxxx-xxxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(de) {
+            var random = Math.random() * 16 | 0, ve = de == 'x' ? random : (random & 0x3 | 0x8);
+            return ve.toString(16);
+        });
+        }
 
-
-                        });
-
-
-</script>
+            id = s4();
+            document.getElementsByName("post_id")[0].textContent = id;
+            document.getElementsByName("post_id")[1].textContent = id;
 
 
+        });
+    </script>
 
 
 
 
-    </body>
+
+
+</body>
 
 
 
@@ -103,7 +90,7 @@ document.getElementById('view-story').addEventListener('click',function(){
 
 </html>
 
-
+<!--Hiding windows on click, IGNORE-->
 <script>
 document.getElementById('edit').addEventListener('click',function(){
     document.getElementsByName("story-owner-view")[0].className = "bg-modal-hidden";
