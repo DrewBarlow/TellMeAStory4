@@ -1,9 +1,12 @@
+import json
+
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
 from .forms import LoginForm, NameChangeForm, RegisterForm
 from .models import User
 
+API_TOKEN = "pk.eyJ1IjoiamFzb25uYWNoIiwiYSI6ImNsMWN0Z2J0MTBhemozbXA2a2tzY2IzcXkifQ.HPGJe8U-0wuFJOcmlmUCJw"
 COOKIE_NAME: str = "StoryUserLoggedIn"
 
 # temp, obviously
@@ -138,3 +141,22 @@ def register(req: HttpRequest) -> HttpResponse:
         "error_message": err_msg
     })
 
+def map(req: HttpRequest) -> HttpResponse:
+
+    DATA_TO_INSERT = []
+
+    # Temporary Data for Testing Purposes of the map
+    DATA_TO_INSERT.insert(0, [[-76.611, 39.301], "Story 1 Location"])
+    DATA_TO_INSERT.insert(0, [[-76.864, 39.1935], "Story 2 Location"])
+    DATA_TO_INSERT.insert(0, [[-77.10415, 39.00532], "Story 3 Location"])
+    DATA_TO_INSERT.insert(0, [[-80.13701, 25.901808], "Story 4 Location"])
+    DATA_TO_INSERT.insert(0, [[-97.6889, 30.32606], "Story 5 Location"])
+
+
+    # Converts our data to JSON format
+    CONVERT_JSON = json.dumps(DATA_TO_INSERT);
+
+    return render(req, "tellmeastory/map.html", {
+        "mapbox_token": API_TOKEN,
+        "map_data": CONVERT_JSON,
+    })
