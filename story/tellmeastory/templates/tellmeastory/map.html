@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TellMeAStory Map</title>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
+
+</head>
+<body>
+TEST
+<div id='map' width="100%" style='margin-top:100px; height:800px'></div>
+   <script>
+    mapboxgl.accessToken = "{{mapbox_token}}";
+    const map = new mapboxgl.Map({
+    container: 'map', // container ID
+    style: 'mapbox://styles/mapbox/streets-v11', // style URL
+    center: [-76.611, 39.301], // starting position [lng, lat]
+    zoom: 4 // starting zoom
+    });
+
+    var data_set = {{map_data|safe}}
+
+    for(let i = 0; i < Object.keys(data_set).length; i++){
+        const popup = new mapboxgl.Popup({ offset: 25 }).setText(
+            data_set[i][1]
+        );
+
+        const marker = new mapboxgl.Marker()
+            .setLngLat(data_set[i][0])
+            .setPopup(popup)
+            .addTo(map);
+    }
+
+    // Heat map features could be used by
+    // https://docs.mapbox.com/mapbox-gl-js/example/heatmap-layer/
+   </script>
+
+</body>
+</html>
