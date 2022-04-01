@@ -8,8 +8,8 @@ To run this:
 4. go to http://127.0.0.1:8000/admin/ for a view of the databases (admin page)
 
 Notes:
-Posts only can be made through the admin terminal, so you MUST create an admin login in order to create posts.
-Basic editing and deleting work
-Fields for editing are automatically filled in (ex. the text saved by the user is autofilled into a field)
+Posts only can be made through the admin terminal, so you MUST create an admin login in order to create posts. </br>
+Basic editing and deleting work </br>
+Fields for editing are automatically filled in (ex. the text saved by the user is autofilled into a field) </br>
 
 
