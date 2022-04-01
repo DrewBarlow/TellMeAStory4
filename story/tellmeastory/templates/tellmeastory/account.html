@@ -1,0 +1,16 @@
+<h1>{{ user.display_name }}'s Account Page</h1>
+<h2><em>{{ user.username }}</em></h2>
+
+{% if form %}
+    <form action="{% url 'tellmeastory:account_page' user.username %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Update">
+        <br>
+        <br>
+        {% if change_message %}
+            <p><strong>{{ change_message }}</strong></p>
+        {% endif %}
+    </form>
+    <button onclick="location.href = '/story/addtags/create/'">Add Tags Here</button>
+{% endif %}
