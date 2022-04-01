@@ -1,4 +1,5 @@
-Requirements:
+Requirements: </br>
+Python 3.8.7 </br>
 
 To run this:
 
