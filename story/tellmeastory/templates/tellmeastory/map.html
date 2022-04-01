@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TellMeAStory Map</title>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
+
+</head>
+<body>
+
+<div style="font-family:sans-serif">
+    Latitude
+    <input id = "lat">
+    <br>
+    Longitude
+    <input id = "long">
+    <br>
+    Name of Story
+    <input id = "stname">
+    <br>
+    <button onclick="insertStory()">Submit</button>
+</div>
+
+<div id='map' width='100%' style='margin-top:100px; height:800px'></div>
+   <script>
+    mapboxgl.accessToken = "{{mapbox_token}}";
+    const map = new mapboxgl.Map({
+    container: 'map', // container ID
+    style: 'mapbox://styles/mapbox/streets-v11', // style URL
+    center: [-76.611, 39.301], // starting position [lng, lat]
+    zoom: 4 // starting zoom
+    });
+
+    var data_set = {{map_data|safe}}
+
+    for(let i = 0; i < Object.keys(data_set).length; i++){
+        insertMarker(data_set[i][0], data_set[i][1])
+    }
+
+    // Heat map features could be used by
+    // https://docs.mapbox.com/mapbox-gl-js/example/heatmap-layer/
+
+    function insertMarker(coord, name){
+        const popup = new mapboxgl.Popup({ offset: 25 }).setText(
+            name
+        );
+        const marker = new mapboxgl.Marker()
+            .setLngLat(coord)
+            .setPopup(popup)
+            .addTo(map);
+    }
+    function insertStory(){
+        var long1 = document.getElementById("long").value
+        var lat1 = document.getElementById("lat").value
+        var storyName = document.getElementById("stname").value
+
+        var coord = [long1, lat1]
+
+        insertMarker(coord, storyName);
+
+    }
+   </script>
+
+</body>
+</html>
