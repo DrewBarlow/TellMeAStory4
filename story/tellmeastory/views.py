@@ -3,6 +3,7 @@ import json
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
+from typing import Any
 from .forms import LoginForm, NameChangeForm, RegisterForm
 from .models import User
 from .constants import *
@@ -140,6 +141,17 @@ def register(req: HttpRequest) -> HttpResponse:
     return render(req, "tellmeastory/register.html", {
         "form": form,
         "error_message": err_msg
+    })
+
+# arguments should be passed for the location which this story node is going to be placed
+# these args should be long/lat
+def make_node(req: HttpRequest, author_user: str, longitude: Any, latitude: Any) -> HttpResponse:
+    # 
+
+    return render(req, "tellmeastory/make_node.html", {
+        "author": author,
+        "longitude": longitude,
+        "latitude": latitude
     })
 
 def map(req: HttpRequest) -> HttpResponse:
