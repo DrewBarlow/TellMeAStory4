@@ -1,4 +1,4 @@
-from django.db.models import CharField, Model
+from django.db.models import ImageField, CharField, Model
 from re import fullmatch, Match
 
 # Create your models here.
@@ -47,3 +47,22 @@ class User(Model):
         Returns True if self.display_name has a length of >= 5 and <= 20.
         """
         return 5 <= len(self.display_name) <= 20
+
+class Node(Model):
+    """ Story Node class. Holds a story's contents to present
+    to users that select the respective story node. """
+    image: ImageField = ImageField(upload_to="storyimages")
+    # location
+
+    ### additions to kush's code (DELETE ME) ###
+    title: CharField = CharField(max_length=200)
+    content: CharField = CharField(max_length=10_000)
+    # author foreign key
+
+    def __str__(self):
+        """ Returns current Title for A Story Node. """
+        return self.title
+
+    def add_image(self):
+        """ Allows for image to be attached to a Story Node. """
+        return True
