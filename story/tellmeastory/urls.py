@@ -9,5 +9,7 @@ urlpatterns = [
     path("login/", views.login, name="login"),
     path("register/", views.register, name="register"),
     path("map/" , views.map , name="map") ,
-    path("addtags/", include("managetags.urls"))
+    path("addtags/", include("managetags.urls")),
+    path("profile/", views.profile, name="profile"),
+
 ]

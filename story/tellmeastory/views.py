@@ -161,3 +161,7 @@ def map(req: HttpRequest) -> HttpResponse:
         "mapbox_token": API_TOKEN,
         "map_data": CONVERT_JSON,
     })
+
+def profile(req: HttpRequest) -> HttpResponse:
+    return render(req, "tellmeastory/profile.html", {
+    })
