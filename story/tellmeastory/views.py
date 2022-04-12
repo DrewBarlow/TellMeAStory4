@@ -3,7 +3,7 @@ import json
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
-from typing import Any
+from typing import Any, Dict
 from .forms import LoginForm, NameChangeForm, NodeCreationForm, RegisterForm
 from .models import Node, User
 from .constants import *
@@ -169,6 +169,52 @@ def create_node(req: HttpRequest) -> HttpResponse:
     form: NodeCreationForm = None
     logged_in: bool = False
     err_message: str = None
+
+    # the cookie stores the username.
+    # grab the stored username, then follow the generic steps
+    alleged_username: str = req.COOKIES.get(COOKIE_NAME)
+    if alleged_username:
+        logged_in = True
+
+        if req.method == "POST":
+            form: NodeCreationForm = NodeCreationForm(req.POST)
+
+            if form.is_valid():
+                user: User = None
+                try:
+                    user = User.objects.get(username=alleged_username)
+                except User.DoesNotExist:
+                    err_message = "We could not find your account..."
+
+                if not err_message:
+                    # gather all of the form data and make the node
+
+                    node_args: Dict[str, Any] = {
+                        "image": None,
+                        "node_title": form["node_title"].value(),
+                        "node_content": form["node_content"].value(),
+                        "longitude": 0,
+                        "latitude": 0,
+                        "node_author": user
+                    }
+
+                    new_node: Node = Node(**node_args)
+
+                    # validate the new node
+                    # TODO: make these more informative?
+                    if not new_node.is_valid_title():
+                        err_message = "Invalid title."
+                    if not new_node.is_valid_content():
+                        err_message = "The content must be less than 10,000 characters!"
+                    else:
+                        new_node.save()
+
+                        # this should redirect to VIEWING the node
+                        # for now, I'll just go to the index
+                        return HttpResponseRedirect("/story/")
+        else:
+            form = NodeCreationForm()
+
     return render(req, "tellmeastory/make_node.html", {
         "form": form,
         "logged_in": logged_in,
