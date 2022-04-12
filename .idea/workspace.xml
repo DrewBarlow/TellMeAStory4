@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="Added AddTags link button to account page">
+    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="Updated launch page to registration page">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_27_22__9_33_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_27_22__9_33_PM__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/account.html" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/account.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/profile.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -422,5 +423,9 @@
     <MESSAGE value="Updated launch page to registration page" />
     <MESSAGE value="Added AddTags link button to account page" />
     <option name="LAST_COMMIT_MESSAGE" value="Added AddTags link button to account page" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/MainProject$.coverage" NAME=" Coverage Results" MODIFIED="1648598064269" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/story/tellmeastory/tests" />
+    <SUITE FILE_PATH="coverage/MainProject$test_maps.coverage" NAME="test_maps Coverage Results" MODIFIED="1648660684478" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/story/tellmeastory/tests" />
   </component>
 </project>
