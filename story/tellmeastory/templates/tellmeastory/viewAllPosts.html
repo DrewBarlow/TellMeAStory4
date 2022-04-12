@@ -1,0 +1,24 @@
+{% block content %}
+
+<h1>Your Posts</h1>
+
+ <!--loop through each object in the post database-->
+{%for post in posts%}
+
+<!--displays the post id each time (the primary key)-->
+<strong>Post ID: {{ post }}</strong>
+
+<!--display the text of the post-->
+<ul>{{post.postText}}</ul>
+
+<!--onclick move to the edit page-->
+<a href="{%url 'updatePost' post.post_id%}">Edit <span class = tab></span></a>
+
+<!--deletes the entry from the database on click-->
+</strong><a href="{%url 'deletePost' post.post_id%}">Delete</a></strong><br><br>
+{% endfor %}
+
+
+{% endblock %}
+
+
