@@ -138,11 +138,11 @@ class NodeModelTests(TestCase):
         whitespace_long: str = f"{' ' * 100} {'Hi :)' * 1000} {' ' * 100}"
         valid: str = "Today I did a thing and blah blah blah"
 
-        short: Node = Node(title=short_title)
-        long: Node = Node(title=long_title)
-        w_short: Node = Node(title=whitespace_short)
-        w_long: Node = Node(title=whitespace_long)
-        good: Node = Node(title=valid)
+        short: Node = Node(node_title=short_title)
+        long: Node = Node(node_title=long_title)
+        w_short: Node = Node(node_title=whitespace_short)
+        w_long: Node = Node(node_title=whitespace_long)
+        good: Node = Node(node_title=valid)
 
         self.assertIs(short.is_valid_title(), False)
         self.assertIs(long.is_valid_title(), False)
@@ -161,9 +161,9 @@ class NodeModelTests(TestCase):
         whitespace_long: str = f"{' ' * 100} {'Hi :)' * 10000} {' ' * 100}"
         valid: str = "WE WENT TO WALMART AND WE GOT SOME..... **corn flakes**"
 
-        long: Node = Node(content=long_content)
-        w_long: Node = Node(content=whitespace_long)
-        good: Node = Node(content=valid)
+        long: Node = Node(node_content=long_content)
+        w_long: Node = Node(node_content=whitespace_long)
+        good: Node = Node(node_content=valid)
 
         self.assertIs(long.is_valid_content(), False)
         self.assertIs(w_long.is_valid_content(), False)
