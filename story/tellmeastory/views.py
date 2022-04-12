@@ -149,27 +149,27 @@ def register(req: HttpRequest) -> HttpResponse:
 #  - some location
 #  - the author
 # I am not dealing with how location is parsed, so I'll make "location" a string for now.
-"""def create_node(req: HttpRequest, location: str) -> HttpResponse:
-    # if user is not logged in, notify them that they need to be
-    # otherwise, prompt them for the title and content
-    form: NodeCreationForm = None
-    logged_in: bool = False
+def create_node(req: HttpRequest, location: str) -> HttpResponse:
+    """
+    HOW ARE WE GOING TO GET THE LOCATION
+    check cookie
+        if the user is logged in:
+            logged_in = true
+            form = req.post
+            if form is valid
+                get the data, query for the user, generate the node
+                if title is not valid, err_message = "something about title"
+                if content is not valid, err_message = "something about content"
+                if good stuff:
+                    make node & insert
 
-    if req.COOKIES.get(COOKIE_NAME) is not None:
-        # find the user
-
-        if req.method == "POST":
-            form = NodeCreationForm(req.POST)
-
-            if form.is_valid():
-                new_node: Node = 
-
-            
-
+    render make_node, pass logged_in and form
+    """
     return render(req, "", {
         "form": form,
-        "logged_in": logged_in
-    })"""
+        "logged_in": logged_in,
+        "error_message": err_message
+    })
 
 # need some node id
 """def view_node(req: HttpRequest, node_id: int) -> HttpResponse:
