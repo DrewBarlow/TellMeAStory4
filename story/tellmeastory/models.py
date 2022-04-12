@@ -1,4 +1,4 @@
-from django.db.models import ImageField, CharField, ForeignKey, Model
+from django.db.models import ImageField, CharField, FloatField, ForeignKey, Model
 from django.db.models import CASCADE
 from re import fullmatch, Match
 
@@ -55,7 +55,8 @@ class Node(Model):
     image: ImageField = ImageField(upload_to="storyimages")
     node_title: CharField = CharField(max_length=200)
     node_content: CharField = CharField(max_length=10_000)
-    # location (long/lat)
+    longitude: float = 0
+    latitude: float = 0
     node_author: ForeignKey = ForeignKey(User, on_delete=CASCADE)
 
     def __str__(self):
