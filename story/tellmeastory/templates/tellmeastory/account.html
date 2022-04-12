@@ -1,3 +1,4 @@
+{% block content %}
 <h1>{{ user.display_name }}'s Account Page</h1>
 <h2><em>{{ user.username }}</em></h2>
 
@@ -13,4 +14,20 @@
         {% endif %}
     </form>
     <button onclick="location.href = '/story/addtags/create/'">Add Tags Here</button>
+
+    {% for post in user_posts %}
+    <br>
+     <strong> Post ID: {{post.post_id}}</strong>
+
+    <!--display the text of the post-->
+    <p>{{post.postText}}</p>
+
+    <!--onclick move to the edit page-->
+    <a href="{%url 'updatePost' post.post_id%}">Edit <span class = tab></span></a>
+
+    <!--deletes the entry from the database on click-->
+    </strong><a href="{%url 'deletePost' post.post_id%}">Delete</a></strong><br><br>
+
+    {% endfor %}
 {% endif %}
+{% endblock %}
