@@ -78,15 +78,13 @@ class Report(models.Model):
     #the id of the user who put in the report (set null so we can keep the reports)
     reporting_username = models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
 
-
-    #the id of the user who was reported
-    reported_username = models.CharField(max_length=400)
-
+    #the id of the reported posts
+    reported_id = models.CharField(max_length=400)
 
     #the reason the user was reported (text field)
-    report_reason = models.CharField(max_length=400)
+    report_reason = models.CharField(max_length=600)
 
 
 
     def __str__(self):
-        return "%s " % self.reporting_username
+        return self.report_reason

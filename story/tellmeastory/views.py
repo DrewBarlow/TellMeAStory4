@@ -3,13 +3,14 @@ import json
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
-from .forms import LoginForm, NameChangeForm, RegisterForm, PostForm
+from .forms import LoginForm, NameChangeForm, RegisterForm, PostForm, ReportForm
 from .models import User, Post, Report
 from .constants import *
 from django.shortcuts import render,redirect
 
 API_TOKEN = APIKEY
 COOKIE_NAME: str = "StoryUserLoggedIn"
+
 
 # temp, obviously
 def index(req: HttpRequest) -> HttpResponse:
@@ -167,36 +168,65 @@ def map(req: HttpRequest) -> HttpResponse:
     })
 
 #Remove a post then redirect to all the posts of the current user (needs a confirm prompt)
-def deletePost(request,post_id):
-    post = Post.objects.get(pk=post_id)  # pk is the primary key
+def deletePost(req: HttpRequest, post_id)-> HttpResponse:
+    post = Post.objects.get(post_id=post_id)  # pk is the primary key
+    get_user = str(post.username)
+
     post.delete()
-    return redirect('userPosts')
+    return redirect("/account/{0}/".format(get_user))
 
 
 #Editing a post chosen by the current user redirect to all the posts of the current user (includes input validation based off the model)
-def editPost(request, post_id):
+def editPost(req: HttpRequest, post_id)-> HttpResponse:
 
-    post = Post.objects.get(post_id=post_id) #primary key is the post_id
-    form = PostForm(request.POST or None, instance=post)
+    post = Post.objects.get(post_id=post_id)
+    form = PostForm(req.POST or None, instance=post)
+
+    get_user = str(post.username)
 
     #if the fields are valid, save and redirect
     if form.is_valid():
         form.save()
-        return redirect('userPosts')
+        return redirect("/account/{0}/".format(get_user))
 
     #form is a form specified by forms.py, post becomes the Post object specified by the post_id
-    return render(request, 'updatePost.html',
+    return render(req, 'tellmeastory/updatePost.html',
                   {'form':form,'post':post})
 
 
-#Viewing the user's own posts
-def viewPost(request):
+#Viewing all the post's in the database
+def viewPost(req: HttpRequest)-> HttpResponse:
+
+    username = req.COOKIES.get(COOKIE_NAME)
 
     #posts are all the posts in the database
     posts = Post.objects.all()
 
+
+
     #pass all the objects to the html page
-    return render(request, 'posts_user_view.html',
+    return render(req, 'tellmeastory/viewAllPosts.html',
                   {
-                      'posts': posts
+                      'posts': posts,
+                      'username': str(username),
                   })
+
+def reportPost(req: HttpRequest, post_id) -> HttpResponse:
+    post = Post.objects.get(post_id=post_id)
+    form = ReportForm(req.POST or None, instance=post)
+
+    currentUser = req.COOKIES.get(COOKIE_NAME)
+    getUser = User.objects.get(username = currentUser)
+    # if the fields are valid, save and redirect
+    if form.is_valid():
+        new_report = Report(reporting_username = getUser,reported_id = str(post.post_id),report_reason = form.cleaned_data.get('report_reason'))
+        Report.save(new_report)
+        return redirect("/allPosts")
+
+    # form is a form specified by forms.py, post becomes the Post object specified by the post_id
+    return render(req, 'tellmeastory/reportPost.html',
+                  {'form': form,
+                   'post': post,
+                   'username': str(post.username)
+
+                   })

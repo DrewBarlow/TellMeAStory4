@@ -15,6 +15,10 @@
     </form>
     <button onclick="location.href = '/story/addtags/create/'">Add Tags Here</button>
 
+    <br>
+    <!--deletes the entry from the database on click-->
+    </strong><a href="{% url 'tellmeastory:viewPosts' %}">View All Posts!</a></strong><br><br>
+
     {% for post in user_posts %}
     <br>
      <strong> Post ID: {{post.post_id}}</strong>
@@ -23,10 +27,10 @@
     <p>{{post.postText}}</p>
 
     <!--onclick move to the edit page-->
-    <a href="{%url 'updatePost' post.post_id%}">Edit <span class = tab></span></a>
+    <a href="{% url 'tellmeastory:editPost' post.post_id %}">Edit <span class = tab></span></a>
 
     <!--deletes the entry from the database on click-->
-    </strong><a href="{%url 'deletePost' post.post_id%}">Delete</a></strong><br><br>
+    </strong><a href="{% url 'tellmeastory:deletePost' post.post_id %}">Delete</a></strong><br><br>
 
     {% endfor %}
 {% endif %}
