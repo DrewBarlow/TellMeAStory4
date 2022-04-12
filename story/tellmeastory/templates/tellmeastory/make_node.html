@@ -10,6 +10,15 @@
 {% if logged_in %}
     <!-- show the form and get all of the needed stuff -->
     <p>Temp, I may or may not be in a work meeting right now!</p>
+
+    <form action="/story/THE_ROUTE" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Register">
+        <br>
+        {% if error_message %}
+            <p><strong>{{ error_message }}</strong></p>
+        {% endif %}
 {% else %}
     <!-- notify the user they need to be logged in and redirect to login -->
     <h4>You must be logged in to create a story!</h4>
