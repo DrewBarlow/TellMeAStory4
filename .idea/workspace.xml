@@ -3,8 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="Added AddTags link button to account page">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/story/tellmeastory/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/account.html" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/account.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,7 +23,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="feature/image_on_node" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -367,7 +368,14 @@
       <option name="project" value="LOCAL" />
       <updated>1648678796447</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="Prepared tests to reference blank functions in Node model">
+      <created>1649728537131</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1649728537131</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -397,7 +405,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added valid Tag ID after insertion check test" />
     <MESSAGE value="Added valid Tag rejection tests" />
     <MESSAGE value="Added tellmeastory and managetags to INSTALLED_APPS" />
     <MESSAGE value="Update first valid test set" />
@@ -422,6 +429,7 @@
     <MESSAGE value="Updated minor spelling and formatting in comments and tag creation html" />
     <MESSAGE value="Updated launch page to registration page" />
     <MESSAGE value="Added AddTags link button to account page" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added AddTags link button to account page" />
+    <MESSAGE value="Prepared tests to reference blank functions in Node model" />
+    <option name="LAST_COMMIT_MESSAGE" value="Prepared tests to reference blank functions in Node model" />
   </component>
 </project>

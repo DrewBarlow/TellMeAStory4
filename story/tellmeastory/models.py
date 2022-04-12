@@ -52,8 +52,12 @@ class Node(Model):
     """ Story Node class. Holds a story's contents to present
     to users that select the respective story node. """
     image: ImageField = ImageField(upload_to="storyimages")
-    title: CharField = CharField(max_length=200)
+    # location
 
+    ### additions to kush's code (DELETE ME) ###
+    title: CharField = CharField(max_length=200)
+    content: CharField = CharField(max_length=10_000)
+    # author foreign key
     def __str__(self):
         """ Returns current Title for A Story Node. """
         return self.title
