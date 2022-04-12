@@ -61,4 +61,17 @@ class Node(Model):
     def add_image(self):
         """ Allows for image to be attached to a Story Node. """
         return True
-    
+
+    def add_image_from_file(self) -> bool:
+        """
+        Allows for image url to be attached to a Story Node.
+        Returns True if attached, otherwise false.
+        """
+        return True
+
+    def add_image_from_url(self):
+        """
+        Allows for image url to be linked to a node.
+        Returns True if downloaded and attached, otherwise false.
+        """
+        return
