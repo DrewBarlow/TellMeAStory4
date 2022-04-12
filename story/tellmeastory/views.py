@@ -4,8 +4,8 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
 from typing import Any
-from .forms import LoginForm, NameChangeForm, RegisterForm
-from .models import User
+from .forms import LoginForm, NameChangeForm, NodeCreationForm, RegisterForm
+from .models import Node, User
 from .constants import *
 
 API_TOKEN = APIKEY
@@ -143,16 +143,38 @@ def register(req: HttpRequest) -> HttpResponse:
         "error_message": err_msg
     })
 
-# arguments should be passed for the location which this story node is going to be placed
-# these args should be long/lat
-def make_node(req: HttpRequest, author_user: str, longitude: Any, latitude: Any) -> HttpResponse:
-    # 
+# to create a story, we need:
+#  - a title
+#  - some content
+#  - some location
+#  - the author
+# I am not dealing with how location is parsed, so I'll make "location" a string for now.
+"""def create_node(req: HttpRequest, location: str) -> HttpResponse:
+    # if user is not logged in, notify them that they need to be
+    # otherwise, prompt them for the title and content
+    form: NodeCreationForm = None
+    logged_in: bool = False
 
-    return render(req, "tellmeastory/make_node.html", {
-        "author": author,
-        "longitude": longitude,
-        "latitude": latitude
-    })
+    if req.COOKIES.get(COOKIE_NAME) is not None:
+        # find the user
+
+        if req.method == "POST":
+            form = NodeCreationForm(req.POST)
+
+            if form.is_valid():
+                new_node: Node = 
+
+            
+
+    return render(req, "", {
+        "form": form,
+        "logged_in": logged_in
+    })"""
+
+# need some node id
+"""def view_node(req: HttpRequest, node_id: int) -> HttpResponse:
+    # get id or 404, display node
+    return"""
 
 def map(req: HttpRequest) -> HttpResponse:
 
