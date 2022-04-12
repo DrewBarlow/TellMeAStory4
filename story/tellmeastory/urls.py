@@ -13,10 +13,16 @@ urlpatterns = [
     path("addtags/", include("managetags.urls")),
 
     #edit post view
-    path('modify/<post_id>', views.editPost, name="updatePost"),
+    path('modify/<post_id>', views.editPost, name="editPost"),
 
     #delete post view (just deletes and redirects not an actual page)
     path('delete/<post_id>', views.deletePost, name="deletePost"),
+
+    #all post view
+    path('allPosts/', views.viewPost, name="viewPosts"),
+
+    #delete post view (just deletes and redirects not an actual page)
+    path('report/<post_id>', views.reportPost, name="reportPost"),
 
     #standard django admin path
     path('admin/', admin.site.urls),

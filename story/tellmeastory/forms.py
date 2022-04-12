@@ -19,7 +19,7 @@ class NameChangeForm(Form):
 
 from django import forms
 from django.forms import ModelForm
-from .models import Post
+from .models import Post,Report
 
 #Create Post form
 class PostForm(ModelForm):
@@ -29,4 +29,13 @@ class PostForm(ModelForm):
 
         #controls what fields appear, MUST BE NAMED AFTER THE FIELDS IN THE DATABASE
         fields = ('postText',)
+
+#Create Report form
+class ReportForm(ModelForm):
+    class Meta:
+        #get the current Post database
+        model = Report
+
+        #controls what fields appear, MUST BE NAMED AFTER THE FIELDS IN THE DATABASE
+        fields = ('report_reason',)
 

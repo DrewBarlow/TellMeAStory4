@@ -1,10 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% block content %}
+
+<h1>Report Post</h1>
+
+<center>
+    <p>User ID: {{username}}</p> <!--display the id of the current user-->
+    <p>Post ID: {{post.post_id}}</p><!--display the id of the current post-->
+
+<form action ="" method=POST>
+    {% csrf_token %}
+
+
+    {{form.as_p}} <!--display the form through forms.py to connect straight into the Post database-->
+    <input type = "submit" value = "Save">
+
+
+</form>
+
+
+</center>
+
+
+{% endblock %}
+
