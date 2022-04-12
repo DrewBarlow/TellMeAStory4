@@ -17,5 +17,5 @@ class NameChangeForm(Form):
     new_display_name: CharField = CharField(max_length=200, required=True)
 
 class NodeCreationForm(Form):
-    title: CharField = CharField(max_length=200, required=True)
-    content: CharField = CharField(max_length=10_000, required=True)
+    node_title: CharField = CharField(max_length=200, required=True)
+    node_content: CharField = CharField(max_length=10_000, required=True)
