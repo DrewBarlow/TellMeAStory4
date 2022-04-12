@@ -149,7 +149,8 @@ def register(req: HttpRequest) -> HttpResponse:
 #  - some location
 #  - the author
 # I am not dealing with how location is parsed, so I'll make "location" a string for now.
-def create_node(req: HttpRequest, location: str) -> HttpResponse:
+# ^ removed the above for now
+def create_node(req: HttpRequest) -> HttpResponse:
     """
     HOW ARE WE GOING TO GET THE LOCATION
     check cookie
@@ -165,7 +166,10 @@ def create_node(req: HttpRequest, location: str) -> HttpResponse:
 
     render make_node, pass logged_in and form
     """
-    return render(req, "", {
+    form: NodeCreationForm = None
+    logged_in: bool = False
+    err_message: str = None
+    return render(req, "tellmeastory/make_node.html", {
         "form": form,
         "logged_in": logged_in,
         "error_message": err_message

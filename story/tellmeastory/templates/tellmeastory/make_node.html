@@ -11,7 +11,7 @@
     <!-- show the form and get all of the needed stuff -->
     <p>Temp, I may or may not be in a work meeting right now!</p>
 
-    <form action="/story/THE_ROUTE" method="post">
+    <form action="/story/create-node/" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Register">
@@ -22,5 +22,5 @@
 {% else %}
     <!-- notify the user they need to be logged in and redirect to login -->
     <h4>You must be logged in to create a story!</h4>
-    <h4 href="/story/login/">Log in here.</a>
+    <a href="/story/login/">Log in here.</a>
 {% endif %}
