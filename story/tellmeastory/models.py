@@ -1,4 +1,5 @@
-from django.db.models import BooleanField, ImageField, TextField, CharField, Model
+from django.db.models import BooleanField, ImageField, TextField, CharField, FloatField, ForeignKey, Model
+from django.db.models import CASCADE
 from django.urls import resolve, Resolver404
 from re import fullmatch, Match
 from validators import url
@@ -56,15 +57,32 @@ class Node(Model):
     image: ImageField = ImageField(upload_to="storyimages", default=None)
     image_url: TextField = TextField()
     node_title: CharField = CharField(max_length=200)
-    content: CharField = CharField(max_length=10_000)
+    node_content: CharField = CharField(max_length=10_000)
     # The Node has an url if False, otherwise it has an image file
     has_image_file: BooleanField = BooleanField(default=False)
+    longitude: float = 0
+    latitude: float = 0
+    node_author: ForeignKey = ForeignKey(User, on_delete=CASCADE)
 
     def __str__(self):
         """
         Returns current Title for A Story Node.
         """
         return self.node_title
+      
+    def is_valid_title(self) -> bool:
+        """
+        The title should be at least 5 characters and no more than 200.
+        """
+        sanitized: str = self.node_title.strip()
+        return 5 <= len(sanitized) <= 200
+
+    def is_valid_content(self) -> bool:
+        """
+        The content should be no more than 10,000 chars long.
+        """
+        sanitized: str = self.node_content.strip()
+        return len(sanitized) <= 10_000
 
     def add_image(self, newFile=None, newURL=None) -> bool:
         """
