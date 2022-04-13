@@ -1,16 +1,7 @@
 <h2>Create a new Story</h2>
 
-<!--
-  if the user is not logged in, do not show the form 
-    and instead redirect them to login page
-  if the user is logged in, prompt them for title and content
-    they will later on be able to upload images and stuff
--->
-
 {% if logged_in %}
     <!-- show the form and get all of the needed stuff -->
-    <p>Temp, I may or may not be in a work meeting right now!</p>
-
     <form action="/story/create-node/" method="post">
         {% csrf_token %}
         {{ form.as_p }}
@@ -19,6 +10,7 @@
         {% if error_message %}
             <p><strong>{{ error_message }}</strong></p>
         {% endif %}
+    </form>
 {% else %}
     <!-- notify the user they need to be logged in and redirect to login -->
     <h4>You must be logged in to create a story!</h4>
