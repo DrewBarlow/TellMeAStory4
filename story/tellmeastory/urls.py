@@ -10,6 +10,6 @@ urlpatterns = [
     path("register/", views.register, name="register"),
     path("map/" , views.map , name="map") ,
     path("addtags/", include("managetags.urls")),
-    path("profile/", views.profile, name="profile"),
+    path("profile/<str:username>/", views.profile, name="profile"),
 
 ]

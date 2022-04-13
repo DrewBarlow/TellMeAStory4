@@ -45,56 +45,13 @@
     </div>
 </nav>
 
-<div class="card">
-    <div class="card-header">
+<div class="alert alert-danger center-block" role="alert" style="width:90%; margin-left:5%; margin-top:5%; max-height:150px; height:150px; text-align: center;">
+    <div style="margin-top:1%"></div>
+  <h1 class="alert-heading">Oh no!</h1>
+  <div style="font-size:24px">You have tried to access an account page that does not exist.</div>
 
 
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col col-lg-4">
-                    <h2>{{ user.display_name }}'s Profile</h2>
-                    <div style="font-style: italic; font-size:20px; margin-top:-15px">{{ user }}</div>
-                    <div>
-                        <table class="table" style="text-align: center">
-                            <thead class="thead-light">
-                            <tr>
-                                <th>Stories</th>
-                                <th>Views</th>
-                                <th>Reactions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr style="font-size:32px; font-weight:500">
-                                <td>[0]</td>
-                                <td>22</td>
-                                <td>[0]</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="col col-sm-3 my-auto">
-                    <div style="padding-left:40%; padding-right:40%">
-                    <img src="https://i.ibb.co/89Pq3PF/Default-Image.png" class="rounded-circle" style="max-height:150px">
-                        </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-        <div class="card-body">
-            <h4 class="card-title">About {{ user.display_name }}</h4>
-            <p class="card-text">[{{ user.display_name }}'s Blurb Goes Here]</p>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title" style="font-size:24px">{{ user.display_name }}'s Stories</h4>
-        </div>
-        <div class="card-footer">
-
-        </div>
-    </div>
 </div>
 
 </body>

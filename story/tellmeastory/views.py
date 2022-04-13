@@ -162,6 +162,20 @@ def map(req: HttpRequest) -> HttpResponse:
         "map_data": CONVERT_JSON,
     })
 
-def profile(req: HttpRequest) -> HttpResponse:
-    return render(req, "tellmeastory/profile.html", {
+def profile(req: HttpRequest, username:str) -> HttpResponse:
+
+    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+    user: User = None
+
+    try:
+        user = User.objects.get(username=username)
+
+    except User.DoesNotExist:
+        return render(req , "tellmeastory/profileNotFound.html" , {
+            "logged_in_username": logged_user ,
+        })
+
+    return render(req , "tellmeastory/profile.html" , {
+        "user": user ,
+        "logged_in_username": logged_user ,
     })
