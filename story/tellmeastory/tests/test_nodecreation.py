@@ -25,9 +25,12 @@ class NodeCreationViewTests(TestCase):
         res: HttpResponse = self.client.get("/story/create-node/")
         self.assertEqual(res.status_code, 200)
         self.assertNotContains(res, "Invalid title.")
-        self.assertNotContains(res, "must be less than 10,000")
-        self.assertNotContains(res, "Submit Story")
-        self.assertContains(res, "Log in here.")
+        self.assertNotContains(res,
+            "The content must be less than 10,000 characters!",
+        html=True)
+        self.assertNotContains(res, "Submit Story", html=True)
+        self.assertContains(res, "Log in here.", html=True)
+        self.assertNotContains(res, "could not find your", html=True)
 
         return
 
@@ -40,10 +43,30 @@ class NodeCreationViewTests(TestCase):
 
         res: HttpResponse = self.client.get("/story/create-node/")
         self.assertEqual(res.status_code, 200)
-        self.assertNotContains(res, "Invalid title.")
-        self.assertNotContains(res, "must be less than 10,000")
-        self.assertContains(res, "Submit Story")
-        self.assertNotContains(res, "Log in here.")
+        self.assertNotContains(res, "Invalid title.", html=True)
+        self.assertNotContains(res,
+            "The content must be less than 10,000 characters!",
+        html=True)
+        self.assertNotContains(res, "Submit Story", html=True)
+        self.assertNotContains(res, "Log in here.", html=True)
+        self.assertNotContains(res, "We could not find your account...", html=True)
+
+        return
+
+    def test_node_creation_false_cookie(self) -> None:
+        """
+        If the user has a cookie but the username is invalid, the response
+        should contain a login redirect.
+        """
+        self.client.cookies[COOKIE_NAME] = "wawawawawaw"
+
+        res: HttpResponse = self.client.get("/story/create-node/")
+        self.assertEqual(res.status_code, 200)
+        self.assertNotContains(res, "Invalid title.", html=True)
+        self.assertNotContains(res,
+            "The content must be less than 10,000 characters!",
+        html=True)
+        self.assertContains(res, "Log in here.", html=True)
 
         return
 
@@ -54,33 +77,37 @@ class NodeCreationViewTests(TestCase):
         """
         self.client.cookies[COOKIE_NAME] = USERNAME
 
+        self.client.get("/story/create-node/")
         res: HttpResponse = self.client.post("/story/create-node/", data={
-            "node_title": "j",
+            "node_title": "yoo",
             "node_content": "hi"
         })
 
         self.assertEqual(res.status_code, 200)
-        self.assertContains(res, "Invalid title.")
-        self.assertNotContains(res, "must be less than 10,000")
+        self.assertContains(res, "Invalid title.", html=True)
+        self.assertNotContains(res,
+            "The content must be less than 10,000 characters!",
+        html=True)
 
         return
 
     def test_node_creation_bad_content(self) -> None:
         """
         An extension of the is_valid_content() Node model test.
-        If the content entered is invalid, the response should contain the following:
-        "The content must be less than 10,000 characters!"
+        If the content entered is invalid, the response should not redirect.
         """
         self.client.cookies[COOKIE_NAME] = USERNAME
+        long_content: str = "y" * 100000
 
+        self.client.get("/story/create-node/")
         res: HttpResponse = self.client.post("/story/create-node/", data={
             "node_title": "Hello there bucko",
-            "node_content": "yo" * 10000
+            "node_content": long_content
         })
 
         self.assertEqual(res.status_code, 200)
-        self.assertNotContains(res, "Invalid title.")
-        self.assertContains(res, "must be less than 10,000")
+        self.assertNotContains(res, "Invalid title.", html=True)
+        self.assertIn("it has 100000", str(res.content))
 
         return
 

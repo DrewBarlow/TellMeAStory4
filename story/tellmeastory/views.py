@@ -151,21 +151,6 @@ def register(req: HttpRequest) -> HttpResponse:
 # I am not dealing with how location is parsed, so I'll make "location" a string for now.
 # ^ removed the above for now
 def create_node(req: HttpRequest) -> HttpResponse:
-    """
-    HOW ARE WE GOING TO GET THE LOCATION
-    check cookie
-        if the user is logged in:
-            logged_in = true
-            form = req.post
-            if form is valid
-                get the data, query for the user, generate the node
-                if title is not valid, err_message = "something about title"
-                if content is not valid, err_message = "something about content"
-                if good stuff:
-                    make node & insert
-
-    render make_node, pass logged_in and form
-    """
     form: NodeCreationForm = None
     logged_in: bool = False
     err_message: str = None
@@ -174,44 +159,40 @@ def create_node(req: HttpRequest) -> HttpResponse:
     # grab the stored username, then follow the generic steps
     alleged_username: str = req.COOKIES.get(COOKIE_NAME)
     if alleged_username:
-        logged_in = True
+        user: User = None
+        try:
+            user = User.objects.get(username=alleged_username)
+            logged_in = True
+        except User.DoesNotExist:
+            err_message = "We could not find your account..."
 
         if req.method == "POST":
             form: NodeCreationForm = NodeCreationForm(req.POST)
 
             if form.is_valid():
-                user: User = None
-                try:
-                    user = User.objects.get(username=alleged_username)
-                except User.DoesNotExist:
-                    err_message = "We could not find your account..."
+                # gather all of the form data and make the node
+                node_args: Dict[str, Any] = {
+                    "image": None,
+                    "node_title": form["node_title"].value().strip(),
+                    "node_content": form["node_content"].value().strip(),
+                    #"longitude": 0,
+                    #"latitude": 0,
+                    "node_author": user
+                }
 
-                if not err_message:
-                    # gather all of the form data and make the node
+                new_node: Node = Node(**node_args)
+                # validate the new node
+                # TODO: make these more informative?
+                if not new_node.is_valid_title():
+                    err_message = "Invalid title."
+                elif not new_node.is_valid_content():
+                    err_message = "The content must be less than 10,000 characters!"
+                else:
+                    new_node.save()
 
-                    node_args: Dict[str, Any] = {
-                        "image": None,
-                        "node_title": form["node_title"].value(),
-                        "node_content": form["node_content"].value(),
-                        "longitude": 0,
-                        "latitude": 0,
-                        "node_author": user
-                    }
-
-                    new_node: Node = Node(**node_args)
-
-                    # validate the new node
-                    # TODO: make these more informative?
-                    if not new_node.is_valid_title():
-                        err_message = "Invalid title."
-                    if not new_node.is_valid_content():
-                        err_message = "The content must be less than 10,000 characters!"
-                    else:
-                        new_node.save()
-
-                        # this should redirect to VIEWING the node
-                        # for now, I'll just go to the index
-                        return HttpResponseRedirect("/story/")
+                    # this should redirect to VIEWING the node
+                    # for now, I'll just go to the index
+                    return HttpResponseRedirect("/story/")
         else:
             form = NodeCreationForm()
 
