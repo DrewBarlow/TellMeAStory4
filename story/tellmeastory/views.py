@@ -3,8 +3,9 @@ import json
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
-from .forms import LoginForm, NameChangeForm, RegisterForm, AddImageForm
-from .models import User, Node
+from typing import Any, Dict
+from .forms import LoginForm, NameChangeForm, AddImageForm, NodeCreationForm, RegisterForm
+from .models import Node, User
 from .constants import *
 
 API_TOKEN = APIKEY
@@ -141,6 +142,66 @@ def register(req: HttpRequest) -> HttpResponse:
         "form": form,
         "error_message": err_msg
     })
+
+# may need location data as args, not sure
+def create_node(req: HttpRequest) -> HttpResponse:
+    form: NodeCreationForm = None
+    logged_in: bool = False
+    err_message: str = None
+
+    # the cookie stores the username.
+    # grab the stored username, then follow the generic steps
+    alleged_username: str = req.COOKIES.get(COOKIE_NAME)
+    if alleged_username:
+        user: User = None
+        try:
+            user = User.objects.get(username=alleged_username)
+            logged_in = True
+        except User.DoesNotExist:
+            err_message = "We could not find your account..."
+
+        if req.method == "POST":
+            form: NodeCreationForm = NodeCreationForm(req.POST)
+
+            if form.is_valid():
+                # gather all of the form data and make the node
+                # ISSUE: I have no idea why, but I get kwarg issues
+                #   on longitude and latitude...
+                node_args: Dict[str, Any] = {
+                    "image": None,
+                    "node_title": form["node_title"].value().strip(),
+                    "node_content": form["node_content"].value().strip(),
+                    #"longitude": 0,
+                    #"latitude": 0,
+                    "node_author": user
+                }
+
+                new_node: Node = Node(**node_args)
+                # validate the new node
+                # TODO: make these more informative?
+                if not new_node.is_valid_title():
+                    err_message = "Invalid title."
+                elif not new_node.is_valid_content():
+                    err_message = "The content must be less than 10,000 characters!"
+                else:
+                    new_node.save()
+
+                    # this should redirect to VIEWING the node
+                    # for now, I'll just go to the index
+                    return HttpResponseRedirect("/story/")
+        else:
+            form = NodeCreationForm()
+
+    return render(req, "tellmeastory/make_node.html", {
+        "form": form,
+        "logged_in": logged_in,
+        "error_message": err_message
+    })
+
+# need some node id
+"""def view_node(req: HttpRequest, node_id: int) -> HttpResponse:
+    # get id or 404, display node
+    return"""
 
 def map(req: HttpRequest) -> HttpResponse:
 
