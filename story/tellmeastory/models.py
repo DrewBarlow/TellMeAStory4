@@ -7,7 +7,7 @@ class User(models.Model):
     username = models.CharField(max_length=200)
     password = models.CharField(max_length=512)
     display_name = models.CharField(max_length=200)
-
+    admin = models.BooleanField(default=False)
 
     def __str__(self):
         return self.username
@@ -84,7 +84,7 @@ class Report(models.Model):
     #the reason the user was reported (text field)
     report_reason = models.CharField(max_length=600)
 
-
+    report_id = models.CharField(max_length=100, default="")
 
     def __str__(self):
         return self.report_reason

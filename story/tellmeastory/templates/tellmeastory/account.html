@@ -19,6 +19,7 @@
     <!--deletes the entry from the database on click-->
     </strong><a href="{% url 'tellmeastory:viewPosts' %}">View All Posts!</a></strong><br><br>
 
+    <strong><p>Your Posts!</p></strong>
     {% for post in user_posts %}
     <br>
      <strong> Post ID: {{post.post_id}}</strong>
