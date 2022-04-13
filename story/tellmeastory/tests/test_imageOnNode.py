@@ -68,3 +68,43 @@ class NodeImageTests(TestCase):
         # Swap to file from URL
         self.assertIs(Node.objects.get(id=node.id).add_image(newFile=test_image_file), True)
         return
+
+    def test_add_image_view(self):
+        '''
+        Test for proper responses from submitting multiple possible forms
+        to the add image to a node view.
+        '''
+        # Test image file
+        test_image_path = "media/storyimages/test_image.jpeg"
+        test_image_file = SimpleUploadedFile(name='test_image.jpeg',
+                                             content=open(test_image_path, 'rb').read(),
+                                             content_type='image/jpeg')
+        # Test image url
+        test_image_url = "https://www.google.com/"
+        all_nodes = Node.objects.filter()
+        err_msg = "N/A"
+        # Create test node
+        node: Node = Node(node_title="Test5")
+        node.save()
+        # Process basic request for url
+        self.client.get("/story/addnodeimage/")  # Process basic request for prompts
+        res: HttpResponse = self.client.post("/story/addnodeimage/", data={
+            "form": AddImageForm,
+            "err_msg": err_msg,
+            "image_url": test_image_url,
+            "id": node.id,
+            "nodes": all_nodes
+        })
+        self.assertEqual(res.status_code, 200)
+        # Process basic request for image
+        self.client.get("/story/addnodeimage/")  # Process basic request for prompts
+        res: HttpResponse = self.client.post("/story/addnodeimage/", data={
+            "form": AddImageForm,
+            "err_msg": err_msg,
+            "image_file": test_image_file,
+            "image_url": "",
+            "id": node.id,
+            "nodes": all_nodes
+        })
+        self.assertEqual(res.status_code, 200)
+        return
