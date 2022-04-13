@@ -22,7 +22,7 @@ class NodeCreationViewTests(TestCase):
         The base creation page should not have a form present.
         Furthermore, it should have a redirect to the login page.
         """
-        res: HttpResponse = self.client.get("/story/create-node/")
+        res: HttpResponse = self.client.get("/story/create-story/")
         self.assertEqual(res.status_code, 200)
         self.assertNotContains(res, "Invalid title.")
         self.assertNotContains(res,
@@ -41,7 +41,7 @@ class NodeCreationViewTests(TestCase):
         """
         self.client.cookies[COOKIE_NAME] = USERNAME
 
-        res: HttpResponse = self.client.get("/story/create-node/")
+        res: HttpResponse = self.client.get("/story/create-story/")
         self.assertEqual(res.status_code, 200)
         self.assertNotContains(res, "Invalid title.", html=True)
         self.assertNotContains(res,
@@ -60,7 +60,7 @@ class NodeCreationViewTests(TestCase):
         """
         self.client.cookies[COOKIE_NAME] = "wawawawawaw"
 
-        res: HttpResponse = self.client.get("/story/create-node/")
+        res: HttpResponse = self.client.get("/story/create-story/")
         self.assertEqual(res.status_code, 200)
         self.assertNotContains(res, "Invalid title.", html=True)
         self.assertNotContains(res,
@@ -77,8 +77,8 @@ class NodeCreationViewTests(TestCase):
         """
         self.client.cookies[COOKIE_NAME] = USERNAME
 
-        self.client.get("/story/create-node/")
-        res: HttpResponse = self.client.post("/story/create-node/", data={
+        self.client.get("/story/create-story/")
+        res: HttpResponse = self.client.post("/story/create-story/", data={
             "node_title": "yoo",
             "node_content": "hi"
         })
@@ -99,8 +99,8 @@ class NodeCreationViewTests(TestCase):
         self.client.cookies[COOKIE_NAME] = USERNAME
         long_content: str = "y" * 100000
 
-        self.client.get("/story/create-node/")
-        res: HttpResponse = self.client.post("/story/create-node/", data={
+        self.client.get("/story/create-story/")
+        res: HttpResponse = self.client.post("/story/create-story/", data={
             "node_title": "Hello there bucko",
             "node_content": long_content
         })
@@ -118,7 +118,7 @@ class NodeCreationViewTests(TestCase):
         """
         self.client.cookies[COOKIE_NAME] = USERNAME
 
-        res: HttpResponse = self.client.post("/story/create-node/", data={
+        res: HttpResponse = self.client.post("/story/create-story/", data={
             "node_title": "hows it going",
             "node_content": "klsjhgkjdshgkjhshk"
         })

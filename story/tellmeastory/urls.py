@@ -10,5 +10,5 @@ urlpatterns = [
     path("register/", views.register, name="register"),
     path("map/" , views.map , name="map") ,
     path("addtags/", include("managetags.urls")),
-    path("create-node/", views.create_node, name="create_node")
+    path("create-story/", views.create_node, name="create_story")
 ]
