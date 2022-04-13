@@ -3,3 +3,4 @@ gunicorn
 django-heroku
 pyenchant
 Pillow
+validators
