@@ -6,7 +6,7 @@ class User(Model):
     username: CharField = CharField(max_length=200)
     password: CharField = CharField(max_length=512)
     display_name: CharField = CharField(max_length=200)
-
+    user_blurb: CharField = CharField(max_length=1000, default="")
     def __str__(self):
         return self.username
 
