@@ -1,4 +1,5 @@
-from django.db.models import CharField, Model
+from django.db.models import ImageField, CharField, FloatField, ForeignKey, Model
+from django.db.models import CASCADE
 from re import fullmatch, Match
 
 # Create your models here.
@@ -47,3 +48,35 @@ class User(Model):
         Returns True if self.display_name has a length of >= 5 and <= 20.
         """
         return 5 <= len(self.display_name) <= 20
+
+class Node(Model):
+    """ Story Node class. Holds a story's contents to present
+    to users that select the respective story node. """
+    image: ImageField = ImageField(upload_to="storyimages")
+    node_title: CharField = CharField(max_length=200)
+    node_content: CharField = CharField(max_length=10_000)
+    longitude: float = 0
+    latitude: float = 0
+    node_author: ForeignKey = ForeignKey(User, on_delete=CASCADE)
+
+    def __str__(self):
+        """ Returns current Title for A Story Node. """
+        return self.node_title
+
+    def add_image(self):
+        """ Allows for image to be attached to a Story Node. """
+        return True
+
+    def is_valid_title(self) -> bool:
+        """
+        The title should be at least 5 characters and no more than 200.
+        """
+        sanitized: str = self.node_title.strip()
+        return 5 <= len(sanitized) <= 200
+
+    def is_valid_content(self) -> bool:
+        """
+        The content should be no more than 10,000 chars long.
+        """
+        sanitized: str = self.node_content.strip()
+        return len(sanitized) <= 10_000
