@@ -16,9 +16,11 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('image', models.ImageField(upload_to='storyimages')),
+                ('image_url', models.TextField()),
                 ('node_title', models.CharField(max_length=200)),
                 ('node_content', models.CharField(max_length=10000)),
                 ('node_author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tellmeastory.user')),
+                ('has_image_file', models.BooleanField()),
             ],
         ),
     ]
