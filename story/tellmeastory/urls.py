@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path, include
 from . import views
 
@@ -10,5 +12,6 @@ urlpatterns = [
     path("register/", views.register, name="register"),
     path("map/" , views.map , name="map") ,
     path("addtags/", include("managetags.urls")),
+    path("addnodeimage/", views.add_image, name="add_node_image"),
     path("create-story/", views.create_node, name="create_story")
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
