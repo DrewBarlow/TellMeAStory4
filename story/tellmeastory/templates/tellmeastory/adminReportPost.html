@@ -1,0 +1,26 @@
+{% block content %}
+
+<h1>Reported Post: {{report.report_id}}</h1>
+
+<center>
+
+<p>Reporting ID: {{report.reporting_username}}</p>
+<p>Reported ID: {{report.reported_id}}</p>
+<p>Reason: {{report.reason}}</p>
+
+<select option="cars" id="option">
+    <option value="Ban">Ban</option>
+    <option value="Delete">Delete</option>
+</select>
+
+<form action ="" method=POST>
+
+
+</form>
+
+
+</center>
+
+
+{% endblock %}
+

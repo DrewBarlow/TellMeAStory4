@@ -1,5 +1,5 @@
 import json
-
+import uuid
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
@@ -7,6 +7,7 @@ from .forms import LoginForm, NameChangeForm, RegisterForm, PostForm, ReportForm
 from .models import User, Post, Report
 from .constants import *
 from django.shortcuts import render,redirect
+from django.core.exceptions import PermissionDenied
 
 API_TOKEN = APIKEY
 COOKIE_NAME: str = "StoryUserLoggedIn"
@@ -190,7 +191,7 @@ def editPost(req: HttpRequest, post_id)-> HttpResponse:
         return redirect("/account/{0}/".format(get_user))
 
     #form is a form specified by forms.py, post becomes the Post object specified by the post_id
-    return render(req, 'tellmeastory/updatePost.html',
+    return render(req, 'tellmeastory/editPost.html',
                   {'form':form,'post':post})
 
 
@@ -219,7 +220,19 @@ def reportPost(req: HttpRequest, post_id) -> HttpResponse:
     getUser = User.objects.get(username = currentUser)
     # if the fields are valid, save and redirect
     if form.is_valid():
-        new_report = Report(reporting_username = getUser,reported_id = str(post.post_id),report_reason = form.cleaned_data.get('report_reason'))
+
+        #get a report id
+        taken_id = True
+
+        getId = None
+        while (taken_id == True):
+            getId = str(uuid.uuid4())
+            try:
+                Report.objects.get(report_id=getId)
+            except Report.DoesNotExist:
+                taken_id = False
+
+        new_report = Report(reporting_username = getUser,reported_id = str(post.username),report_reason = form.cleaned_data.get('report_reason'), report_id = getId)
         Report.save(new_report)
         return redirect("/allPosts")
 
@@ -230,3 +243,52 @@ def reportPost(req: HttpRequest, post_id) -> HttpResponse:
                    'username': str(post.username)
 
                    })
+
+#Admin view for viewing reports
+def adminReportPage(req: HttpRequest)-> HttpResponse:
+
+    #get the username
+    username = req.COOKIES.get(COOKIE_NAME)
+
+    #posts are all the posts in the database
+    reports = Report.objects.all()
+
+    #get the current user to check privileges
+    user = User.objects.get(username=username)
+
+    #if the user is not an admin
+    if (user.admin == False):
+        raise PermissionDenied
+    else:
+        # pass all the objects to the html page
+        return render(req, 'tellmeastory/adminReportPage.html',
+                      {
+                          'reports': reports,
+
+                      })
+
+
+def adminReportPost(req: HttpRequest, report_id) -> HttpResponse:
+
+    # get the username
+    username = req.COOKIES.get(COOKIE_NAME)
+
+    # get the current user to check privileges
+    user = User.objects.get(username=username)
+
+
+    report = Report.objects.get(report_id=report_id)
+
+
+    #if the user is not an admin
+    if (user.admin == False):
+        raise PermissionDenied
+    else:
+        # pass all the objects to the html page
+        return render(req, 'tellmeastory/adminReportPost.html',
+                      {
+                          'report': report,
+
+                      })
+
+
