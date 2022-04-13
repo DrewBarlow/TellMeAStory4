@@ -2,7 +2,7 @@
 
 {% if logged_in %}
     <!-- show the form and get all of the needed stuff -->
-    <form action="/story/create-node/" method="post">
+    <form action="/story/create-story/" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Submit Story">

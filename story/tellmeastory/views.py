@@ -143,13 +143,7 @@ def register(req: HttpRequest) -> HttpResponse:
         "error_message": err_msg
     })
 
-# to create a story, we need:
-#  - a title
-#  - some content
-#  - some location
-#  - the author
-# I am not dealing with how location is parsed, so I'll make "location" a string for now.
-# ^ removed the above for now
+# may need location data as args, not sure
 def create_node(req: HttpRequest) -> HttpResponse:
     form: NodeCreationForm = None
     logged_in: bool = False
@@ -171,6 +165,8 @@ def create_node(req: HttpRequest) -> HttpResponse:
 
             if form.is_valid():
                 # gather all of the form data and make the node
+                # ISSUE: I have no idea why, but I get kwarg issues
+                #   on longitude and latitude...
                 node_args: Dict[str, Any] = {
                     "image": None,
                     "node_title": form["node_title"].value().strip(),
