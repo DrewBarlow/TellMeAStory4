@@ -3,8 +3,8 @@ import json
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
-from .forms import LoginForm, NameChangeForm, RegisterForm
-from .models import User
+from .forms import LoginForm, NameChangeForm, RegisterForm, AddImageForm
+from .models import User, Node
 from .constants import *
 
 API_TOKEN = APIKEY
@@ -161,3 +161,72 @@ def map(req: HttpRequest) -> HttpResponse:
         "mapbox_token": API_TOKEN,
         "map_data": CONVERT_JSON,
     })
+
+# Takes an existing node to add an image onto it
+def add_image(req: HttpRequest) -> HttpResponse:
+    err_msg: str = "Please enter only one image field and an id from an existing Node."
+    all_nodes = Node.objects.filter()
+    # Verify a valid POST request
+    if req.method == "POST":
+        form = AddImageForm(req.POST)
+        if form.is_valid():
+            # Check if Node object is given, otherwise prompt
+            # with undefined node error.
+            # TODO: Redirect to view all Nodes page
+            #  once Node page is created for an account.
+            node: Node = form["node_id"].value()
+            node = Node.objects.get(id=node)
+            if node is None:
+                err_msg = "Undefined Node. Image cannot be attached to this node. Please try another node."
+            # Otherwise, try to attach new image given
+            else:
+                image_file = form["image_file"].value()
+                image_url: str = form["image_url"].value()
+                print(image_file)
+                # Null url if blank
+                if image_url == "":
+                    image_url = None
+                # If Node receives an image from an image file
+                if image_file is not None and image_url is None:
+                    # Only save if new image is valid
+                    if node.add_image(newFile=image_file):
+                        node.save()
+                        err_msg = "Thank you! Your node has been updated for Node id: " + str(node.id)
+                    else:
+                        err_msg = "Undefined Image. Please try again."
+                # If Node receives an image from an url
+                elif image_url is not None and image_file is None:
+                    # Only save if new image is valid
+                    if node.add_image(newURL=image_url):
+                        node.save()
+                        err_msg = "Thank you! Your node has been updated for Node id: " + str(node.id)
+                    else:
+                        err_msg = "Invalid Image URL. Please try again."
+                # If Node receives no image or two images (retains features)
+                elif image_url is not None and image_file is not None:
+                    err_msg = "Try again. Please enter only one one field."
+                # If no images are given (retains features)
+                else:
+                    err_msg = "Try again. No image given."
+        # Reprompt for another change with applied new changes
+        # Provide an error message if relevant. Otherwise,
+        # provide a success message.
+        return render(req, "tellmeastory/addnodeimage.html", {
+            "form": form,
+            "err_msg": err_msg,
+            "image_file": None,
+            "image_url": None,
+            "id": None,
+            "nodes": all_nodes
+        })
+    # Otherwise, prompt for image source info to add to node
+    else:
+        return render(req, "tellmeastory/addnodeimage.html", {
+                    "form": AddImageForm,
+                    "err_msg": err_msg,
+                    "image_file": None,
+                    "image_url": None,
+                    "id": None,
+                    "nodes": all_nodes
+                })
+

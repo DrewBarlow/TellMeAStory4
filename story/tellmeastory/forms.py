@@ -1,4 +1,4 @@
-from django.forms import IntegerField, CharField, FileField, Form
+from django.forms import IntegerField, CharField, ImageField, Form
 from .models import Node, User
 
 class LoginForm(Form):
@@ -23,6 +23,6 @@ class NodeCreationForm(Form):
 
 class AddImageForm(Form):
     # If no image is given, then no image is added.
-    image_file: FileField = FileField(max_length=200, required=False)
+    image_file: ImageField = ImageField(required=False)
     image_url: CharField = CharField(max_length=200, required=False)
     node_id: IntegerField = IntegerField(required=True)
