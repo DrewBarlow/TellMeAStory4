@@ -180,9 +180,15 @@ def add_image(req: HttpRequest) -> HttpResponse:
                 err_msg = "Undefined Node. Image cannot be attached to this node. Please try another node."
             # Otherwise, try to attach new image given
             else:
-                image_file = req.FILES["image_file"]
+                # Null image if empty
+                try:
+                    image_file = req.FILES.get('image_file', None)
+                except:
+                    # Image_file should be none if no files given.
+                    # Failsafe if get throws an exception instead
+                    # of setting image_file to None for no files.
+                    image_file = None
                 image_url: str = form["image_url"].value()
-                print(image_file)
                 # Null url if blank
                 if image_url == "":
                     image_url = None

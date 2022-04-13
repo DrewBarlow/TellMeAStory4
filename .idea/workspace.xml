@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="Added AddTags link button to account page">
+    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="Update add Node image html to accept image files">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/story/tellmeastory/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -12,11 +10,14 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -50,9 +51,13 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/story/media" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.django.DjangoModulesConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/story/media" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
     </key>
@@ -73,55 +78,8 @@
       <workItem from="1648481264765" duration="139000" />
       <workItem from="1648492943374" duration="269000" />
       <workItem from="1648598423522" duration="35030000" />
-    </task>
-    <task id="LOCAL-00001" summary="made requirements document">
-      <created>1648431775201</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1648431775201</updated>
-    </task>
-    <task id="LOCAL-00002" summary="added Django version 4.0.3 to requirements">
-      <created>1648432939565</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1648432939565</updated>
-    </task>
-    <task id="LOCAL-00003" summary="updated index page to direct to story/">
-      <created>1648436797073</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1648436797073</updated>
-    </task>
-    <task id="LOCAL-00004" summary="added ProcFile for heroku">
-      <created>1648438348120</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1648438348120</updated>
-    </task>
-    <task id="LOCAL-00005" summary="updated requirements for heroku">
-      <created>1648438455917</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1648438455917</updated>
-    </task>
-    <task id="LOCAL-00006" summary="updated story settings.py for heroku URL">
-      <created>1648438638528</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1648438638528</updated>
-    </task>
-    <task id="LOCAL-00007" summary="updated landing page to temporary index page">
-      <created>1648438759345</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1648438759345</updated>
+      <workItem from="1649785611902" duration="13679000" />
+      <workItem from="1649813969817" duration="21239000" />
     </task>
     <task id="LOCAL-00008" summary="Heroku Settings">
       <created>1648481351429</created>
@@ -375,7 +333,98 @@
       <option name="project" value="LOCAL" />
       <updated>1649728537131</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="Accept Node model changes and Node form from story-creation branch">
+      <created>1649728896890</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1649728896890</updated>
+    </task>
+    <task id="LOCAL-00045" summary="Register Nodes for admin page creation">
+      <created>1649811194395</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1649811194395</updated>
+    </task>
+    <task id="LOCAL-00046" summary="Create form for adding an image to an existing node">
+      <created>1649811393604</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1649811393604</updated>
+    </task>
+    <task id="LOCAL-00047" summary="Updated requirements with Pillow for ImageFields">
+      <created>1649812084687</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1649812084687</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Add path to add image and create media files' location">
+      <created>1649816537870</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1649816537872</updated>
+    </task>
+    <task id="LOCAL-00049" summary="Added outline for Node tests">
+      <created>1649872418749</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1649872418749</updated>
+    </task>
+    <task id="LOCAL-00050" summary="Finalize add image tests">
+      <created>1649874330371</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1649874330371</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Add button to send user from account page to add node image page">
+      <created>1649874376326</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1649874376326</updated>
+    </task>
+    <task id="LOCAL-00052" summary="Update add node image html page">
+      <created>1649874976516</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1649874976516</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Add validators to requirements for validating urls">
+      <created>1649874997999</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1649874997999</updated>
+    </task>
+    <task id="LOCAL-00054" summary="Add test image for running tests">
+      <created>1649875020472</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1649875020472</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Add Node model add image functions and add image view">
+      <created>1649879375386</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1649879375386</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Update add Node image html to accept image files">
+      <created>1649880427974</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1649880427975</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -405,19 +454,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added valid Tag rejection tests" />
-    <MESSAGE value="Added tellmeastory and managetags to INSTALLED_APPS" />
-    <MESSAGE value="Update first valid test set" />
-    <MESSAGE value="Wrote is_valid_name for Tag model" />
-    <MESSAGE value="Wrote insertion/rejection functions for Tag model" />
-    <MESSAGE value="Update Tag tests to check add_tag_to_node's returned dict" />
-    <MESSAGE value="Update Tag tests to check for valid language" />
-    <MESSAGE value="Wrote is_tag_name_in_dictionary Tag function" />
-    <MESSAGE value="Fixed missing tag insertions in tests" />
-    <MESSAGE value="Added exceptions for insertion of Tags" />
-    <MESSAGE value="Added migrations for Tag" />
-    <MESSAGE value="Added addtags url to tellmeastory urls" />
-    <MESSAGE value="Added url and view for creating tags" />
     <MESSAGE value="Put tellmeastory tests back" />
     <MESSAGE value="Added create a tag html form" />
     <MESSAGE value="Update create a tag html form" />
@@ -430,6 +466,19 @@
     <MESSAGE value="Updated launch page to registration page" />
     <MESSAGE value="Added AddTags link button to account page" />
     <MESSAGE value="Prepared tests to reference blank functions in Node model" />
-    <option name="LAST_COMMIT_MESSAGE" value="Prepared tests to reference blank functions in Node model" />
+    <MESSAGE value="Accept Node model changes and Node form from story-creation branch" />
+    <MESSAGE value="Register Nodes for admin page creation" />
+    <MESSAGE value="Create form for adding an image to an existing node" />
+    <MESSAGE value="Updated requirements with Pillow for ImageFields" />
+    <MESSAGE value="Add path to add image and create media files' location" />
+    <MESSAGE value="Added outline for Node tests" />
+    <MESSAGE value="Finalize add image tests" />
+    <MESSAGE value="Add button to send user from account page to add node image page" />
+    <MESSAGE value="Update add node image html page" />
+    <MESSAGE value="Add validators to requirements for validating urls" />
+    <MESSAGE value="Add test image for running tests" />
+    <MESSAGE value="Add Node model add image functions and add image view" />
+    <MESSAGE value="Update add Node image html to accept image files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update add Node image html to accept image files" />
   </component>
 </project>
