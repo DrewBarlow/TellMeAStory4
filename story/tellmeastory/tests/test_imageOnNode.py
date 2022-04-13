@@ -33,14 +33,15 @@ class NodeImageTests(TestCase):
         url.
         """
         # Add an image from a valid URL
-        test_image_url = "https://img.sunset02.com/sites/default/files/styles/marquee_large_2x/public/image/2016/07/main/western-palm-trees-mexican-fan-palms-elysian-park-0214.jpg"
+        test_image_url = "https://www.google.com/"
         node: Node = Node(node_title="Test2")
         node.save()
         self.assertIs(Node.objects.get(id=node.id).add_image(newURL=test_image_url), True)
         # Add an image from an invalid URL
         test_image_url = "invalidlink_testing"
         node: Node = Node(node_title="Test3")
-        node.add_image(newURL=test_image_url)
+        node.save()
+        self.assertIs(Node.objects.get(id=node.id).add_image(newURL=test_image_url), False)
         return
 
     def test_change_image(self):
@@ -48,13 +49,22 @@ class NodeImageTests(TestCase):
         Swap between URL and file images. Should not cause
         errors and properties must be updated.
         """
-        test_image_file ="media/storyimages/test_image.jpeg"
-        test_image_url = "https://img.sunset02.com/sites/default/files/styles/marquee_large_2x/public/image/2016/07/main/western-palm-trees-mexican-fan-palms-elysian-park-0214.jpg"
+        # Test image file
+        test_image_path = "media/storyimages/test_image.jpeg"
+        test_image_file = SimpleUploadedFile(name='test_image.jpeg',
+                                             content=open(test_image_path, 'rb').read(),
+                                             content_type='image/jpeg')
+        # Test image url
+        test_image_url = "https://www.google.com/"
+
+        # Create test node
         node: Node = Node(node_title="Test4")
-        # Intialize with a valid file
-        node.add_image(newFile=test_image_file)
+        node.save()
+
+        # Swap to image from no image (initialize
+        self.assertIs(Node.objects.get(id=node.id).add_image(newFile=test_image_file), True)
         # Swap to URL from file
-        node.add_image(newURL=test_image_url)
+        self.assertIs(Node.objects.get(id=node.id).add_image(newURL=test_image_url), True)
         # Swap to file from URL
-        node.add_image(newFile=test_image_file)
+        self.assertIs(Node.objects.get(id=node.id).add_image(newFile=test_image_file), True)
         return
