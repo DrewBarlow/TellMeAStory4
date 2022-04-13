@@ -62,7 +62,7 @@ class Node(Model):
     has_image_file: BooleanField = BooleanField(default=False)
     longitude: float = 0
     latitude: float = 0
-    node_author: ForeignKey = ForeignKey(User, on_delete=CASCADE)
+    node_author: ForeignKey = ForeignKey(User, on_delete=CASCADE, null=True)
 
     def __str__(self):
         """
