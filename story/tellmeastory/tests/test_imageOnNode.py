@@ -107,4 +107,15 @@ class NodeImageTests(TestCase):
             "nodes": all_nodes
         })
         self.assertEqual(res.status_code, 200)
+        # Process basic request with invalid node
+        self.client.get("/story/addnodeimage/")  # Process basic request for prompts
+        res: HttpResponse = self.client.post("/story/addnodeimage/", data={
+            "form": AddImageForm,
+            "err_msg": err_msg,
+            "image_file": test_image_file,
+            "image_url": "",
+            "id": 0,
+            "nodes": all_nodes
+        })
+        self.assertEqual(res.status_code, 200)
         return
