@@ -1,5 +1,5 @@
-from django.db.models import ManyToManyField, BooleanField, ImageField, TextField, CharField, FloatField, ForeignKey, Model
-from django.db.models import CASCADE
+from django.db import models
+from django.db.models import ManyToManyField, BooleanField, ImageField, TextField, CharField, FloatField, ForeignKey, Model, CASCADE
 from django.urls import resolve, Resolver404
 from re import fullmatch, Match
 from validators import url
@@ -55,6 +55,12 @@ class User(Model):
         """
         return 5 <= len(self.display_name) <= 20
 
+    def is_mature(self) -> bool:
+        """
+        Returns True if self.mature is True.
+        """
+        return self.is_mature
+
 class Post(models.Model):
 
     #hold user's id
@@ -74,16 +80,12 @@ class Post(models.Model):
 
     def __str__(self):
         return "%s " % self.username
-    def is_mature(self) -> bool:
-        """
-        Returns True if self.mature is True.
-        """
-        return self.is_mature
 
 class Node(Model):
     """ Story Node class. Holds a story's contents to present
     to users that select the respective story node. """
-    image: ImageField = ImageField(upload_to="storyimages", default=None)  # File for an image if a file is given by user
+    image: ImageField = ImageField(upload_to="storyimages" ,
+                                   default=None)  # File for an image if a file is given by user
     image_url: TextField = TextField()  # URL to source an image from if URL is given by user
     node_title: CharField = CharField(max_length=200)  # Title of the story stored in the Node
     node_content: CharField = CharField(max_length=10_000)  # Story content (text) of node
@@ -92,7 +94,7 @@ class Node(Model):
     # Node coordinates on map
     longitude: float = 0
     latitude: float = 0
-    node_author: ForeignKey = ForeignKey(User, on_delete=CASCADE, null=True)  # Account/user who created the Node
+    node_author: ForeignKey = ForeignKey(User , on_delete=CASCADE , null=True)  # Account/user who created the Node
     main_tag_id: int = 0  # Primary story content Tag's id. One main Tag can relate to many story Nodes.
     other_tags: ManyToManyField = ManyToManyField(Tag)  # A Node can have many tags for further filtering
 
@@ -116,7 +118,7 @@ class Node(Model):
         sanitized: str = self.node_content.strip()
         return len(sanitized) <= 10_000
 
-    def add_image(self, newFile=None, newURL=None) -> bool:
+    def add_image(self , newFile=None , newURL=None) -> bool:
         """
         Allows for image to be attached to a Story Node.
         """
@@ -134,7 +136,7 @@ class Node(Model):
         else:
             return False
 
-    def add_image_from_file(self, file) -> bool:
+    def add_image_from_file(self , file) -> bool:
         """
         Allows for image url to be attached to a Story Node.
         Returns True if attached, otherwise false.
@@ -152,7 +154,7 @@ class Node(Model):
             # Change nothing
             return False
 
-    def add_image_from_url(self, URL) -> bool:
+    def add_image_from_url(self , URL) -> bool:
         """
         Allows for image url to be linked to a node.
         Returns True if downloaded and attached, otherwise false.
@@ -174,7 +176,7 @@ class Node(Model):
             # Change nothing
             return False
 
-    def attach_main_tag(self, properties: dict) -> bool:
+    def attach_main_tag(self , properties: dict) -> bool:
         '''
         The Node (self) is given a Foreign key to
         its main Tag. The id and properties of the
@@ -192,7 +194,7 @@ class Node(Model):
             # Invalid Tag attachment
             return False
 
-    def attach_tag(self, properties: dict) -> bool:
+    def attach_tag(self , properties: dict) -> bool:
         '''
         The Node (self) is given a relationship to
         many Tags. The id and properties of the
@@ -224,7 +226,8 @@ class Node(Model):
         tag: Tag = None
 
         # retrieve the mature tag if it exists, otherwise make it
-        try: tag = Tag.objects.get(name_text="Mature")
+        try:
+            tag = Tag.objects.get(name_text="Mature")
         except Tag.DoesNotExist:
             tag = Tag(name_text="Mature")
             tag.save()
