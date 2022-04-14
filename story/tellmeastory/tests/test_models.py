@@ -72,7 +72,7 @@ class UserModelTests(TestCase):
         their account as mature.
         """
         user: User = User(mature=True)
-        self.assertIs(user.is_mature(), True)
+        self.assertTrue(user.is_mature())
 
         return
 

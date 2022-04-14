@@ -80,6 +80,6 @@ class AttachTagTests(TestCase):
         new_node.save()
         new_node.attach_mature_tag()
 
-        self.assertTrue(new_node.other_tags.filter(other_tags__name_text="Mature"))
+        self.assertTrue(new_node.other_tags.filter(name_text="Mature"))
 
         return
