@@ -1,10 +1,10 @@
 import json
 import uuid
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
 from .forms import LoginForm, NameChangeForm, RegisterForm, PostForm, ReportForm
-from .models import User, Post, Report
+from .models import User, Post, Report, Ban
 from .constants import *
 from django.shortcuts import render,redirect
 from django.core.exceptions import PermissionDenied
@@ -24,6 +24,12 @@ def index(req: HttpRequest) -> HttpResponse:
 
 # account stub for now
 def account(req: HttpRequest, username) -> HttpResponse:
+
+    username = req.COOKIES.get(COOKIE_NAME)
+
+    checkBan = Ban.objects.filter(bannedUser=username)
+    if checkBan.exists():
+        return HttpResponseRedirect("/banned/")
 
     user: User = get_object_or_404(User, username=username)
     user_posts =  Post.objects.all().filter(username__username__istartswith = username)
@@ -114,11 +120,14 @@ def register(req: HttpRequest) -> HttpResponse:
         form = RegisterForm(req.POST)
 
         if form.is_valid():
+
             # display_name is optional--
             # if one isn't specified, default the username
             display_name: str = form["display_name"].value()
             if display_name is None or not len(display_name):
                 display_name = form["username"].value()
+
+            checkBan = Ban.objects.filter(bannedUser=str(form["username"].value()))
 
             # hash the user's password for at least a bit of security
             hashed_pw: str = sha512(form["password"].value().encode("utf-8")).hexdigest()
@@ -136,6 +145,8 @@ def register(req: HttpRequest) -> HttpResponse:
                 err_msg = "Username is already taken."
             elif not new_user.is_valid_display_name():
                 err_msg = "Invalid display name."
+            elif checkBan.exists():
+                err_msg = "That username is banned."
             else:
                 new_user.save()
                 return HttpResponseRedirect("/story/login/")
@@ -149,6 +160,12 @@ def register(req: HttpRequest) -> HttpResponse:
     })
 
 def map(req: HttpRequest) -> HttpResponse:
+
+    username = req.COOKIES.get(COOKIE_NAME)
+
+    checkBan = Ban.objects.filter(bannedUser=username)
+    if checkBan.exists():
+        return HttpResponseRedirect("/banned/")
 
     DATA_TO_INSERT = []
 
@@ -170,6 +187,13 @@ def map(req: HttpRequest) -> HttpResponse:
 
 #Remove a post then redirect to all the posts of the current user (needs a confirm prompt)
 def deletePost(req: HttpRequest, post_id)-> HttpResponse:
+
+    username = req.COOKIES.get(COOKIE_NAME)
+
+    checkBan = Ban.objects.filter(bannedUser=username)
+    if checkBan.exists():
+        return HttpResponseRedirect("/banned/")
+
     post = Post.objects.get(post_id=post_id)  # pk is the primary key
     get_user = str(post.username)
 
@@ -179,6 +203,12 @@ def deletePost(req: HttpRequest, post_id)-> HttpResponse:
 
 #Editing a post chosen by the current user redirect to all the posts of the current user (includes input validation based off the model)
 def editPost(req: HttpRequest, post_id)-> HttpResponse:
+
+    username = req.COOKIES.get(COOKIE_NAME)
+
+    checkBan = Ban.objects.filter(bannedUser=username)
+    if checkBan.exists():
+        return HttpResponseRedirect("/banned/")
 
     post = Post.objects.get(post_id=post_id)
     form = PostForm(req.POST or None, instance=post)
@@ -200,6 +230,12 @@ def viewPost(req: HttpRequest)-> HttpResponse:
 
     username = req.COOKIES.get(COOKIE_NAME)
 
+    checkBan = Ban.objects.filter(bannedUser=username)
+    if checkBan.exists():
+        return HttpResponseRedirect("/banned/")
+
+    username = req.COOKIES.get(COOKIE_NAME)
+
     #posts are all the posts in the database
     posts = Post.objects.all()
 
@@ -213,10 +249,17 @@ def viewPost(req: HttpRequest)-> HttpResponse:
                   })
 
 def reportPost(req: HttpRequest, post_id) -> HttpResponse:
+
+    currentUser = req.COOKIES.get(COOKIE_NAME)
+
+    checkBan = Ban.objects.filter(bannedUser=currentUser)
+    if checkBan.exists():
+        return HttpResponseRedirect("/banned/")
+
     post = Post.objects.get(post_id=post_id)
     form = ReportForm(req.POST or None, instance=post)
 
-    currentUser = req.COOKIES.get(COOKIE_NAME)
+
     getUser = User.objects.get(username = currentUser)
     # if the fields are valid, save and redirect
     if form.is_valid():
@@ -247,8 +290,12 @@ def reportPost(req: HttpRequest, post_id) -> HttpResponse:
 #Admin view for viewing reports
 def adminReportPage(req: HttpRequest)-> HttpResponse:
 
-    #get the username
     username = req.COOKIES.get(COOKIE_NAME)
+
+    checkBan = Ban.objects.filter(bannedUser=username)
+    if checkBan.exists():
+        return HttpResponseRedirect("/banned/")
+
 
     #posts are all the posts in the database
     reports = Report.objects.all()
@@ -270,8 +317,12 @@ def adminReportPage(req: HttpRequest)-> HttpResponse:
 
 def adminReportPost(req: HttpRequest, report_id) -> HttpResponse:
 
-    # get the username
     username = req.COOKIES.get(COOKIE_NAME)
+
+    checkBan = Ban.objects.filter(bannedUser=username)
+    if checkBan.exists():
+        return HttpResponseRedirect("/banned/")
+
 
     # get the current user to check privileges
     user = User.objects.get(username=username)
@@ -284,11 +335,24 @@ def adminReportPost(req: HttpRequest, report_id) -> HttpResponse:
     if (user.admin == False):
         raise PermissionDenied
     else:
-        # pass all the objects to the html page
-        return render(req, 'tellmeastory/adminReportPost.html',
-                      {
-                          'report': report,
+        if req.method == "POST":
+            getChoice = req.POST["choice"]
+            if (getChoice) == "Ban":
+                reportedUser = User.objects.get(username=report.reporting_username)
+                Ban.save(Ban(bannedUser=str(reportedUser)))
+                User.delete(reportedUser)
+            else:
+                Report.delete(report)
+            return HttpResponseRedirect("/adminReportList/")
+        else:
+            # pass all the objects to the html page
+            return render(req, 'tellmeastory/adminReportPost.html',
+                        {
+                            'report': report,
 
-                      })
+                        })
 
 
+
+def banned(req: HttpRequest)-> HttpResponse:
+    return render(req, 'tellmeastory/ban.html')

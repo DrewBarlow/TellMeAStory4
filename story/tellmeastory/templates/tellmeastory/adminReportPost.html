@@ -6,18 +6,22 @@
 
 <p>Reporting ID: {{report.reporting_username}}</p>
 <p>Reported ID: {{report.reported_id}}</p>
-<p>Reason: {{report.reason}}</p>
+<p>Reason: {{report.report_reason}}</p>
 
-<select option="cars" id="option">
-    <option value="Ban">Ban</option>
-    <option value="Delete">Delete</option>
-</select>
+
 
 <form action ="" method=POST>
+{% csrf_token %}
 
+ <select name="choice">
+    <option value="Ban">Ban Offender</option>
+    <option value="Delete">Delete Report</option>
+</select>
+
+<input type = "submit" value = "Save">
 
 </form>
-
+</strong><a href="{% url 'tellmeastory:adminReportPage' %}">Exit</a></strong>
 
 </center>
 

@@ -88,3 +88,10 @@ class Report(models.Model):
 
     def __str__(self):
         return self.report_reason
+
+class Ban(models.Model):
+    # the id of the user who put in the report (set null so we can keep the reports)
+    bannedUser = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.bannedUser
