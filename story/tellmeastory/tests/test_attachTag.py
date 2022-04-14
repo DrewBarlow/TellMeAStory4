@@ -19,7 +19,7 @@ class AttachTagTests(TestCase):
         self.assertIs(new_tag.add_new_tag(), True)
         self.assertIs(new_node.attach_main_tag(new_tag.add_tag_to_node()), True)
         # Check if the Tag is attached properly
-        self.assertIs(new_tag.id, new_node.main_tag_id)
+        self.assertEqual(new_node.other_tags.get(id=new_tag.id), Tag.objects.get(id=new_node.main_tag_id))
         return
 
     def test_change_main_tag_on_node(self):
@@ -35,7 +35,7 @@ class AttachTagTests(TestCase):
         self.assertIs(new_tag.add_new_tag(), True)
         self.assertIs(new_node.attach_main_tag(new_tag.add_tag_to_node()), True)
         # Check if the Tag is attached properly
-        self.assertIs(new_tag.id, new_node.main_tag_id)
+        self.assertEqual(new_node.other_tags.get(id=new_tag.id), Tag.objects.get(id=new_node.main_tag_id))
 
         # Now Change the Main Tag
         new_tag: Tag = Tag(name_text="Test3Tag", language="en")
@@ -43,7 +43,7 @@ class AttachTagTests(TestCase):
         self.assertIs(new_tag.add_new_tag(), True)
         self.assertIs(new_node.attach_main_tag(new_tag.add_tag_to_node()), True)
         # Check if the Tag is attached properly
-        self.assertIs(new_tag.id, new_node.main_tag_id)
+        self.assertEqual(new_node.other_tags.get(id=new_tag.id), Tag.objects.get(id=new_node.main_tag_id))
         return
 
     def test_attaching_other_tags(self):
@@ -59,7 +59,7 @@ class AttachTagTests(TestCase):
         self.assertIs(new_tag.add_new_tag(), True)
         self.assertIs(new_node.attach_tag(new_tag.add_tag_to_node()), True)
         # Check if the Tag is attached properly
-        self.assertEqual(new_node.other_tags_set.all()[0].name_text, new_tag.name_text)
+        self.assertEqual(new_node.other_tags.get(id=new_tag.id).name_text, new_tag.name_text)
 
         # Add multiple Tags (in addition to first)
         # Attach the Tag to the Node using the Tag's properties
@@ -67,5 +67,5 @@ class AttachTagTests(TestCase):
         self.assertIs(new_tag.add_new_tag(), True)
         self.assertIs(new_node.attach_tag(new_tag.add_tag_to_node()), True)
         # Check if the Tag is attached properly
-        self.assertEqual(new_node.other_tags.all().order_by("id")[1].name_text, new_tag.name_text)
+        self.assertEqual(new_node.other_tags.get(id=new_tag.id).name_text, new_tag.name_text)
         return
