@@ -1,5 +1,5 @@
 from django.test import TestCase
-from tellmeastory.models import Node
+from tellmeastory.models import Node, User
 from managetags.models import Tag
 
 class AttachTagTests(TestCase):
@@ -68,4 +68,18 @@ class AttachTagTests(TestCase):
         self.assertIs(new_node.attach_tag(new_tag.add_tag_to_node()), True)
         # Check if the Tag is attached properly
         self.assertEqual(new_node.other_tags.get(id=new_tag.id).name_text, new_tag.name_text)
+        return
+
+    def test_attaching_mature_tag(self) -> None:
+        """
+        Attaching the maturity tag should be simple.
+        Call the attach_mature_tag function on the Node, then check if it
+        has been applied properly.
+        """
+        new_node: Node = Node(node_title="BIG NODE!!")
+        new_node.save()
+        new_node.attach_mature_tag()
+
+        self.assertTrue(new_node.other_tags.filter(name_text="Mature"))
+
         return

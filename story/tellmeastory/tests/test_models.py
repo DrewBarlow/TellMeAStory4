@@ -1,5 +1,6 @@
 from django.test import TestCase
 from tellmeastory.models import Node, User
+from managetags.models import Tag
 
 RND_USERNAME: str = "RandomUser"
 
@@ -62,6 +63,16 @@ class UserModelTests(TestCase):
         self.assertIs(short.is_valid_display_name(), False)
         self.assertIs(long.is_valid_display_name(), False)
         self.assertIs(good.is_valid_display_name(), True)
+
+        return
+
+    def test_can_view_mature(self) -> None:
+        """
+        is_mature() should return True if the user has marked
+        their account as mature.
+        """
+        user: User = User(mature=True)
+        self.assertTrue(user.is_mature())
 
         return
 
@@ -168,5 +179,21 @@ class NodeModelTests(TestCase):
         self.assertIs(long.is_valid_content(), False)
         self.assertIs(w_long.is_valid_content(), False)
         self.assertIs(good.is_valid_content(), True)
+
+        return
+
+    def test_is_mature(self) -> None:
+        """
+        is_mature() should return True if the node has a mature tag.
+        """
+        new_node: Node = Node(node_title="BIG TITLE!!!")
+        new_node.save()
+        self.assertFalse(new_node.is_mature())
+        
+        tag: Tag = Tag(name_text="Mature", language="en")
+        self.assertTrue(tag.add_new_tag())
+        self.assertTrue(new_node.attach_tag(tag.add_tag_to_node()))
+
+        self.assertTrue(new_node.is_mature())
 
         return
