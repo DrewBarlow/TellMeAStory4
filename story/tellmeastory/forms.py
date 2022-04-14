@@ -1,4 +1,4 @@
-from django.forms import IntegerField, CharField, ImageField, Form
+from django.forms import BooleanField, IntegerField, CharField, ImageField, Form
 from .models import Node, User
 
 class LoginForm(Form):
@@ -11,6 +11,8 @@ class RegisterForm(Form):
 
     # default to the username if not specified
     display_name: CharField = CharField(max_length=200, required=False)
+
+    maturity: BooleanField = BooleanField(label="Are you over 18?", required=False)
 
 class NameChangeForm(Form):
     # this may not need to be required?
