@@ -65,8 +65,8 @@
                             </thead>
                             <tbody>
                             <tr style="font-size:32px; font-weight:500">
+                                <td>{{ story_count }}</td>
                                 <td>[0]</td>
-                                <td>22</td>
                                 <td>[0]</td>
                             </tr>
                             </tbody>
@@ -75,26 +75,60 @@
                 </div>
                 <div class="col col-sm-3 my-auto">
                     <div style="padding-left:40%; padding-right:40%">
-                    <img src="https://i.ibb.co/89Pq3PF/Default-Image.png" class="rounded-circle" style="max-height:150px">
-                        </div>
+                        <img src="https://i.ibb.co/89Pq3PF/Default-Image.png" class="rounded-circle"
+                             style="max-height:150px">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-        <div class="card-body">
-            <h4 class="card-title">About {{ user.display_name }}</h4>
-            <p class="card-text">{{ user.user_blurb }}</p>
-        </div>
+    <div class="card-body">
+        <h4 class="card-title">About {{ user.display_name }}</h4>
+        <p class="card-text">{{ user.user_blurb }}</p>
     </div>
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title" style="font-size:24px">{{ user.display_name }}'s Stories</h4>
-        </div>
-        <div class="card-footer">
+</div>
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title" style="font-size:24px">{{ user.display_name }}'s Stories</h4>
 
-        </div>
+        <container>
+            <div class="row justify-content-center">
+
+                {% block content %}
+
+                    {% for post in stories %}
+                        {% if forloop.counter|divisibleby:3 %}
+                            </div>
+                            <div class="row justify-content-center">
+                        {% endif %}
+
+
+                        <div class="col col-md1">
+                            <div class="card text-center my-auto">
+                                <div class="card-body">
+                                    <h5 class="card-title">Story {{ post.post_id }}</h5>
+                                    <p class="card-text">{{ post.postText }}</p>
+                                    <a href="#" class="btn btn-primary">View Story</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endfor %}
+
+                {% endblock %}
+
+
+
+                </div>
+
+        </container>
+
     </div>
+    <div class="card-footer">
+
+    </div>
+</div>
 </div>
 
 </body>

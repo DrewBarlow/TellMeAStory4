@@ -1,12 +1,15 @@
-from django.db.models import CharField, Model
+from django.db import models
+
 from re import fullmatch, Match
 
 # Create your models here.
-class User(Model):
-    username: CharField = CharField(max_length=200)
-    password: CharField = CharField(max_length=512)
-    display_name: CharField = CharField(max_length=200)
-    user_blurb: CharField = CharField(max_length=1000, default="")
+class User(models.Model):
+    username = models.CharField(max_length=200)
+    password = models.CharField(max_length=512)
+    display_name = models.CharField(max_length=200)
+    admin = models.BooleanField(default=False)
+    user_blurb = models.CharField(max_length=1000, default="")
+
     def __str__(self):
         return self.username
 
@@ -47,3 +50,23 @@ class User(Model):
         Returns True if self.display_name has a length of >= 5 and <= 20.
         """
         return 5 <= len(self.display_name) <= 20
+
+class Post(models.Model):
+
+    #hold user's id
+    username = models.ForeignKey(User,on_delete=models.CASCADE)
+
+
+    #hold the id of a post
+    post_id = models.CharField(max_length=72,primary_key=True, default="")
+
+    #hold the text that a user enters
+    postText = models.CharField(max_length=200, default="")
+
+    #add more fields for soundclips, pictures
+
+    #this field would be for current date time
+    #postTime = models.DateTimeField()
+
+    def __str__(self):
+        return "%s " % self.username
