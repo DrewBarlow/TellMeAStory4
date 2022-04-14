@@ -30,6 +30,8 @@ urlpatterns = [
     #delete post view (just deletes and redirects not an actual page)
     path('adminReport/<report_id>', views.adminReportPost, name="adminReportPost"),
 
+    path('banned/', views.banned, name="bannedPage"),
+
     #standard django admin path
     path('admin/', admin.site.urls),
 ]
