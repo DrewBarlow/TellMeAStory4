@@ -120,7 +120,8 @@ def register(req: HttpRequest) -> HttpResponse:
             new_user: User = User(
                 username=form["username"].value(),
                 password=hashed_pw,
-                display_name=display_name
+                display_name=display_name,
+                mature=form["maturity"].value()
             )
 
             form = RegisterForm()
