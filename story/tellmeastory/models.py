@@ -4,9 +4,16 @@ from re import fullmatch, Match
 
 # Create your models here.
 class User(models.Model):
+    #hold the user's username
     username = models.CharField(max_length=200)
+
+    #hold a password
     password = models.CharField(max_length=512)
+
+    #hold a display name
     display_name = models.CharField(max_length=200)
+
+    #hold if the user is admin or not
     admin = models.BooleanField(default=False)
 
     def __str__(self):
@@ -76,7 +83,7 @@ class Post(models.Model):
 
 class Report(models.Model):
     #the id of the user who put in the report (set null so we can keep the reports)
-    reporting_username = models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    reporting_username = models.ForeignKey(User,on_delete=models.DO_NOTHING, null=False, primary_key=True)
 
     #the id of the reported posts
     reported_id = models.CharField(max_length=400)
@@ -84,10 +91,14 @@ class Report(models.Model):
     #the reason the user was reported (text field)
     report_reason = models.CharField(max_length=600)
 
-    report_id = models.CharField(max_length=100, default="")
+    #hold the id for a report
+    id_for_report = models.CharField(max_length=100, default="")
+
+    #an id for a report
+    post = models.ForeignKey(Post,on_delete=models.CASCADE, default=None)
 
     def __str__(self):
-        return self.report_reason
+        return self.id_for_report
 
 class Ban(models.Model):
     # the id of the user who put in the report (set null so we can keep the reports)
