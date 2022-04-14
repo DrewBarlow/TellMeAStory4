@@ -3,9 +3,9 @@ import json
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
-from typing import Any, Dict
 from .forms import LoginForm, NameChangeForm, AddImageForm, NodeCreationForm, RegisterForm
-from .models import Node, User
+from .models import User, Post, Node
+from typing import Any, Dict
 from .constants import *
 
 API_TOKEN = APIKEY
@@ -303,3 +303,26 @@ def add_image(req: HttpRequest) -> HttpResponse:
                     "nodes": all_nodes
                 })
 
+
+def profile(req: HttpRequest, username:str) -> HttpResponse:
+
+    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+    user: User = None
+
+    try:
+        user = User.objects.get(username=username)
+
+    except User.DoesNotExist:
+        return render(req , "tellmeastory/profileNotFound.html" , {
+            "logged_in_username": logged_user ,
+        })
+
+    storiesFromUser = Post.objects.filter(username_id=user.id)
+    storyCount = storiesFromUser.count()
+
+    return render(req , "tellmeastory/profile.html" , {
+        "user": user ,
+        "logged_in_username": logged_user ,
+        "stories": storiesFromUser,
+        "story_count": storyCount,
+    })
