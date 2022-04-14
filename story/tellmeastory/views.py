@@ -120,7 +120,8 @@ def register(req: HttpRequest) -> HttpResponse:
             new_user: User = User(
                 username=form["username"].value(),
                 password=hashed_pw,
-                display_name=display_name
+                display_name=display_name,
+                mature=form["maturity"].value()
             )
 
             form = RegisterForm()
@@ -185,6 +186,8 @@ def create_node(req: HttpRequest) -> HttpResponse:
                     err_message = "The content must be less than 10,000 characters!"
                 else:
                     new_node.save()
+                    if form["mature_node"].value():
+                        new_node.attach_mature_tag()
 
                     # this should redirect to VIEWING the node
                     # for now, I'll just go to the index
