@@ -54,15 +54,16 @@ class User(Model):
 class Node(Model):
     """ Story Node class. Holds a story's contents to present
     to users that select the respective story node. """
-    image: ImageField = ImageField(upload_to="storyimages", default=None)
-    image_url: TextField = TextField()
-    node_title: CharField = CharField(max_length=200)
-    node_content: CharField = CharField(max_length=10_000)
+    image: ImageField = ImageField(upload_to="storyimages", default=None)  # File for an image if a file is given by user
+    image_url: TextField = TextField()  # URL to source an image from if URL is given by user
+    node_title: CharField = CharField(max_length=200)  # Title of the story stored in the Node
+    node_content: CharField = CharField(max_length=10_000)  # Story content (text) of node
     # The Node has an url if False, otherwise it has an image file
-    has_image_file: BooleanField = BooleanField(default=False)
+    has_image_file: BooleanField = BooleanField(default=False)  # True only when user gave a file for an image
+    # Node coordinates on map
     longitude: float = 0
     latitude: float = 0
-    node_author: ForeignKey = ForeignKey(User, on_delete=CASCADE, null=True)
+    node_author: ForeignKey = ForeignKey(User, on_delete=CASCADE, null=True)  # Account/user who created the Node
 
     def __str__(self):
         """
