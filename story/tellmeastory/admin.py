@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import User,Report,Post, Ban
-
+from .models import User,Report,Post, Ban, Node
 # Register your models here.
+admin.site.register(Node)
 admin.site.register(Post)
 admin.site.register(Report)
 admin.site.register(User)

@@ -13,6 +13,7 @@
             <p><strong>{{ change_message }}</strong></p>
         {% endif %}
     </form>
+
     <button onclick="location.href = '/story/addtags/create/'">Add Tags Here</button>
 
     <br>
@@ -34,5 +35,10 @@
     </strong><a href="{% url 'tellmeastory:deletePost' post.post_id %}">Delete</a></strong><br><br>
 
     {% endfor %}
+
+    <!--Tagging stuff from the develop branch-->
+    <button onclick="location.href = '/story/addtags/create/'">Add Tags Here</button> <br/>
+    <button onclick="location.href = '/story/addnodeimage/'">Add Image to Node Here</button> <br/>
+
 {% endif %}
 {% endblock %}
