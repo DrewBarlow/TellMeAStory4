@@ -3,6 +3,7 @@ from django.db.models import CASCADE
 from django.urls import resolve, Resolver404
 from re import fullmatch, Match
 from validators import url
+from managetags.models import Tag
 
 # Create your models here.
 class User(Model):
@@ -64,6 +65,7 @@ class Node(Model):
     longitude: float = 0
     latitude: float = 0
     node_author: ForeignKey = ForeignKey(User, on_delete=CASCADE, null=True)  # Account/user who created the Node
+    main_tag: ForeignKey = ForeignKey(Tag, on_delete=CASCADE, null=True)  # Primary story content. One Tag can relate to many story Nodes.
 
     def __str__(self):
         """
@@ -142,3 +144,17 @@ class Node(Model):
             # Error thrown, meaning file does not exist
             # Change nothing
             return False
+
+    def attach_tag(self, properties: dict) -> bool:
+        '''
+        The Node (self) is given a Foreign key to
+        its main Tag. The id and properties of the
+        Tag are given in a dict:
+        {"name_text": Tag.name_text, "countID": Tag.countID, "id": Tag.id}
+        Returns True if attached or False otherwise
+        '''
+        try:
+            return True
+        except:
+            return False
+        return False
