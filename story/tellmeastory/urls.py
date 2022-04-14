@@ -38,6 +38,10 @@ urlpatterns = [
     #standard django admin path
     path('admin/', admin.site.urls),
   
+
+    path("profile/<str:username>/", views.profile, name="profile"),
+    path("addtags/", include("managetags.urls")),
+
     path("addnodeimage/", views.add_image, name="add_node_image"),
     path("create-story/", views.create_node, name="create_story"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
