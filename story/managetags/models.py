@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Tag(models.Model):
-    # TODO: Add many to one relationship with Node model using ForeignKey
+
     name_text = models.CharField(max_length=255) # tag name identifier
     countID = models.IntegerField(default=-1) # unique tag ID
     usage_count = models.IntegerField(default=0) # times used by users
@@ -51,7 +51,6 @@ class Tag(models.Model):
     # Returns properties needed to add tag to a node and
     # increments usage count when used.
     def add_tag_to_node(self) -> dict:
-        # TODO: Add Tag relation to Node in database
         # Increment usage count and save to db
         try:
             existing_tag = Tag.objects.get(name_text=self.name_text)
