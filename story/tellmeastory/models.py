@@ -1,4 +1,4 @@
-from django.db.models import BooleanField, ImageField, TextField, CharField, FloatField, ForeignKey, Model
+from django.db.models import ManyToManyField, BooleanField, ImageField, TextField, CharField, FloatField, ForeignKey, Model
 from django.db.models import CASCADE
 from django.urls import resolve, Resolver404
 from re import fullmatch, Match
@@ -65,7 +65,8 @@ class Node(Model):
     longitude: float = 0
     latitude: float = 0
     node_author: ForeignKey = ForeignKey(User, on_delete=CASCADE, null=True)  # Account/user who created the Node
-    main_tag: ForeignKey = ForeignKey(Tag, on_delete=CASCADE, null=True)  # Primary story content. One Tag can relate to many story Nodes.
+    main_tag: ForeignKey = ForeignKey(Tag, on_delete=CASCADE, null=True)  # Primary story content. One main Tag can relate to many story Nodes.
+    other_tags: ManyToManyField = ManyToManyField(Tag)  # A Node can have many tags for further filtering
 
     def __str__(self):
         """
@@ -145,7 +146,7 @@ class Node(Model):
             # Change nothing
             return False
 
-    def attach_tag(self, properties: dict) -> bool:
+    def attach_main_tag(self, properties: dict) -> bool:
         '''
         The Node (self) is given a Foreign key to
         its main Tag. The id and properties of the
@@ -157,4 +158,17 @@ class Node(Model):
             return True
         except:
             return False
-        return False
+
+    def attach_tag(self, properties: dict) -> bool:
+        '''
+        The Node (self) is given a relationship to
+        many Tags. The id and properties of the
+        Tag are given in a dict:
+        {"name_text": Tag.name_text, "countID": Tag.countID, "id": Tag.id}
+        Returns True if attached or False otherwise
+        '''
+        try:
+            return True
+        except:
+            return False
+
