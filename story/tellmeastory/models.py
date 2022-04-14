@@ -10,6 +10,7 @@ class User(Model):
     username: CharField = CharField(max_length=200)
     password: CharField = CharField(max_length=512)
     display_name: CharField = CharField(max_length=200)
+    mature: BooleanField = BooleanField(default=False)
 
     def __str__(self):
         return self.username
@@ -51,6 +52,12 @@ class User(Model):
         Returns True if self.display_name has a length of >= 5 and <= 20.
         """
         return 5 <= len(self.display_name) <= 20
+
+    def is_mature(self) -> bool:
+        """
+        Returns True if self.mature is True.
+        """
+        return self.is_mature
 
 class Node(Model):
     """ Story Node class. Holds a story's contents to present
@@ -181,3 +188,27 @@ class Node(Model):
             # Invalid Tag attachment
             return False
 
+    def is_mature(self) -> bool:
+        """
+        Returns True if this node has the "Mature" tag in other_tags.
+        """
+        return self.other_tags.filter(name_text="Mature").exists()
+
+    def attach_mature_tag(self) -> None:
+        """
+        Adds the "Mature" tag to this Node.
+        If the tag does not already exist, create it. Otherwise, retrieve it
+        and add it.
+        """
+        tag: Tag = None
+
+        # retrieve the mature tag if it exists, otherwise make it
+        try: tag = Tag.objects.get(name_text="Mature")
+        except Tag.DoesNotExist:
+            tag = Tag(name_text="Mature")
+            tag.save()
+
+        self.other_tags.add(tag)
+        self.save()
+
+        return
