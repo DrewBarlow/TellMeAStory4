@@ -20,6 +20,7 @@ class Migration(migrations.Migration):
                 ('username', models.CharField(max_length=200)),
                 ('password', models.CharField(max_length=512)),
                 ('display_name', models.CharField(max_length=200)),
+                ('user_blurb', models.CharField(max_length=1000, default="")),
             ],
         ),
         migrations.CreateModel(
