@@ -235,8 +235,11 @@ def add_image(req: HttpRequest) -> HttpResponse:
             # with undefined node error.
             # TODO: Redirect to view all Nodes page
             #  once Node page is created for an account.
-            node: Node = form["node_id"].value()
-            node = Node.objects.get(id=node)
+            node = form["node_id"].value()
+            if Node.objects.filter(id=node).exists():
+                node = Node.objects.get(id=node)
+            else:
+                node = None
             if node is None:
                 err_msg = "Undefined Node. Image cannot be attached to this node. Please try another node."
             # Otherwise, try to attach new image given
