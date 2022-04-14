@@ -19,3 +19,14 @@ To explore the project, visit [this Heroku link](https://tellmeastory4.herokuapp
 ### If you wish to run tests:
   * Run `python3 story/manage.py test story/<APP_NAME>/tests`.
   * NOTE: `<APP_NAME>` should be replaced by either `tellmeastory` or `managetags`.
+
+### Notes about tests:
+  * There must be an image named `"test_image.jpeg"` in `media/storyimages/`.
+  * Issues occur in the database when pulling a branch. If this is the case, run these commands:
+    1. `cd story`
+    2. `python3 manage.py flush`
+    3. `rm tellmeastory/migrations/00*`
+    4. `rm managetags/migrations/00*`
+    5. `python3 manage.py makemigrations`
+    6. `python3 manage.py migrate`
+
