@@ -65,7 +65,7 @@ class Node(Model):
     longitude: float = 0
     latitude: float = 0
     node_author: ForeignKey = ForeignKey(User, on_delete=CASCADE, null=True)  # Account/user who created the Node
-    main_tag: ForeignKey = ForeignKey(Tag, on_delete=CASCADE, null=True)  # Primary story content. One main Tag can relate to many story Nodes.
+    main_tag_id: int = 0  # Primary story content Tag's id. One main Tag can relate to many story Nodes.
     other_tags: ManyToManyField = ManyToManyField(Tag)  # A Node can have many tags for further filtering
 
     def __str__(self):
@@ -155,8 +155,13 @@ class Node(Model):
         Returns True if attached or False otherwise
         '''
         try:
+            # Valid Tag attachment
+            self.other_tags.add(Tag.objects.get(id=properties["id"]))
+            self.main_tag_id = properties["id"]
+            self.save()
             return True
         except:
+            # Invalid Tag attachment
             return False
 
     def attach_tag(self, properties: dict) -> bool:
@@ -168,7 +173,11 @@ class Node(Model):
         Returns True if attached or False otherwise
         '''
         try:
+            # Attach given Tag to this Node
+            self.other_tags.add(Tag.objects.get(id=properties["id"]))
+            self.save()
             return True
         except:
+            # Invalid Tag attachment
             return False
 

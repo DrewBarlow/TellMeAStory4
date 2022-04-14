@@ -59,7 +59,7 @@ class AttachTagTests(TestCase):
         self.assertIs(new_tag.add_new_tag(), True)
         self.assertIs(new_node.attach_tag(new_tag.add_tag_to_node()), True)
         # Check if the Tag is attached properly
-        self.assertEqual(new_node.other_tags.all()[0].name_text, new_tag.name_text)
+        self.assertEqual(new_node.other_tags_set.all()[0].name_text, new_tag.name_text)
 
         # Add multiple Tags (in addition to first)
         # Attach the Tag to the Node using the Tag's properties
@@ -67,5 +67,5 @@ class AttachTagTests(TestCase):
         self.assertIs(new_tag.add_new_tag(), True)
         self.assertIs(new_node.attach_tag(new_tag.add_tag_to_node()), True)
         # Check if the Tag is attached properly
-        self.assertEqual(new_node.other_tags.all()[1].name_text, new_tag.name_text)
+        self.assertEqual(new_node.other_tags.all().order_by("id")[1].name_text, new_tag.name_text)
         return
