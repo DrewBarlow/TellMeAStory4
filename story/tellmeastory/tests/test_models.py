@@ -1,6 +1,7 @@
 from django.test import TestCase
-from tellmeastory.models import Node, User, Post, Report, Ban
+from tellmeastory.models import User, Post, Report, Ban, Node
 from managetags.models import Tag
+
 RND_USERNAME: str = "RandomUser"
 
 
@@ -75,15 +76,16 @@ class UserModelTests(TestCase):
         self.assertTrue(user.is_mature())
 
         return
-      
-    def insert_node_w_author(author: User, title: str, content: str) -> Node:
+
+
+def insert_node_w_author(author: User, title: str, content: str) -> Node:
     return Node.objects.create(
         node_author=author,
         node_title=title,
         node_content=content
     )
 
- class testDatabaseRetrieval(TestCase):
+class testDatabaseRetrieval(TestCase):
     #testing Post database functionality
     def test_get_retrieval_post(self):
 
@@ -94,7 +96,7 @@ class UserModelTests(TestCase):
 
         # create some objects
         Post.objects.create(username=user1, post_id="4ad56262a25", postText="My first post!")
-        Post.objects.create(username=user2, password="26q2aa263a2", postText="My second post!")
+        Post.objects.create(username=user2, post_id="26q2aa263a2", postText="My second post!")
 
         # get by the post_id (primary key)
         first_post = Post.objects.get(post_id="4ad56262a25",)
@@ -115,12 +117,12 @@ class UserModelTests(TestCase):
 
 
         #get by the user_id (primary key)
-        first_post = User.objects.get(username="user1")
-        second_post = User.objects.get(username="user2")
+        first_user = User.objects.get(username="user1")
+        second_user = User.objects.get(username="user2")
 
         #check if the passwords are equal
-        self.assertEqual(first_post.password, "qwertyuiop")
-        self.assertEqual(second_post.password, "oagkawdoa")
+        self.assertEqual(first_user.password, "test")
+        self.assertEqual(second_user.password, "test")
 
         return
 
@@ -132,9 +134,9 @@ class testReporting(TestCase):
         user2 = User.objects.create(username="user2", password="test", display_name="Gunner", admin=False)
 
         # create some objects
-        Post.objects.create(username=user2, post_id="4ad56262a25", postText="My first post!")
+        post = Post.objects.create(username=user2, post_id="4ad56262a25", postText="My first post!")
 
-        report = Report.objects.create(reporting_username=user1,reported_id="9205a925",report_reason="Racism",id_for_report="6a92agh0aw",post=user2)
+        report = Report.objects.create(reporting_username=user1,reported_id="9205a925",report_reason="Racism",id_for_report="6a92agh0aw",post=post)
 
 
         self.assertEqual(report.report_reason, "Racism")
@@ -157,7 +159,7 @@ class testReporting(TestCase):
         get_user = User.objects.filter(username=str(user))
         get_banned_user = Ban.objects.filter(bannedUser=str(user))
 
-        self.assertEqual(get_user,None)
+        self.assertEqual(get_user.exists(),False)
         self.assertNotEqual(get_banned_user, None)
 
         return

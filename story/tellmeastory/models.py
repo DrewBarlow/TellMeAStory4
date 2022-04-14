@@ -1,9 +1,9 @@
-from django.db import models
-from django.db.models import ManyToManyField, BooleanField, ImageField, TextField, CharField, FloatField, ForeignKey, Model, CASCADE
-from django.urls import resolve, Resolver404
+from django.db.models import ManyToManyField, BooleanField, ImageField, TextField, CharField, ForeignKey, Model, CASCADE
 
 from re import fullmatch, Match
 from validators import url
+
+from django.db import models
 from managetags.models import Tag
 
 class User(Model):

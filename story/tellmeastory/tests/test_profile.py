@@ -1,8 +1,8 @@
 from django.http import HttpResponse
 from django.test import TestCase
 from hashlib import sha512
-from tellmeastory.models import User
-from tellmeastory.models import Post
+from tellmeastory.models import User, Post
+
 
 
 def insertUser(usern: str , pw: str , dname: str) -> User:
