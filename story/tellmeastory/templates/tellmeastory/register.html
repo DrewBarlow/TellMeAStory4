@@ -52,6 +52,14 @@
                 <div class="row justify-content-center">
                     <h2>Register for a Story Account</h2>
                 </div>
+
+                <div class="row justify-content-center">
+                    {% if error_message %}
+                        <div class="alert alert-danger" style="width:50%">{{ error_message }}</div>
+                    {% endif %}
+                </div>
+
+
                 <div class="row justify-content-center">
 
                     <form class=form-group" action="/story/register/" method="post">
@@ -63,24 +71,25 @@
                                 {% if field.label == "Password" %}
 
                                     <div class="form-group">
-                                    <label class="col col-form-label"
-                                           for="id_{{ field.name }}">{{ field.label }}</label>
-                                    <div class="col">
-                                        <input
-                                                type="password"
-                                                class="form-control"
-                                                name="{{ field.name }}"
-                                                id="id_{{ field.name }}"
-                                                value="{{ field.value|default:'' }}"
-                                        >
-                                    </div>
+                                        <label class="col col-form-label"
+                                               for="id_{{ field.name }}">{{ field.label }}</label>
+                                        <div class="col">
+                                            <input
+                                                    type="password"
+                                                    class="form-control"
+                                                    name="{{ field.name }}"
+                                                    id="id_{{ field.name }}"
+                                                    value="{{ field.value|default:'' }}"
+                                            >
+                                        </div>
                                     </div>
 
-                                    {% elif field.field.widget.input_type == "checkbox" %}
+                                {% elif field.field.widget.input_type == "checkbox" %}
 
-                                   <div class="form-group">
-                                   <div class="form-check">
-                                        <label class="form-check-label" for="id_{{ field.name }}">{{ field.label }}</label>
+                                    <div class="form-group">
+                                        <div class="form-check">
+                                            <label class="form-check-label"
+                                                   for="id_{{ field.name }}">{{ field.label }}</label>
                                             <input
                                                     type="checkbox"
                                                     class="form-check-input"
@@ -90,7 +99,7 @@
                                                     style="margin-left:20%"
                                             >
 
-                                   </div>
+                                        </div>
                                     </div>
 
 
@@ -115,10 +124,6 @@
                             <div class="form-group row justify-content-center">
                                 <input type="submit" value="Register" class="btn btn-primary" style="width:150px">
                             </div>
-                            {% if error_message %}
-                                <p><strong>{{ error_message }}</strong></p>
-                            {% endif %}
-
                         {% endblock %}
                     </form>
 
