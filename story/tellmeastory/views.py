@@ -74,7 +74,7 @@ def login(req: HttpRequest) -> HttpResponse:
             try:
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
-                err_msg = "No account with that username."
+                err_msg = "The username you have entered does not exist."
 
             # only validate password iff user account was found
             if not err_msg:
@@ -90,7 +90,7 @@ def login(req: HttpRequest) -> HttpResponse:
 
                     return res
                 else:
-                    err_msg = "Incorrect password."
+                    err_msg = "The password you have entered is incorrect."
 
     else:
         form: LoginForm = LoginForm()
