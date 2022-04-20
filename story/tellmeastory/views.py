@@ -211,6 +211,8 @@ def create_node(req: HttpRequest) -> HttpResponse:
 
 def map(req: HttpRequest) -> HttpResponse:
 
+    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+
     DATA_TO_INSERT = []
 
     # THIS DATA IS TEMPORARY - Used only to visualize how stories will appear on the map - not apart of the story
@@ -227,6 +229,7 @@ def map(req: HttpRequest) -> HttpResponse:
     return render(req, "tellmeastory/map.html", {
         "mapbox_token": API_TOKEN,
         "map_data": CONVERT_JSON,
+        "logged_in_username": logged_user
     })
 
 # Takes an existing node to add an image onto it
