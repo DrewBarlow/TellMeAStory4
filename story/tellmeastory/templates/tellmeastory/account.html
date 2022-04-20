@@ -27,125 +27,155 @@
             </li>
 
         </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false" style=" color:white">
-                    My Profile
-                </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                    <div style="text-align: center">Welcome, {{ logged_in_username }}!</div>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">My Profile</a>
-                    <a class="dropdown-item" href="#">Administration</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Log Out</a>
-                </div>
-            </li>
-        </ul>
+
+        {% if logged_in_username %}
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false" style=" color:white">
+                        My Profile
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <div style="text-align: center">Welcome, {{ logged_in_username }}!</div>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/story/profile/{{ logged_in_username }}">My Profile</a>
+                        <a class="dropdown-item" href="/story/account/{{ logged_in_username }}">My Account</a>
+                        {% if user.admin %}
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Administration</a>
+                            {% endif %}
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Log Out</a>
+                    </div>
+                </li>
+            </ul>
+
+        {% else %}
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/story/login/">Login <span class="sr-only">(current)</span></a>
+                </li>
+
+            </ul>
+
+
+        {% endif %}
     </div>
 </nav>
 
+{% if logged_in_username == user.username %}
 
-<div class="card">
-    <div class="card-header" style="text-align: center;">
+    <div class="card">
+        <div class="card-header" style="text-align: center;">
 
-        <h1 class="card-title">Manage {{ user.display_name }}'s Account</h1>
-        <div class="card-text" style="font-size:28px; font-style: italic">{{ user.username }}</div>
+            <h1 class="card-title">Manage {{ user.display_name }}'s Account</h1>
+            <div class="card-text" style="font-size:28px; font-style: italic">{{ user.username }}</div>
 
-    </div>
+        </div>
 
-    <div class="card-body">
+        <div class="card-body">
 
-        {% if form %}
-            <form action="{% url 'tellmeastory:account_page' user.username %}" method="post">
-                {% csrf_token %}
+            {% if form %}
+                <form action="{% url 'tellmeastory:account_page' user.username %}" method="post">
+                    {% csrf_token %}
 
-                <div class="container">
-                    {% block content %}
-                        <div class="row justify-content-center">
-                            {% if change_message %}
-                            {% if change_message == "Successfully changed display name." %}
+                    <div class="container">
+                        {% block content %}
+                            <div class="row justify-content-center">
+                                {% if change_message %}
+                                    {% if change_message == "Successfully changed display name." %}
 
-                                <div class="alert alert-success"
-                                     style="width:50%; text-align: center">{{ change_message }}</div>
+                                        <div class="alert alert-success"
+                                             style="width:50%; text-align: center">{{ change_message }}</div>
 
-                            {% else %}
-                                <div class="alert alert-danger"
-                                     style="width:50%; text-align: center">{{ change_message }}</div>
+                                    {% else %}
+                                        <div class="alert alert-danger"
+                                             style="width:50%; text-align: center">{{ change_message }}</div>
 
-                            {% endif %}
-                        {% endif %}
-                        </div>
-
-                        {% for field in form %}
-
-                            {% if field.label == "Edit blurb" %}
-                                <div class="row justify-content-center">
-
-                                    <div class="form-group">
-                                        <label class="col col-form-label" style="text-align: center"
-                                               for="id_{{ field.name }}">{{ field.label }}</label>
-                                        <div class="col">
-                                            <input
-                                                    type="{{ field.field.widget.input_type }}"
-                                                    class="form-control"
-                                                    style="text-align: center; width:400px"
-                                                    name="{{ field.name }}"
-                                                    id="id_{{ field.name }}"
-                                                    value="{{ field.value|default:'' }}"
-                                                    style="width:300px"
-                                            >
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                            {% else %}
-                                <div class="row justify-content-center">
-
-                                    <div class="form-group">
-                                        <label class="col col-form-label" style="text-align: center"
-                                               for="id_{{ field.name }}">{{ field.label }}</label>
-                                        <div class="col">
-                                            <input
-                                                    type="{{ field.field.widget.input_type }}"
-                                                    class="form-control"
-                                                    style="text-align: center; width:400px"
-                                                    name="{{ field.name }}"
-                                                    id="id_{{ field.name }}"
-                                                    value="{{ field.value|default:'' }}"
-                                                    style="width:300px"
-                                            >
-                                        </div>
-                                    </div>
-                                </div>
-
-                            {% endif %}
-                        {% endfor %}
-
-                        </div>
-                        <div class="row justify-content-center">
-
-                            <div class="form-group row">
-                                <input type="submit" value="Update" class="btn btn-primary"
-                                       style="width:150px">
+                                    {% endif %}
+                                {% endif %}
                             </div>
-                        </div>
-                    {% endblock %}
-            </div>
-            </div>
 
-            </form>
-            <button onclick="location.href = '/story/addtags/create/'">Add Tags Here</button> <br/>
-            <button onclick="location.href = '/story/addnodeimage/'">Add Image to Node Here</button> <br/>
-        {% endif %}
+                            {% for field in form %}
 
-</div>
-</div>
+                                {% if field.label == "Edit blurb" %}
+                                    <div class="row justify-content-center">
 
-</div>
+                                        <div class="form-group">
+                                            <label class="col col-form-label" style="text-align: center"
+                                                   for="id_{{ field.name }}">{{ field.label }}</label>
+                                            <div class="col">
+                                                <input
+                                                        type="{{ field.field.widget.input_type }}"
+                                                        class="form-control"
+                                                        style="text-align: center; width:400px"
+                                                        name="{{ field.name }}"
+                                                        id="id_{{ field.name }}"
+                                                        value="{{ field.value|default:'' }}"
+                                                        style="width:300px"
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
 
+
+                                {% else %}
+                                    <div class="row justify-content-center">
+
+                                        <div class="form-group">
+                                            <label class="col col-form-label" style="text-align: center"
+                                                   for="id_{{ field.name }}">{{ field.label }}</label>
+                                            <div class="col">
+                                                <input
+                                                        type="{{ field.field.widget.input_type }}"
+                                                        class="form-control"
+                                                        style="text-align: center; width:400px"
+                                                        name="{{ field.name }}"
+                                                        id="id_{{ field.name }}"
+                                                        value="{{ field.value|default:'' }}"
+                                                        style="width:300px"
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                {% endif %}
+                            {% endfor %}
+
+                            </div>
+                            <div class="row justify-content-center">
+
+                                <div class="form-group row">
+                                    <input type="submit" value="Update" class="btn btn-primary"
+                                           style="width:150px">
+                                </div>
+                            </div>
+                        {% endblock %}
+
+                </form>
+                <button onclick="location.href = '/story/addtags/create/'">Add Tags Here</button> <br/>
+                <button onclick="location.href = '/story/addnodeimage/'">Add Image to Node Here</button> <br/>
+            {% endif %}
+
+                </div>
+                </div>
+
+
+{% else %}
+
+
+    <div class="alert alert-danger center-block" role="alert"
+     style="width:90%; margin-left:5%; margin-top:5%; max-height:150px; height:150px; text-align: center;">
+    <div style="margin-top:1%"></div>
+    <h1 class="alert-heading">Oh no!</h1>
+    <div style="font-size:24px">You have tried to access an account page that does not belong to you.</div>
+
+
+
+{% endif %}
 </body>
 
 </html>
