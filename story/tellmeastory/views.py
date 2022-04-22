@@ -26,6 +26,8 @@ def account(req: HttpRequest, username: str) -> HttpResponse:
     form: NameChangeForm = None
     form_msg: str = None
 
+    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+
     if req.COOKIES.get(COOKIE_NAME) == username:
         if req.method == "POST":
             form = NameChangeForm(req.POST)
@@ -50,7 +52,8 @@ def account(req: HttpRequest, username: str) -> HttpResponse:
     return render(req, "tellmeastory/account.html", {
         "user": user,
         "form": form,
-        "change_message": form_msg
+        "change_message": form_msg,
+        "logged_in_username": logged_user
     })
 
 # https://docs.djangoproject.com/en/4.0/topics/forms/
@@ -208,6 +211,8 @@ def create_node(req: HttpRequest) -> HttpResponse:
 
 def map(req: HttpRequest) -> HttpResponse:
 
+    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+
     DATA_TO_INSERT = []
 
     # THIS DATA IS TEMPORARY - Used only to visualize how stories will appear on the map - not apart of the story
@@ -224,6 +229,7 @@ def map(req: HttpRequest) -> HttpResponse:
     return render(req, "tellmeastory/map.html", {
         "mapbox_token": API_TOKEN,
         "map_data": CONVERT_JSON,
+        "logged_in_username": logged_user
     })
 
 # Takes an existing node to add an image onto it
