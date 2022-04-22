@@ -2,7 +2,13 @@ from django.http import HttpResponse
 from django.test import TestCase
 from hashlib import sha512
 from tellmeastory.models import User
-from tellmeastory.models import Post
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from django.test import LiveServerTestCase
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.by import By
+
 
 URL_PROFILE = "/profile/"
 TEST_ACCOUNT = "tellme1"
@@ -105,4 +111,86 @@ class navBarTests(TestCase):
         self.assertContains(res, "Oh no!")
 
 
+class SeleniumTests(LiveServerTestCase):
 
+    def testLogin(self):
+        uName = TEST_ACCOUNT
+        pw = "testing123"
+        dName = "John Doe"
+        insertUser(uName , pw , dName)
+
+        selenium = webdriver.Chrome(ChromeDriverManager().install())
+
+        selenium.get('%s%s' % (self.live_server_url, '/login/'))
+
+        username_input = selenium.find_element(By.NAME, value="username")
+        username_input.send_keys(uName)
+
+        pw_input = selenium.find_element(By.NAME, value="password")
+        pw_input.send_keys(pw)
+
+        selenium.find_element(By.XPATH, value = '//input[@value="Login"]').click()
+        # Check to make sure that welcome user is displayed
+        checkmsg = "Welcome, " + uName
+        assert checkmsg in selenium.page_source
+
+    def testRegister(self):
+        uName2 = "TheTester123"
+        pw = "testing123"
+        dName = "John Doe"
+        insertUser(uName2 , pw , dName)
+
+        selenium = webdriver.Chrome(ChromeDriverManager().install())
+
+
+        # Register the account
+        selenium.get('%s%s' % (self.live_server_url , '/register/'))
+
+        username_input = selenium.find_element(By.NAME , value="username")
+        username_input.send_keys(uName2)
+
+        pw_input = selenium.find_element(By.NAME , value="password")
+        pw_input.send_keys(pw)
+
+        display_name_input = selenium.find_element(By.NAME, value="display_name")
+        display_name_input.send_keys(dName)
+
+        selenium.find_element(By.XPATH , value='//input[@value="Register"]').click()
+
+        # Log in the account
+        selenium.get('%s%s' % (self.live_server_url , '/login/'))
+
+        username_input = selenium.find_element(By.NAME, value="username")
+        username_input.send_keys(uName2)
+
+        pw_input = selenium.find_element(By.NAME, value="password")
+        pw_input.send_keys(pw)
+
+        selenium.find_element(By.XPATH, value = '//input[@value="Login"]').click()
+
+        # Check to make sure we are in the account page
+        checkmsg = "Manage " + dName + "'s Account"
+        assert checkmsg in selenium.page_source
+
+    def testCorrectInformationDisplay(self):
+        uName = TEST_ACCOUNT
+        pw = "testing123"
+        dName = "John Doe"
+        insertUser(uName , pw , dName)
+
+        selenium = webdriver.Chrome(ChromeDriverManager().install())
+
+        selenium.get('%s%s' % (self.live_server_url, '/profile/' + uName))
+
+        # Check to make sure that Register and Login Buttons are Displayed
+
+        assert "Register" in selenium.page_source
+        assert "Login" in selenium.page_source
+        assert "Tell Me A Story" in selenium.page_source
+
+
+
+## HOW TO INSTALL SELENIUM
+
+# python -m pip install selenium
+# python -m pip install webdriver-manager
