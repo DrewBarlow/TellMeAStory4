@@ -217,7 +217,7 @@ class NodeModelTests(TestCase):
         node.save()
 
         self.assertTrue(node.add_reaction(IMP, user))
-        self.assertFalse(node.add_reaction(HEART, user))
+        self.assertFalse(node.add_reaction(IMP, user))
 
         return
 
