@@ -469,7 +469,7 @@ def adminReportPost(req: HttpRequest, report_id) -> HttpResponse:
 
             #Ban the offender
             if (getChoice) == "Ban":
-                reportedUser = str(report.post.username)
+                reportedUser = str(report.post.node_author)
                 Ban.save(Ban(bannedUser=str(reportedUser)))
                 User.objects.get(username=reportedUser).delete()
             #Delete the report
@@ -582,7 +582,7 @@ def profile(req: HttpRequest, username:str) -> HttpResponse:
             "logged_in_username": logged_user ,
         })
 
-    storiesFromUser = Post.objects.filter(username_id=user.id)
+    storiesFromUser = Node.objects.filter(node_author=user)
     storyCount = storiesFromUser.count()
 
     return render(req , "tellmeastory/profile.html" , {
