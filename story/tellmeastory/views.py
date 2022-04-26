@@ -5,10 +5,11 @@ from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
 from typing import Any, Dict
 from .forms import LoginForm, NameChangeForm, RegisterForm, PostForm, ReportForm, AddImageForm, NodeCreationForm
-from .models import User, Post, Report, Ban, Node
+from .models import User, Report, Ban, Node
 from .constants import *
 from django.shortcuts import render,redirect
 from django.core.exceptions import PermissionDenied
+import uuid
 
 API_TOKEN = APIKEY
 COOKIE_NAME: str = "StoryUserLoggedIn"
@@ -38,7 +39,7 @@ def account(req: HttpRequest, username) -> HttpResponse:
     user: User = get_object_or_404(User, username=username)
 
     #get all the post from the current user
-    user_posts =  Post.objects.all().filter(username__username__istartswith = username)
+    user_posts =  Node.objects.all().filter(node_author__username__istartswith = username)
 
     form: NameChangeForm = None
     form_msg: str = None
@@ -192,13 +193,23 @@ def create_node(req: HttpRequest) -> HttpResponse:
                 # gather all of the form data and make the node
                 # ISSUE: I have no idea why, but I get kwarg issues
                 #   on longitude and latitude...
+
+                #create a post id
+                create_post_id = uuid.uuid1()
+                checkID = Node.objects.filter(post_id=create_post_id)
+                while (checkID.count() != 0):
+                    create_post_id = uuid.uuid1()
+                    checkID = Node.objects.filter(post_id=create_post_id)
+
+
                 node_args: Dict[str, Any] = {
                     "image": None,
                     "node_title": form["node_title"].value().strip(),
                     "node_content": form["node_content"].value().strip(),
                     #"longitude": 0,
                     #"latitude": 0,
-                    "node_author": user
+                    "node_author": user,
+                    "post_id": create_post_id
                 }
 
                 new_node: Node = Node(**node_args)
@@ -272,14 +283,14 @@ def deletePost(req: HttpRequest, post_id)-> HttpResponse:
 
 
     #get the current post
-    post = Post.objects.get(post_id=post_id)
+    post = Node.objects.get(post_id=post_id)
 
     # if another user is trying to edit someone else's post
-    current_post_user = str(post.username)
+    current_post_user = str(post.node_author)
     if (current_post_user != username):
         return HttpResponseRedirect("/allPosts/")
 
-    get_user = str(post.username)
+    get_user = str(post.node_author)
 
     #delete current post
     post.delete()
@@ -300,17 +311,17 @@ def editPost(req: HttpRequest, post_id)-> HttpResponse:
         return HttpResponseRedirect("/banned/")
 
     #get current post
-    post = Post.objects.get(post_id=post_id)
+    post = Node.objects.get(post_id=post_id)
 
     #if another user is trying to edit someone else's post
-    current_post_user = str(post.username)
+    current_post_user = str(post.node_author)
     if (current_post_user != username):
         return HttpResponseRedirect("/allPosts/")
 
     #get the form for posting
     form = PostForm(req.POST or None, instance=post)
 
-    get_user = str(post.username)
+    get_user = str(post.node_author)
 
     #if the fields are valid, save and redirect
     if form.is_valid():
@@ -335,7 +346,7 @@ def viewPost(req: HttpRequest)-> HttpResponse:
 
 
     #posts are all the posts in the database
-    posts = Post.objects.all()
+    posts = Node.objects.all()
 
 
 
@@ -358,7 +369,7 @@ def reportPost(req: HttpRequest, post_id) -> HttpResponse:
         return HttpResponseRedirect("/banned/")
 
     #get the current post and the form we need
-    post = Post.objects.get(post_id=post_id)
+    post = Node.objects.get(post_id=post_id)
     form = ReportForm(req.POST or None, instance=post)
 
 
@@ -381,7 +392,7 @@ def reportPost(req: HttpRequest, post_id) -> HttpResponse:
                 taken_id = False
 
         #get a report object
-        new_report = Report(reporting_username = getUser,reported_id = str(post.username),report_reason = form.cleaned_data.get('report_reason'), id_for_report = getId, post = Post.objects.get(post_id=post_id) )
+        new_report = Report(reporting_username = getUser,reported_id = str(post.node_author),report_reason = form.cleaned_data.get('report_reason'), id_for_report = getId, post = Node.objects.get(post_id=post_id))
 
         #save the new report to the database and redirect to all the posts
         Report.save(new_report)
@@ -391,7 +402,7 @@ def reportPost(req: HttpRequest, post_id) -> HttpResponse:
     return render(req, 'tellmeastory/reportPost.html',
                   {'form': form,
                    'post': post,
-                   'username': str(post.username)
+                   'node_author': str(post.node_author)
 
                    })
 
@@ -423,6 +434,7 @@ def adminReportPage(req: HttpRequest)-> HttpResponse:
                           'reports': reports,
 
                       })
+
 
 
 def adminReportPost(req: HttpRequest, report_id) -> HttpResponse:

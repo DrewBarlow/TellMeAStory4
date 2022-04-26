@@ -1,5 +1,5 @@
 from django.forms import CharField, Form, EmailField, BooleanField, IntegerField, CharField, ImageField, ModelForm
-from .models import Node, User, Post, Report
+from .models import Node, User, Report
 
 
 class LoginForm(Form):
@@ -24,10 +24,10 @@ class NameChangeForm(Form):
 class PostForm(ModelForm):
     class Meta:
         #get the current Post database
-        model = Post
+        model = Node
 
         #controls what fields appear, MUST BE NAMED AFTER THE FIELDS IN THE DATABASE
-        fields = ('postText',)
+        fields = ('node_content',)
 
 #Create Report form
 class ReportForm(ModelForm):
