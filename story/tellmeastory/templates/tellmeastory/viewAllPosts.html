@@ -3,25 +3,25 @@
 <h1>All Posts</h1>
 
  <!--loop through each object in the post database-->
-{%for post in posts%}
+{%for node in posts%}
 
 <!--displays the post id each time (the primary key)-->
-<strong>Post ID: {{ post }}</strong>
+<strong>Post ID: {{ node.post_id }}</strong>
 
 <!--display the text of the post-->
-<ul>{{post.postText}}</ul>
+<ul>{{node.node_content}}</ul>
 
 
-{% if username|stringformat:"s" == post.username|stringformat:"s" %}
+{% if username|stringformat:"s" == node.node_author|stringformat:"s" %}
  <!--onclick move to the edit page-->
-    <a href="{% url 'tellmeastory:editPost' post.post_id %}">Edit <span class = tab></span></a>
+    <a href="{% url 'tellmeastory:editPost' node.post_id %}">Edit <span class = tab></span></a>
 
     <!--deletes the entry from the database on click-->
-    <a href="{% url 'tellmeastory:deletePost' post.post_id %}">Delete</a></strong><br><br>
+    <a href="{% url 'tellmeastory:deletePost' node.post_id %}">Delete</a></strong><br><br>
 {% endif %}
 
-{% if username|stringformat:"s" != post.username|stringformat:"s" %}
- <a href="{% url 'tellmeastory:reportPost' post.post_id %}">Report <span class = tab></span></a><br>
+{% if username|stringformat:"s" != node.node_author|stringformat:"s" %}
+ <a href="{% url 'tellmeastory:reportPost' node.post_id %}">Report <span class = tab></span></a><br>
 {% endif %}
 
 {% endfor %}

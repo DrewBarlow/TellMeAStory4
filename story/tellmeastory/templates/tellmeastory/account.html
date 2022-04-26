@@ -21,18 +21,18 @@
     </strong><a href="{% url 'tellmeastory:viewPosts' %}">View All Posts!</a></strong><br><br>
 
     <strong><p>Your Posts!</p></strong>
-    {% for post in user_posts %}
+    {% for node in user_posts %}
     <br>
-     <strong> Post ID: {{post.post_id}}</strong>
+     <strong> Post ID: {{node.post_id}}</strong>
 
     <!--display the text of the post-->
-    <p>{{post.postText}}</p>
+    <p>{{node.node_content}}</p>
 
     <!--onclick move to the edit page-->
-    <a href="{% url 'tellmeastory:editPost' post.post_id %}">Edit <span class = tab></span></a>
+    <a href="{% url 'tellmeastory:editPost' node.post_id %}">Edit <span class = tab></span></a>
 
     <!--deletes the entry from the database on click-->
-    </strong><a href="{% url 'tellmeastory:deletePost' post.post_id %}">Delete</a></strong><br><br>
+    </strong><a href="{% url 'tellmeastory:deletePost' node.post_id %}">Delete</a></strong><br><br>
 
     {% endfor %}
 

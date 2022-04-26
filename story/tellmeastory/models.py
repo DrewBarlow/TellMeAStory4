@@ -62,44 +62,8 @@ class User(Model):
         return self.is_mature
 
 
-class Post(models.Model):
-
-    #hold user's id
-    username = models.ForeignKey(User,on_delete=models.CASCADE)
 
 
-    #hold the id of a post
-    post_id = models.CharField(max_length=72,primary_key=True, default="")
-
-    #hold the text that a user enters
-    postText = models.CharField(max_length=200, default="")
-
-    #add more fields for soundclips, pictures
-
-    #this field would be for current date time
-    #postTime = models.DateTimeField()
-
-    def __str__(self):
-        return "%s " % self.username
-
-class Report(models.Model):
-    #the id of the user who put in the report (set null so we can keep the reports)
-    reporting_username = models.ForeignKey(User,on_delete=models.DO_NOTHING, null=False, primary_key=True)
-
-    #the id of the reported posts
-    reported_id = models.CharField(max_length=400)
-
-    #the reason the user was reported (text field)
-    report_reason = models.CharField(max_length=600)
-
-    #hold the id for a report
-    id_for_report = models.CharField(max_length=100, default="")
-
-    #an id for a report
-    post = models.ForeignKey(Post,on_delete=models.CASCADE, default=None)
-
-    def __str__(self):
-        return self.id_for_report
 
 class Ban(models.Model):
     # the id of the user who put in the report (set null so we can keep the reports)
@@ -114,6 +78,7 @@ class Node(Model):
     to users that select the respective story node. """
     image: ImageField = ImageField(upload_to="storyimages" ,
                                    default=None)  # File for an image if a file is given by user
+    post_id : CharField = CharField(max_length=200, default="")
     image_url: TextField = TextField()  # URL to source an image from if URL is given by user
     node_title: CharField = CharField(max_length=200)  # Title of the story stored in the Node
     node_content: CharField = CharField(max_length=10_000)  # Story content (text) of node
@@ -124,7 +89,7 @@ class Node(Model):
     latitude: float = 0
     node_author: ForeignKey = ForeignKey(User , on_delete=CASCADE , null=True)  # Account/user who created the Node
     main_tag_id: int = 0  # Primary story content Tag's id. One main Tag can relate to many story Nodes.
-    other_tags: ManyToManyField = ManyToManyField(Tag)  # A Node can have many tags for further filtering
+    other_tags: ManyToManyField = ManyToManyField(Tag, blank=True)  # A Node can have many tags for further filtering
 
     def __str__(self):
         """
@@ -266,3 +231,21 @@ class Node(Model):
         return
 
 
+class Report(models.Model):
+    #the id of the user who put in the report (set null so we can keep the reports)
+    reporting_username = models.ForeignKey(User,on_delete=models.DO_NOTHING, null=False, primary_key=True)
+
+    #the id of the reported posts
+    reported_id = models.CharField(max_length=400)
+
+    #the reason the user was reported (text field)
+    report_reason = models.CharField(max_length=600)
+
+    #hold the id for a report
+    id_for_report = models.CharField(max_length=100, default="")
+
+    #an id for a report
+    post = models.ForeignKey(Node,on_delete=models.CASCADE, default=None)
+
+    def __str__(self):
+        return self.id_for_report
