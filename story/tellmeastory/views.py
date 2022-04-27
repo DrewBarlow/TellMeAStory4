@@ -296,7 +296,7 @@ def deletePost(req: HttpRequest, post_id)-> HttpResponse:
     post.delete()
 
     #redirect to the users page
-    return redirect("/account/{0}/".format(get_user))
+    return redirect("/profile/{0}/".format(get_user))
 
 
 #Editing a post chosen by the current user redirect to all the posts of the current user (includes input validation based off the model)
@@ -326,7 +326,7 @@ def editPost(req: HttpRequest, post_id)-> HttpResponse:
     #if the fields are valid, save and redirect
     if form.is_valid():
         form.save()
-        return redirect("/account/{0}/".format(get_user))
+        return redirect("/profile/{0}/".format(get_user))
 
     #form is a form specified by forms.py, post becomes the Post object specified by the post_id
     return render(req, 'tellmeastory/editPost.html',
@@ -581,6 +581,11 @@ def profile(req: HttpRequest, username:str) -> HttpResponse:
         return render(req , "tellmeastory/profileNotFound.html" , {
             "logged_in_username": logged_user ,
         })
+
+    #check if another user is trying to go to someone else's profile
+    if (username != req.COOKIES.get(COOKIE_NAME)):
+        raise PermissionDenied
+
 
     storiesFromUser = Node.objects.filter(node_author=user)
     storyCount = storiesFromUser.count()
