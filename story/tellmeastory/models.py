@@ -61,6 +61,12 @@ class User(Model):
         """
         return self.is_mature
 
+    def post_node(self, insertNode) -> bool:
+        """
+        Returns True if node is posted correctly.
+        """
+        return False
+
 class Post(models.Model):
 
     #hold user's id
