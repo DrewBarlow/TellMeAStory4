@@ -1,4 +1,4 @@
-from django.forms import CharField, Form, EmailField, BooleanField, IntegerField, CharField, ImageField, ModelForm
+from django.forms import CharField, Form, EmailField, BooleanField, IntegerField, CharField, ImageField, ModelForm,FloatField
 from .models import Node, User, Report
 
 
@@ -16,9 +16,10 @@ class RegisterForm(Form):
 
     maturity: BooleanField = BooleanField(label="Are you over 18?", required=False)
 
-class NameChangeForm(Form):
+class AccountForm(Form):
     # this may not need to be required?
     new_display_name: CharField = CharField(max_length=200, required=True)
+    edit_blurb: CharField = CharField(max_length=1000, required=True)
 
 #Create Post form
 class PostForm(ModelForm):
@@ -48,4 +49,16 @@ class AddImageForm(Form):
     image_file: ImageField = ImageField(required=False)
     image_url: CharField = CharField(max_length=200, required=False)
     node_id: IntegerField = IntegerField(required=True)
+
+
+class PostStoryForm(Form):
+    # If no image is given, then no image is added.
+    node_title: CharField = CharField(max_length=200, required=True)
+    node_content: CharField = CharField(max_length=10_000, required=True)
+    image_file: ImageField = ImageField(required=False)
+    image_url: CharField = CharField(max_length=200, required=False)
+    main_tag_id: IntegerField = IntegerField(required=True)
+    mature_node: BooleanField = BooleanField(label="Is this story mature?", required=False)
+    latitude: FloatField = FloatField(required=True)
+    longitude: FloatField = FloatField(required=True)
 
