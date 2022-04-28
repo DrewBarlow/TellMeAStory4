@@ -1,5 +1,6 @@
 from django.forms import BooleanField, IntegerField, CharField, ImageField, Form, ModelForm, FileField
-from .models import Node, User
+from .models import Node, User, Account
+
 
 class LoginForm(Form):
     username: CharField = CharField(max_length=200, required=True)
@@ -41,5 +42,5 @@ class AudioForm(Form):
 class ProfileForm(ModelForm):
     profile_pic: ImageField = ImageField(required=True)
     class Meta:
-        model = User
+        model = Account
         fields = ['profile_pic']

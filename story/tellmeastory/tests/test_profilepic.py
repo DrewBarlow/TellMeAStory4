@@ -1,18 +1,17 @@
 from django.http import HttpResponse
 from django.test import TestCase
-from tellmeastory.models import User
+from tellmeastory.models import User, Account
 from hashlib import sha512
 from django.db.models import ImageField
 from tellmeastory.forms import ProfileForm
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 
-def insertUser(usern: str, pw: str, dname: str, pic: str) -> User:
-    return User.objects.create(
+def insertUser(usern: str, dname: str, pic: str) -> Account:
+    return Account.objects.create(
         username=usern,
-        password=sha512(pw.encode("utf-8")).hexdigest(),
         display_name=dname,
-        profile_pic=User.profile_pic
+        profile_pic=pic
     )
 
 URL_PROFILE = "/profile/"
@@ -31,11 +30,10 @@ class ProfilePageTests(TestCase):
         # Checks to see if the page shows the profile of the user
     def test_profile_page_account_exists(self) -> None:
         uName = TEST_ACCOUNT
-        pw = "testing123"
         dName = "John Doe"
         pPic = "https://i.ibb.co/MnjnjFL/profile-pic.jpg"
 
-        insertUser(uName , pw , dName, pPic)
+        insertUser(uName, dName, pPic)
 
         res: HttpResponse = self.client.get(URL_PROFILE + TEST_ACCOUNT + "/")
         # Checks that it loaded correctly

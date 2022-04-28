@@ -5,6 +5,7 @@ from re import fullmatch, Match
 from validators import url
 from managetags.models import Tag
 from playsound import playsound
+from django.contrib.auth.models import User
 
 # Create your models here.
 class User(Model):
@@ -255,4 +256,13 @@ class Node(Model):
                 return False
         else:
             return False
+
+class Account(models.Model):
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    username: CharField = CharField(max_length=200, default="Giads123")
+    display_name: CharField = CharField(max_length=200)
+    profile_pic = models.ImageField(default="profile_pic.jpg", null=True, blank=True)
+
+    def __str__(self):
+        return self.display_name
 

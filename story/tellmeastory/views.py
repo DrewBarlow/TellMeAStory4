@@ -4,7 +4,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
 from .forms import LoginForm, NameChangeForm, AddImageForm, NodeCreationForm, RegisterForm, ProfileForm, AudioForm
-from .models import User, Post, Node
+from .models import User, Post, Node, Account
 from typing import Any, Dict
 from .constants import *
 
@@ -380,12 +380,12 @@ def Audio_store(req: HttpRequest) -> HttpResponse:
 
 def accountSettings(req: HttpRequest, username:str) -> HttpResponse:
     logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
-    user: User = None
+    user: Account = None
 
     try:
-        user = User.objects.get(username=username)
+        user = Account.objects.get(username=username)
 
-    except User.DoesNotExist:
+    except Account.DoesNotExist:
         return render(req, "tellmeastory/profileNotFound.html", {
             "logged_in_username": logged_user,
         })
