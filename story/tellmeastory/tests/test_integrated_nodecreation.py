@@ -172,8 +172,30 @@ class AddNodeFromUserTests(LiveServerTestCase):
         password_input = selenium_browser.find_element(By.NAME, value="password")
         password_input.send_keys(password)  # Enter password
         selenium_browser.find_element(By.XPATH, value='//input[@value="Login"]').click()
-        # Navigate to Story Posting for given user
-        selenium_browser.get('%s%s' % (self.live_server_url, '/author-story/'+username))
+        # Check for stories posted by other users (should be none)
+        # Create a temporary Test user for calling post function
+        newusername = "namename1"
+        newpassword = "password2"
+        newdisplay_name = "display1"
+        newuser = User.objects.create(username=newusername, password=sha512(newpassword.encode("utf-8")).hexdigest(), display_name=newdisplay_name)
+        # Create test tag
+        NewTagToInsert = Tag(name_text="differentTag", language="en_US")
+        NewTagToInsert.add_new_tag() # Create Main Tag to Add
+        valid_node_dict = {
+                    "node_title": "title",
+                    "node_content": "content",
+                    "image_file": None,
+                    "image_url": "www.google.com",
+                    "main_tag_id": NewTagToInsert.id,
+                    "mature_node": False,
+                    "latitude": 90,
+                    "longitude": 90
+                }
+        newuser.post_node(valid_node_dict)
+        present_story = "ID: " + str(Node.objects.filter(node_author__username=newusername).first().id)\
+                      + " Title: " + Node.objects.filter(node_author__username=newusername).first().node_title
+        selenium_browser.get('%s%s' % (self.live_server_url, '/author-story/'+username))  # Navigate to Story Posting for a different user
+        self.assertTrue(selenium_browser.page_source.find(present_story) == -1)  # It should not find another user's story on creation page
         # Enter Title, Content, One Image, and a Main Tag ID (after first creating a Tag)
         TagToInsert = Tag(name_text="name123", language="en_US")
         TagToInsert.add_new_tag() # Create Main Tag to Add
