@@ -131,8 +131,11 @@
                             <div class="card text-center my-auto">
                                 <div class="card-body">
                                     <h5 class="card-title">Story {{ post.post_id }}</h5>
-                                    <p class="card-text">{{ post.postText }}</p>
+                                    <p class="card-text">{{ post.node_content }}</p>
+
                                     <a href="#" class="btn btn-primary">View Story</a>
+                                    <a href="{% url 'tellmeastory:editPost' post.post_id %}" class="btn btn-primary">Edit Story</a>
+                                    <a href="{% url 'tellmeastory:deletePost' post.post_id %}" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete Story</a>
                                 </div>
                             </div>
                         </div>
