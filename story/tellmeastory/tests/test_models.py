@@ -1,8 +1,11 @@
 from django.test import TestCase
-from tellmeastory.models import Node, User
+from tellmeastory.models import Node, Reaction, User
 from managetags.models import Tag
 
 RND_USERNAME: str = "RandomUser"
+HEART: str = "💙"
+SMILE: str = "🙂"
+IMP: str = "😈"
 
 class UserModelTests(TestCase):
     def test_valid_username(self) -> None:
@@ -195,5 +198,106 @@ class NodeModelTests(TestCase):
         self.assertTrue(new_node.attach_tag(tag.add_tag_to_node()))
 
         self.assertTrue(new_node.is_mature())
+
+        return
+
+    def test_add_reaction(self) -> None:
+        """
+        add_reaction() should add a Reaction to a Node and return True.
+        Attempting to add the same Reaction with the same User should return False.
+        Also tests is_user_reacted_with_emoji().
+        """
+        user: User = None
+        try: user = User.objects.get(username=RND_USERNAME)
+        except: pass
+
+        self.assertNotEqual(user, None)
+
+        node: Node = insert_node_w_author(user, "NodeTitle", "Content")
+        node.save()
+
+        self.assertTrue(node.add_reaction(IMP, user))
+        self.assertFalse(node.add_reaction(IMP, user))
+
+        return
+
+    def test_num_reactions_of_emoji(self) -> None:
+        """
+        num_reactions_of_emoji should be used to determine what number
+        to display on a Node's view.
+        """
+        user: User = None
+        try: user = User.objects.get(username=RND_USERNAME)
+        except: pass
+
+        self.assertNotEqual(user, None)
+
+        node: Node = insert_node_w_author(user, "NodeTitle", "Content")
+        node.save()
+
+        self.assertEqual(node.num_reactions_of_emoji(IMP), 0)
+        self.assertEqual(node.num_reactions_of_emoji(HEART), 0)
+
+        node.add_reaction(IMP, user)
+        node.add_reaction(HEART, user)
+
+        self.assertEqual(node.num_reactions_of_emoji(IMP), 1)
+        self.assertEqual(node.num_reactions_of_emoji(HEART), 1)
+
+        return
+
+class ReactionModelTests(TestCase):
+    def setUp(self):
+        User.objects.create(
+            username=RND_USERNAME,
+            password="password",
+            display_name="Random User"
+        )
+        return
+
+    def test_foreign_key_relationship_w_user(self) -> None:
+        """
+        The Reaction class should have a ForeignKey relationship to the
+        User class.
+        i.e. A User should have many Reactions, but a Reaction should have one
+        User.
+        """
+        user: User = None
+        try: user = User.objects.get(username=RND_USERNAME)
+        except: pass
+
+        self.assertNotEqual(user, None)
+
+        # insert three reactions into the database
+        # all of these reactions should have the same author
+        reaction1: Reaction = Reaction(owner=user, emoji=HEART)
+        reaction2: Reaction = Reaction(owner=user, emoji=SMILE)
+        reaction3: Reaction = Reaction(owner=user, emoji=IMP)
+
+        for reaction in [reaction1, reaction2, reaction3]:
+            reaction.save()
+            self.assertEqual(reaction.owner, user)
+
+        return
+
+    def test_foreign_key_relationship_w_author(self) -> None:
+        """
+        The Reaction class should have a ForeignKey relationship to the
+        Node class.
+        i.e. A Node should have many Reactions, but a Reaction should have one
+        Node.
+        """
+        new_node: Node = Node(node_title="BIG TITLE!!!")
+        new_node.save()
+
+        # insert three reactions into the database
+        # all of these reactions should have the same node
+        reaction1: Reaction = Reaction(node=new_node, emoji=HEART)
+        reaction2: Reaction = Reaction(node=new_node, emoji=SMILE)
+        reaction3: Reaction = Reaction(node=new_node, emoji=IMP)
+
+        for reaction in [reaction1, reaction2, reaction3]:
+            reaction.save()
+            self.assertEqual(reaction.node, new_node)
 
         return
