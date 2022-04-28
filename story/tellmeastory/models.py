@@ -72,6 +72,8 @@ class User(Model):
             "image_url" -> CharField
             "main_tag_id" -> IntegerField
             "mature_node" -> Bool (true when mature)
+            "latitude" -> Float
+            "longitude" -> Float
         """
         # Add title, content, and author to a new Node to insert
         node_args: Dict[str, Any] = {
@@ -93,7 +95,7 @@ class User(Model):
                 is_image_not_added = True
         if is_not_one_image:
             return "Invalid Image. You may add one image to each story."
-        newNode.save()
+        newNode.save()  # Every return after this MUST delete newNode, it was saved to create its id for ManyToMany
         # Add main tag to story and validate that it exists
         if int(contentDict["main_tag_id"]) < 0 or (not newNode.attach_main_tag(Tag.objects.get(id=int(contentDict["main_tag_id"])).add_tag_to_node())):
             newNode.delete()
@@ -101,6 +103,20 @@ class User(Model):
         # Add mature rating is node contains mature content
         if contentDict["mature_node"]:
             newNode.attach_mature_tag()
+        # Verify longitude and latitude
+        MAX_LONG = 180
+        MIN_LONG = -180
+        MAX_LAT = 90
+        MIN_LAT = -90
+        if not (float(contentDict["latitude"]) <= MAX_LAT and float(contentDict["latitude"]) >= MIN_LAT):
+            newNode.delete()
+            return "Invalid latitude"
+        elif not (float(contentDict["longitude"]) <= MAX_LONG and float(contentDict["longitude"]) >= MIN_LONG):
+            newNode.delete()
+            return "Invalid longitude"
+        # Update long/lat
+        newNode.latitude = float(contentDict["latitude"])
+        newNode.longitude = float(contentDict["longitude"])
         # Now that everything has been verified. The node can be successfully
         # saved to the database and the user can receive a success message.
         newNode.save()

@@ -54,6 +54,11 @@ class AddNodeFromUserTests(LiveServerTestCase):
         image_input.send_keys("www.google.com")  # Enter valid URL
         main_tag_input = selenium_browser.find_element(By.NAME, value="main_tag_id")
         main_tag_input.send_keys(TagToInsert.id)  # Enter valid tag id
+        # Enter longitude and latitude
+        title_input = selenium_browser.find_element(By.NAME, value="latitude")
+        title_input.send_keys(90)  # Enter latitude
+        title_input = selenium_browser.find_element(By.NAME, value="longitude")
+        title_input.send_keys(90)  # Enter longitude
         """
         Section 2 of Function
         Tests submitting a node with various data
@@ -94,7 +99,9 @@ class AddNodeFromUserTests(LiveServerTestCase):
                     "image_file": None,
                     "image_url": "www.google.com",
                     "main_tag_id": TagToInsert.id,
-                    "mature_node": False
+                    "mature_node": False,
+                    "latitude": 90,
+                    "longitude": 90
                 }
         self.assertTrue(invalid_title_err, user.post_node(invalid_node_dict))
         # Test invalid content response
@@ -106,7 +113,9 @@ class AddNodeFromUserTests(LiveServerTestCase):
                     "image_file": None,
                     "image_url": "www.google.com",
                     "main_tag_id": TagToInsert.id,
-                    "mature_node": False
+                    "mature_node": False,
+                    "latitude": 90,
+                    "longitude": 90
                 }
         self.assertTrue(invalid_title_err, user.post_node(invalid_node_dict))
         # Test invalid image response
@@ -117,7 +126,9 @@ class AddNodeFromUserTests(LiveServerTestCase):
                     "image_file": "www.google.com",
                     "image_url": "www.google.com",
                     "main_tag_id": TagToInsert.id,
-                    "mature_node": False
+                    "mature_node": False,
+                    "latitude": 90,
+                    "longitude": 90
                 }
         self.assertTrue(invalid_title_err, user.post_node(invalid_node_dict))
         # Test invalid main tag response
@@ -128,7 +139,9 @@ class AddNodeFromUserTests(LiveServerTestCase):
                     "image_file": None,
                     "image_url": "www.google.com",
                     "main_tag_id": -1,
-                    "mature_node": False
+                    "mature_node": False,
+                    "latitude": 90,
+                    "longitude": 90
                 }
         self.assertTrue(invalid_title_err, user.post_node(invalid_node_dict))
         return
@@ -172,6 +185,11 @@ class AddNodeFromUserTests(LiveServerTestCase):
         image_input.send_keys("www.google.com")  # Enter valid URL
         main_tag_input = selenium_browser.find_element(By.NAME, value="main_tag_id")
         main_tag_input.send_keys(TagToInsert.id)  # Enter valid tag id
+        # Enter longitude and latitude
+        title_input = selenium_browser.find_element(By.NAME, value="latitude")
+        title_input.send_keys(90)  # Enter latitude
+        title_input = selenium_browser.find_element(By.NAME, value="longitude")
+        title_input.send_keys(90)  # Enter longitude
         # Submit content entered from above
         selenium_browser.find_element(By.XPATH, value='//input[@value="Create"]').click()
         """ Now the stories should be present as well as the tags on the posting page. """
@@ -184,5 +202,71 @@ class AddNodeFromUserTests(LiveServerTestCase):
         story_with_ID = "ID: " + str(Node.objects.filter(node_author__username=username).first().id)\
                       + " Title: " + Node.objects.filter(node_author__username=username).first().node_title
         self.assertTrue(selenium_browser.page_source.find(story_with_ID) != -1)
+        return
+
+    def test_long_lat_input(self):
+        """
+        Tests will run to check for invalid long
+        and lat values given to posting function.
+        """
+        # Create a temporary Test user for calling post function
+        username = "namename"
+        password = "password1"
+        display_name = "display"
+        user = User.objects.create(username=username, password=sha512(password.encode("utf-8")).hexdigest(), display_name=display_name)
+        # Create test tag
+        TagToInsert = Tag(name_text="name123", language="en_US")
+        TagToInsert.add_new_tag() # Create Main Tag to Add
+        # Test invalid responses
+        invalid_lat_err = "Invalid latitude"
+        invalid_long_err = "Invalid longitude"
+        # Test overly large latitude
+        invalid_node_dict = {
+                    "node_title": "title",
+                    "node_content": "content",
+                    "image_file": None,
+                    "image_url": "www.google.com",
+                    "main_tag_id": TagToInsert.id,
+                    "mature_node": False,
+                    "latitude": 91,
+                    "longitude": 90
+                }
+        self.assertTrue(invalid_lat_err, user.post_node(invalid_node_dict))
+        # Test overly small latitude
+        invalid_node_dict = {
+                    "node_title": "title",
+                    "node_content": "content",
+                    "image_file": None,
+                    "image_url": "www.google.com",
+                    "main_tag_id": TagToInsert.id,
+                    "mature_node": False,
+                    "latitude": -91,
+                    "longitude": 90
+                }
+        self.assertTrue(invalid_lat_err, user.post_node(invalid_node_dict))
+        # Test overly large longitude
+        invalid_node_dict = {
+                    "node_title": "title",
+                    "node_content": "content",
+                    "image_file": None,
+                    "image_url": "www.google.com",
+                    "main_tag_id": TagToInsert.id,
+                    "mature_node": False,
+                    "latitude": 90,
+                    "longitude": 181
+                }
+        self.assertTrue(invalid_long_err, user.post_node(invalid_node_dict))
+        # Test overly small longitude
+        invalid_node_dict = {
+                    "node_title": "title",
+                    "node_content": "content",
+                    "image_file": None,
+                    "image_url": "www.google.com",
+                    "main_tag_id": TagToInsert.id,
+                    "mature_node": False,
+                    "latitude": 90,
+                    "longitude": -181
+                }
+        self.assertTrue(invalid_long_err, user.post_node(invalid_node_dict))
         return
 

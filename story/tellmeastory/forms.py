@@ -1,4 +1,4 @@
-from django.forms import BooleanField, IntegerField, CharField, ImageField, Form
+from django.forms import BooleanField, IntegerField, FloatField, CharField, ImageField, Form
 from .models import Node, User
 
 class LoginForm(Form):
@@ -37,3 +37,5 @@ class PostStoryForm(Form):
     image_url: CharField = CharField(max_length=200, required=False)
     main_tag_id: IntegerField = IntegerField(required=True)
     mature_node: BooleanField = BooleanField(label="Is this story mature?", required=False)
+    latitude: FloatField = FloatField(required=True)
+    longitude: FloatField = FloatField(required=True)
