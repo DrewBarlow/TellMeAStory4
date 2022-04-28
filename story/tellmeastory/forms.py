@@ -1,4 +1,4 @@
-from django.forms import BooleanField, IntegerField, CharField, ImageField, Form
+from django.forms import BooleanField, IntegerField, CharField, ImageField, Form, ModelForm, FileField
 from .models import Node, User
 
 class LoginForm(Form):
@@ -28,3 +28,18 @@ class AddImageForm(Form):
     image_file: ImageField = ImageField(required=False)
     image_url: CharField = CharField(max_length=200, required=False)
     node_id: IntegerField = IntegerField(required=True)
+
+class AudioForm(Form):
+    class Meta:
+        model=Node
+        fields = ['node_audio']
+    # If no audio is given then no audio is added
+    audio_file: FileField = FileField(required=False)
+    node_audio: FileField = FileField(required=False)
+    node_id: IntegerField = IntegerField(required=True)
+
+class ProfileForm(ModelForm):
+    profile_pic: ImageField = ImageField(required=True)
+    class Meta:
+        model = User
+        fields = ['profile_pic']
