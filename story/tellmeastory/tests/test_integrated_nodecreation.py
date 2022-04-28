@@ -6,6 +6,7 @@ from django.test import LiveServerTestCase
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from hashlib import sha512
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 class AddNodeFromUserTests(LiveServerTestCase):
 
@@ -78,7 +79,7 @@ class AddNodeFromUserTests(LiveServerTestCase):
         self.assertFalse(Node.objects.filter(node_author__username=username).first().has_image_file)  # Check image (should only have url, not file)
         return
 
-    def test_add_invalid_story_fields(self):
+    def test_add_invalid_and_valid_story_fields(self):
         """
         Tests invalid input for all story fields. The correct error
         message should appear and no additional nodes should exist.
@@ -88,6 +89,19 @@ class AddNodeFromUserTests(LiveServerTestCase):
         password = "password1"
         display_name = "display"
         user = User.objects.create(username=username, password=sha512(password.encode("utf-8")).hexdigest(), display_name=display_name)
+        # Test invalid main tag response (when there are no tags at all)
+        invalid_main_tag_err = "Main Tag not found. Please select a valid main tag."
+        invalid_node_dict = {
+                    "node_title": "title",
+                    "node_content": "content",
+                    "image_file": None,
+                    "image_url": "www.google.com",
+                    "main_tag_id": 1,
+                    "mature_node": False,
+                    "latitude": 90,
+                    "longitude": 90
+                }
+        self.assertTrue(invalid_main_tag_err, user.post_node(invalid_node_dict))
         # Create test tag
         TagToInsert = Tag(name_text="name123", language="en_US")
         TagToInsert.add_new_tag() # Create Main Tag to Add
@@ -117,7 +131,7 @@ class AddNodeFromUserTests(LiveServerTestCase):
                     "latitude": 90,
                     "longitude": 90
                 }
-        self.assertTrue(invalid_title_err, user.post_node(invalid_node_dict))
+        self.assertTrue(invalid_content_err, user.post_node(invalid_node_dict))
         # Test invalid image response
         invalid_image_err = "Invalid Image. You may add one image to each story."
         invalid_node_dict = {
@@ -130,7 +144,7 @@ class AddNodeFromUserTests(LiveServerTestCase):
                     "latitude": 90,
                     "longitude": 90
                 }
-        self.assertTrue(invalid_title_err, user.post_node(invalid_node_dict))
+        self.assertTrue(invalid_image_err, user.post_node(invalid_node_dict))
         # Test invalid main tag response
         invalid_main_tag_err = "Main Tag not found. Please select a valid main tag."
         invalid_node_dict = {
@@ -143,7 +157,24 @@ class AddNodeFromUserTests(LiveServerTestCase):
                     "latitude": 90,
                     "longitude": 90
                 }
-        self.assertTrue(invalid_title_err, user.post_node(invalid_node_dict))
+        self.assertTrue(invalid_main_tag_err, user.post_node(invalid_node_dict))
+        # Test valid image response
+        test_image_path = "media/storyimages/test_image.jpeg"
+        test_image_file = SimpleUploadedFile(name='test_image.jpeg',
+                                             content=open(test_image_path, 'rb').read(),
+                                             content_type='image/jpeg')
+        valid_response = "Successfully Added your Story! Please refresh page to see changes."
+        invalid_node_dict = {
+                    "node_title": "titletitle",
+                    "node_content": "content",
+                    "image_file": test_image_file,
+                    "image_url": None,
+                    "main_tag_id": TagToInsert.id,
+                    "mature_node": False,
+                    "latitude": 90,
+                    "longitude": 90
+                }
+        self.assertTrue(valid_response, user.post_node(invalid_node_dict))
         return
 
     def test_existing_stories_and_tags_present(self):
