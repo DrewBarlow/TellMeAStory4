@@ -37,6 +37,7 @@ class NodeImageTests(TestCase):
         node: Node = Node(node_title="Test2")
         node.save()
         self.assertIs(Node.objects.get(id=node.id).add_image(newURL=test_image_url), True)
+        self.assertIs(Node.objects.get(id=node.id).has_image_file, False)
         # Add an image from an invalid URL
         test_image_url = "invalidlink_testing"
         node: Node = Node(node_title="Test3")
