@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Author A Story</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#4fbaf7">
@@ -73,7 +73,7 @@
         <div class="row justify-content-center">
             <div class="col">
                 <div class="row justify-content-center">
-                    <h2>Login to your Story Account</h2>
+                    <h2>Author a Story</h2>
                 </div>
 
                 <div class="row justify-content-center">
@@ -81,57 +81,75 @@
                         <div class="alert alert-danger" style="width:50%; text-align:center">{{ error_message }}</div>
                     {% endif %}
                 </div>
-
+                <! –– Prompt user with fields for posting a story  -->
                 <div class="row justify-content-center">
-
-                    <form class=form-group" action="/story/login/" method="post">
+                    <form class=form-group" action="{% url 'tellmeastory:author_story' user.username %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-
                         {% block content %}
                             {% for field in form %}
-
-                                {% if field.label == "Password" %}
-
-                                    <div class="form-group">
-                                        <label class="col col-form-label"
-                                               for="id_{{ field.name }}">{{ field.label }}</label>
-                                        <div class="col">
-                                            <input
-                                                    type="password"
-                                                    class="form-control"
-                                                    name="{{ field.name }}"
-                                                    id="id_{{ field.name }}"
-                                                    value="{{ field.value|default:'' }}"
-                                            >
-                                        </div>
+                                <div class="form-group">
+                                    <label class="col col-form-label"
+                                           for="id_{{ field.name }}">{{ field.label }}</label>
+                                    <div class="col">
+                                        <input
+                                                type="{{ field.field.widget.input_type }}"
+                                                class="form-control"
+                                                name="{{ field.name }}"
+                                                id="id_{{ field.name }}"
+                                                value="{{ field.value|default:'' }}"
+                                                style="width:300px"
+                                        >
                                     </div>
-
-
-                                {% else %}
-
-                                    <div class="form-group">
-                                        <label class="col col-form-label"
-                                               for="id_{{ field.name }}">{{ field.label }}</label>
-                                        <div class="col">
-                                            <input
-                                                    type="{{ field.field.widget.input_type }}"
-                                                    class="form-control"
-                                                    name="{{ field.name }}"
-                                                    id="id_{{ field.name }}"
-                                                    value="{{ field.value|default:'' }}"
-                                                    style="width:300px"
-                                            >
-                                        </div>
-                                    </div>
-                                {% endif %}
+                                </div>
                             {% endfor %}
                             <div class="form-group row justify-content-center">
-                                <input type="submit" value="Login" class="btn btn-primary" style="width:150px">
+                                <input type="submit" value="Create" class="btn btn-primary" style="width:150px">
                             </div>
 
                         {% endblock %}
                     </form>
+                </div>
 
+            </div>
+            <! –– Allow user to view their existing stories  -->
+            <div class="col">
+                <div class="row justify-content-center">
+                    <p>
+                      <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#showTags" aria-expanded="false" aria-controls="showTags">
+                        Show Tags
+                      </button>
+                    </p>
+                    <div class="collapse" id="showTags">
+                      <div class="card card-body" style="width: 18rem;">
+                        <p>
+                            <br/> Existing Tags:
+                            <ol>
+                                {% for tag in tags %}
+                                    ID: {{ tag.id }} Name: {{ tag.name_text }} <br/>
+                                {% endfor %}
+                            </ol>
+                        </p>
+                      </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <p>
+                      <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#showStories" aria-expanded="false" aria-controls="showStories">
+                        My Stories
+                      </button>
+                    </p>
+                    <div class="collapse" id="showStories">
+                      <div class="card card-body" style="width: 18rem;">
+                        <p>
+                            <br/> My Stories:
+                            <ol>
+                                {% for node in nodes %}
+                                    ID: {{ node.id }} Title: {{ node.node_title }} <br/>
+                                {% endfor %}
+                            </ol>
+                        </p>
+                      </div>
+                    </div>
                 </div>
             </div>
         </div>

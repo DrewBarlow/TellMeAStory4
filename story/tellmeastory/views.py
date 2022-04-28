@@ -3,8 +3,8 @@ import uuid
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, HttpResponseForbidden, Http404
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
+from .forms import LoginForm, AccountForm, AddImageForm, NodeCreationForm, RegisterForm, PostStoryForm, ReportForm, NameChangeForm, PostForm
 from typing import Any, Dict
-from .forms import LoginForm, NameChangeForm, RegisterForm, PostForm, ReportForm, AddImageForm, NodeCreationForm
 from .models import User, Report, Ban, Node
 from .constants import *
 from django.shortcuts import render, redirect
@@ -44,32 +44,52 @@ def account(req: HttpRequest, username) -> HttpResponse:
     form: NameChangeForm = None
     form_msg: str = None
 
+    # 0 = No message
+    # 1 = Success
+    # -1 = Error
+    msg_type = 0;
+
+    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+
     if req.COOKIES.get(COOKIE_NAME) == username:
         if req.method == "POST":
-            form = NameChangeForm(req.POST)
+            form = AccountForm(req.POST)
 
             # update the User model and check if the new
             # display name is valid
             old_dname: str = user.display_name
-            user.display_name = form["new_display_name"].value().strip()
 
-            if user.is_valid_display_name():
+            if form["edit_blurb"].value() != user.user_blurb and form["edit_blurb"].value() != None:
+                user.user_blurb = form["edit_blurb"].value().strip()
                 user.save()
-                form_msg = "Successfully changed display name."
-            else:
-                user.display_name = old_dname
-                form_msg = "Failed to change display name."
+                msg_type = 1
+                form_msg = form_msg + "Successfully changed user blurb."
+
+
+            if form["new_display_name"].value() != user.display_name and form["new_display_name"].value() != None:
+                old_dname: str = user.display_name
+                user.display_name = form["new_display_name"].value().strip()
+
+                if user.is_valid_display_name():
+                    user.save()
+                    msg_type = 1;
+                    form_msg = form_msg + "Successfully changed display name."
+                else:
+                    user.display_name = old_dname
+                    msg_type = -1;
+                    form_msg = form_msg + "Failed to change display name."
 
         else:
             # just display the form if the cookie is present and
             # we aren't trying to post data
-            form = NameChangeForm()
+            form = AccountForm()
 
     return render(req, "tellmeastory/account.html", {
         "user": user,
         "form": form,
         "change_message": form_msg,
-        "user_posts": user_posts,
+        "message_type": msg_type,
+        "logged_in_username": logged_user
     })
 
 
@@ -254,6 +274,8 @@ def map(req: HttpRequest) -> HttpResponse:
     if checkBan.exists():
         return HttpResponseRedirect("/banned/")
 
+    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+
     DATA_TO_INSERT = []
 
     # THIS DATA IS TEMPORARY - Used only to visualize how stories will appear on the map - not apart of the story
@@ -269,6 +291,7 @@ def map(req: HttpRequest) -> HttpResponse:
     return render(req, "tellmeastory/map.html", {
         "mapbox_token": API_TOKEN,
         "map_data": CONVERT_JSON,
+        "logged_in_username": logged_user
     })
 
 
@@ -595,3 +618,101 @@ def profile(req: HttpRequest, username: str) -> HttpResponse:
         "stories": storiesFromUser,
         "story_count": storyCount,
     })
+
+
+def author_story(req: HttpRequest, username: str) -> HttpResponse:
+    user: User = get_object_or_404(User, username=username)
+    err_msg = None
+    all_nodes = Node.objects.filter()
+    my_nodes = []
+    all_tags = Tag.objects.filter()
+    form = PostStoryForm()
+    logged_user: str = req.COOKIES.get(COOKIE_NAME)
+
+    # Find all of a user's stories
+    if logged_user == username:
+        # User account should exist, otherwise they have no nodes
+        try:
+            user = User.objects.get(username=username)
+            for curNode in all_nodes:
+                if curNode.node_author == user:
+                    my_nodes.append(curNode)
+        except User.DoesNotExist:
+            my_nodes = []
+
+    # If POST, then process new node authored by user, else
+    # send to node creation page.
+    if req.method == "POST":
+        # Check for a valid POST request and that
+        # the given username is what their cookie
+        # shows.
+        form: PostStoryForm() = PostStoryForm(req.POST)
+        if form.is_valid():
+            if logged_user == username:
+                # User account should exist, otherwise send them
+                # to the login page.
+                try:
+                    user = User.objects.get(username=username)
+                except User.DoesNotExist:
+                    err_msg = "Account does not exist."
+                    form: LoginForm = LoginForm()
+                    return render(req, "tellmeastory/login.html", {
+                        "form": form,
+                        "error_message": err_msg
+                    })
+                # CREATE STORY NODE FROM PROVIDED INFORMATION
+                err_msg = user.post_node({
+                    "node_title": form["node_title"].value().strip(),
+                    "node_content": form["node_content"].value().strip(),
+                    "image_file": form["image_file"].value(),
+                    "image_url": form["image_url"].value(),
+                    "main_tag_id": form["main_tag_id"].value(),
+                    "mature_node": form["mature_node"].value(),
+                    "latitude": form["latitude"].value(),
+                    "longitude": form["longitude"].value()
+                })
+                # Present error if any exists, update my nodes and present
+                # blank form.
+                form = PostStoryForm()
+                return render(req, "tellmeastory/author_a_node.html", {
+                    "user": user,
+                    "form": form,
+                    "error_message": err_msg,
+                    "nodes": my_nodes,
+                    "tags": all_tags,
+                    "logged_in_username": logged_user
+                })
+            # If cookie does not match username, send to
+            # login page.
+            else:
+                form: LoginForm = LoginForm()
+                err_msg = "Account not found. Try adding a story later."
+                return render(req, "tellmeastory/login.html", {
+                    "form": form,
+                    "error_message": err_msg
+                })
+        else:
+            # Reprompt when invalid form is submitted
+            form = PostStoryForm(req.POST)
+            err_msg = "Invalid Story. All fields are required except the image. Only one image is allowed."
+            return render(req, "tellmeastory/author_a_node.html", {
+                "user": user,
+                "form": form,
+                "error_message": err_msg,
+                "nodes": my_nodes,
+                "tags": all_tags,
+                "logged_in_username": logged_user
+            })
+    # Prompt with node creation page.
+    else:
+        # Render the page with node creation form and
+        # all nodes of current user.
+        return render(req, "tellmeastory/author_a_node.html", {
+                "user": user,
+                "form": form,
+                "error_message": err_msg,
+                "nodes": my_nodes,
+                "tags": all_tags,
+                "logged_in_username": logged_user
+            })
+
