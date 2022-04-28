@@ -297,3 +297,31 @@ class Node(Model):
         self.save()
 
         return
+
+    def add_reaction(self, emoji: str, user: User) -> bool:
+        """
+        Adds a reaction to this node.
+        """
+        if self.is_user_reacted_with_emoji(emoji, user): return False
+
+        reaction: Reaction = Reaction(node=self, emoji=emoji, owner=user)
+        reaction.save()
+        return True
+
+    def num_reactions_of_emoji(self, emoji: str) -> int:
+        """
+        Returns a QuerySet of all the reactions to this Node
+        with the given emoji.
+        """
+        return Reaction.objects.filter(node=self, emoji=emoji).count()
+
+    def is_user_reacted_with_emoji(self, emoji: str, user: User) -> bool:
+        """
+        Returns True if the current user has reacted to this Node.
+        """
+        return Reaction.objects.filter(node=self, emoji=emoji, owner=user).exists()
+
+class Reaction(Model):
+    emoji: CharField = CharField(max_length=1)
+    node: ForeignKey = ForeignKey(Node, on_delete=CASCADE, null=True)
+    owner: ForeignKey = ForeignKey(User, on_delete=CASCADE, null=True)
