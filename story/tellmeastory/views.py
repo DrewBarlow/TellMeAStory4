@@ -339,20 +339,23 @@ def Audio_store(req: HttpRequest) -> HttpResponse:
         if form.is_valid():
             # process data as required
             node: Node = form["node_id"].value()
-            node = Node.objects.get(id=node)
+            if Node.objects.filter(id=node).exists():
+                node = Node.objects.get(id=node)
+            else:
+                node = None
             if node is None:
                 msg = "cannot attach audio to node"
             # attach new audio
             else:
                 try:
-                    audio_file = req.FILES.get('node_audio', None)
+                    audio_file = req.FILES.get('audio_file', None)
                 except:
                     audio_file = None
                 # if audio is read save
                 if audio_file is not None:
                     if node.add_audio(sound=audio_file):
                         node.save()
-                        msg = "audio update"
+                        msg = "audio update" + str(node.id)
                     else:
                         msg = "Unknown audio, try again"
 
@@ -376,7 +379,17 @@ def Audio_store(req: HttpRequest) -> HttpResponse:
 
 
 def accountSettings(req: HttpRequest, username:str) -> HttpResponse:
-    user = User.objects.get(username=username)#user = req.user
+    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+    user: User = None
+
+    try:
+        user = User.objects.get(username=username)
+
+    except User.DoesNotExist:
+        return render(req, "tellmeastory/profileNotFound.html", {
+            "logged_in_username": logged_user,
+        })
+
     form = ProfileForm(instance=user)
 
     if req.method == 'POST':
@@ -385,4 +398,8 @@ def accountSettings(req: HttpRequest, username:str) -> HttpResponse:
             form.save()
 
     context = {'form': form}
-    return render(req, 'tellmeastory/accountimg_settings.html', context)
+    return render(req, 'tellmeastory/profile.html', {
+        "user": user ,
+        "logged_in_username": logged_user ,
+        "form": form,
+    })

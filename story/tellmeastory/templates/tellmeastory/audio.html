@@ -25,11 +25,15 @@
                     <!-- Display image from url or image from file depending on what is stored (for manual testing)-->
                     <!-- Will be connected to story creation later on. -->
                     {% if not node_models.audio_exists%}
-                        <img src="{{node_models.node_audio}}" height="100px">
+                        <audio controls autoplay>
+                            <source src="{{node_models.node_audio}}" type="audio/wav">
+                        </audio>
                     {% else %}
-                        <img src="{{node_models.node_audio}}" height="100px">
+                        <audio controls autoplay>
+                            <source src="{{node_models.node_audio}}" type="audio/wav">
+                        </audio>
                     {% endif %}
-                    {{ node_models.node_audio }}
+                    {{ node.node_audio }}
                 </li> <br/>
             {% endfor %}
         </ol>

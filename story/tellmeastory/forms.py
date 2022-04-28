@@ -29,23 +29,13 @@ class AddImageForm(Form):
     image_url: CharField = CharField(max_length=200, required=False)
     node_id: IntegerField = IntegerField(required=True)
 
-class AudioForm(Form):
-    class Meta:
-        model=Node
-        fields = ['node_audio']
-    # If no audio is given then no audio is added
-    audio_file: FileField = FileField(required=False)
-    node_audio: FileField = FileField(required=False)
-    node_id: IntegerField = IntegerField(required=True)
-
 
 class AudioForm(Form):
     class Meta:
-        model=Node
+        model = Node
         fields = ['node_audio']
     # If no audio is given then no audio is added
     audio_file: FileField = FileField(required=False)
-    node_audio: FileField = FileField(required=False)
     node_id: IntegerField = IntegerField(required=True)
 
 class ProfileForm(ModelForm):

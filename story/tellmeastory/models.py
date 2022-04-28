@@ -4,6 +4,7 @@ from django.urls import resolve, Resolver404
 from re import fullmatch, Match
 from validators import url
 from managetags.models import Tag
+from playsound import playsound
 
 # Create your models here.
 class User(Model):
@@ -98,7 +99,7 @@ class Node(Model):
     node_author: ForeignKey = ForeignKey(User , on_delete=CASCADE , null=True)  # Account/user who created the Node
     main_tag_id: int = 0  # Primary story content Tag's id. One main Tag can relate to many story Nodes.
     other_tags: ManyToManyField = ManyToManyField(Tag)  # A Node can have many tags for further filtering
-    node_audio: FileField = FileField(upload_to="profileimg", default=None)
+    node_audio: FileField = FileField(upload_to="storyaudio", default=None)
     audio_exists = models.BooleanField(default=False) # True only when user gave an audio file
 
     def __str__(self):
@@ -244,12 +245,14 @@ class Node(Model):
     def add_audio(self, sound=None) -> bool:
         # checks for audio
         if sound is not None:
-            self.audio = sound
+            self.node_audio = sound
             try:
                 self.audio_exists = True
                 self.save()
+                playsound(r'storyaudio')
                 return True
             except:
                 return False
         else:
             return False
+

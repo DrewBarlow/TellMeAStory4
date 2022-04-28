@@ -39,7 +39,7 @@ class NodeAudioTests(TestCase):
         err_msg = "N/A"
 
         # Create test node
-        node: Node = Node(node_title="Test5")
+        node: Node = Node(node_title="Test2")
         node.save()
 
         # Process basic request for audio
@@ -57,7 +57,7 @@ class NodeAudioTests(TestCase):
         res: HttpResponse = self.client.post("/story/audio/", data={
             "form": AudioForm,
             "err_msg": err_msg,
-            "image_file": test_audio_file,
+            "audio_file": test_audio_file,
             "id": 0,
             "nodes": all_nodes
         })
