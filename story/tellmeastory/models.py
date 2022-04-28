@@ -292,7 +292,7 @@ class Node(Model):
 
         return
       
-     def add_reaction(self, emoji: str, user: User) -> bool:
+    def add_reaction(self, emoji: str, user: User) -> bool:
         """
         Adds a reaction to this node.
         """
