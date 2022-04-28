@@ -382,7 +382,9 @@ def author_story(req: HttpRequest, username: str) -> HttpResponse:
                     "image_file": form["image_file"].value(),
                     "image_url": form["image_url"].value(),
                     "main_tag_id": form["main_tag_id"].value(),
-                    "mature_node": form["mature_node"].value()
+                    "mature_node": form["mature_node"].value(),
+                    "latitude": form["latitude"].value(),
+                    "longitude": form["longitude"].value()
                 })
                 # Present error if any exists, update my nodes and present
                 # blank form.
