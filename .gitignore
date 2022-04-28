@@ -1,3 +1,6 @@
+# Image Duplication inside of media
+story/media/storyimages/test_image_*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
