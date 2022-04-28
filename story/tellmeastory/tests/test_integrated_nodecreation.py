@@ -5,6 +5,7 @@ from selenium import webdriver
 from django.test import LiveServerTestCase
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
+from hashlib import sha512
 
 class AddNodeFromUserTests(LiveServerTestCase):
 
@@ -69,8 +70,7 @@ class AddNodeFromUserTests(LiveServerTestCase):
         self.assertTrue(Node.objects.count())  # Check if nodes exist
         self.assertTrue(Node.objects.filter(node_author__username=username).first().node_title == "title")  # Check title
         self.assertTrue(Node.objects.filter(node_author__username=username).first().node_content == "content")  # Check content
-        self.assertFalse(Node.objects.filter(node_author__username=username).first().has_image_file)  # Check image
-        self.assertTrue(Node.objects.filter(node_author__username=username).first().main_tag_id == TagToInsert.id)  # Check main tag
+        self.assertFalse(Node.objects.filter(node_author__username=username).first().has_image_file)  # Check image (should only have url, not file)
         return
 
     def test_add_invalid_story_fields(self):
@@ -78,6 +78,59 @@ class AddNodeFromUserTests(LiveServerTestCase):
         Tests invalid input for all story fields. The correct error
         message should appear and no additional nodes should exist.
         """
+        # Create a temporary Test user for calling post function
+        username = "namename"
+        password = "password1"
+        display_name = "display"
+        user = User.objects.create(username=username, password=sha512(password.encode("utf-8")).hexdigest(), display_name=display_name)
+        # Create test tag
+        TagToInsert = Tag(name_text="name123", language="en_US")
+        TagToInsert.add_new_tag() # Create Main Tag to Add
+        # Test invalid title response
+        invalid_title_err = "Invalid title"
+        invalid_node_dict = {
+                    "node_title": "t",
+                    "node_content": "content",
+                    "image_file": None,
+                    "image_url": "www.google.com",
+                    "main_tag_id": TagToInsert.id,
+                    "mature_node": False
+                }
+        self.assertTrue(invalid_title_err, user.post_node(invalid_node_dict))
+        # Test invalid content response
+        invalid_content_err = "Content is limited to 10,000 characters"
+        long_content: str = "l" * 100000
+        invalid_node_dict = {
+                    "node_title": "title",
+                    "node_content": long_content,
+                    "image_file": None,
+                    "image_url": "www.google.com",
+                    "main_tag_id": TagToInsert.id,
+                    "mature_node": False
+                }
+        self.assertTrue(invalid_title_err, user.post_node(invalid_node_dict))
+        # Test invalid image response
+        invalid_image_err = "Invalid Image. You may add one image to each story."
+        invalid_node_dict = {
+                    "node_title": "title",
+                    "node_content": "content",
+                    "image_file": "www.google.com",
+                    "image_url": "www.google.com",
+                    "main_tag_id": TagToInsert.id,
+                    "mature_node": False
+                }
+        self.assertTrue(invalid_title_err, user.post_node(invalid_node_dict))
+        # Test invalid main tag response
+        invalid_main_tag_err = "Main Tag not found. Please select a valid main tag."
+        invalid_node_dict = {
+                    "node_title": "title",
+                    "node_content": "content",
+                    "image_file": None,
+                    "image_url": "www.google.com",
+                    "main_tag_id": -1,
+                    "mature_node": False
+                }
+        self.assertTrue(invalid_title_err, user.post_node(invalid_node_dict))
         return
 
     def test_existing_stories_and_tags_present(self):
