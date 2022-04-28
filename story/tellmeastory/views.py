@@ -3,7 +3,7 @@ import json
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
-from .forms import LoginForm, NameChangeForm, AddImageForm, NodeCreationForm, RegisterForm, AudioForm, ProfileForm
+from .forms import LoginForm, NameChangeForm, AddImageForm, NodeCreationForm, RegisterForm
 from .models import User, Post, Node
 from typing import Any, Dict
 from .constants import *
@@ -25,8 +25,6 @@ def account(req: HttpRequest, username: str) -> HttpResponse:
     user: User = get_object_or_404(User, username=username)
     form: NameChangeForm = None
     form_msg: str = None
-
-    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
 
     if req.COOKIES.get(COOKIE_NAME) == username:
         if req.method == "POST":
@@ -52,8 +50,7 @@ def account(req: HttpRequest, username: str) -> HttpResponse:
     return render(req, "tellmeastory/account.html", {
         "user": user,
         "form": form,
-        "change_message": form_msg,
-        "logged_in_username": logged_user
+        "change_message": form_msg
     })
 
 # https://docs.djangoproject.com/en/4.0/topics/forms/
@@ -211,8 +208,6 @@ def create_node(req: HttpRequest) -> HttpResponse:
 
 def map(req: HttpRequest) -> HttpResponse:
 
-    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
-
     DATA_TO_INSERT = []
 
     # THIS DATA IS TEMPORARY - Used only to visualize how stories will appear on the map - not apart of the story
@@ -229,7 +224,6 @@ def map(req: HttpRequest) -> HttpResponse:
     return render(req, "tellmeastory/map.html", {
         "mapbox_token": API_TOKEN,
         "map_data": CONVERT_JSON,
-        "logged_in_username": logged_user
     })
 
 # Takes an existing node to add an image onto it
@@ -331,75 +325,4 @@ def profile(req: HttpRequest, username:str) -> HttpResponse:
         "logged_in_username": logged_user ,
         "stories": storiesFromUser,
         "story_count": storyCount,
-    })
-
-def Audio_store(req: HttpRequest) -> HttpResponse:
-    msg: str = "choose audio file"
-    all_nodes = Node.objects.filter()
-    # if this is a POST request process form data
-    if req.method == 'POST':
-        # create form instance for text data
-        form = AudioForm(req.POST, req.FILES or None)
-        # check whether it is valid
-        if form.is_valid():
-            # process data as required
-            node: Node = form["node_id"].value()
-            node = Node.objects.get(id=node)
-            if node is None:
-                msg = "cannot attach audio to node"
-            # attach new audio
-            else:
-                try:
-                    audio_file = req.FILES.get('node_audio', None)
-                except:
-                    audio_file = None
-                # if audio is read save
-                if audio_file is not None:
-                    if node.add_audio(sound=audio_file):
-                        node.save()
-                        msg = "audio update"
-                    else:
-                        msg = "Unknown audio, try again"
-
-        # go through stages with new change and leave msg     [form.save()]
-        return render(req, "tellmeastory/audio.html", {
-            "form": form,
-            "msg": msg,
-            "audio_file": None,
-            "id": None,
-            "nodes": all_nodes
-        })
-    else: # ask for audio to be added
-        return render(req, "tellmeastory/audio.html", {
-                    "form": AudioForm,
-                    "msg": msg,
-                    "audio_file": None,
-                    "id": None,
-                    "nodes": all_nodes
-        })
-
-def accountSettings(req: HttpRequest, username: str) -> HttpResponse:
-    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
-    user: User = None
-
-    try:
-        user = User.objects.get(username=username)
-
-    except User.DoesNotExist:
-        return render(req, "tellmeastory/profileNotFound.html", {
-            "logged_in_username": logged_user,
-        })
-
-    form = ProfileForm(instance=user)
-
-    if req.method == 'POST':
-        form = ProfileForm(req.POST, req.FILES, instance=user)
-        if form.is_valid():
-            form.save()
-
-    context = {'form':form}
-    return render(req, 'story/accountimg_settings.html',{
-        "user": user,
-        "logged_in_username": logged_user,
-        "form": form,
     })

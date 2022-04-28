@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import ManyToManyField, BooleanField, ImageField, TextField, CharField, FloatField, ForeignKey, Model, CASCADE, FileField
+from django.db.models import ManyToManyField, BooleanField, ImageField, TextField, CharField, FloatField, ForeignKey, Model, CASCADE
 from django.urls import resolve, Resolver404
 from re import fullmatch, Match
 from validators import url
@@ -10,7 +10,6 @@ class User(Model):
     username: CharField = CharField(max_length=200)
     password: CharField = CharField(max_length=512)
     display_name: CharField = CharField(max_length=200)
-    profile_pic = models.ImageField(default="profile_pic.jpg", null=True, blank=True)
     mature: BooleanField = BooleanField(default=False)
     user_blurb = models.CharField(max_length=1000, default="")
     admin = models.BooleanField(default=False)
@@ -98,8 +97,6 @@ class Node(Model):
     node_author: ForeignKey = ForeignKey(User , on_delete=CASCADE , null=True)  # Account/user who created the Node
     main_tag_id: int = 0  # Primary story content Tag's id. One main Tag can relate to many story Nodes.
     other_tags: ManyToManyField = ManyToManyField(Tag)  # A Node can have many tags for further filtering
-    node_audio: FileField = FileField(upload_to="storyaudio", default=None)
-    audio_exists = models.BooleanField(default=False) # True only when user gave an audio file
 
     def __str__(self):
         """
@@ -239,17 +236,3 @@ class Node(Model):
         self.save()
 
         return
-
-    # audio to story
-    def add_audio(self, sound=None) -> bool:
-        # checks for audio
-        if sound is not None:
-            self.node_audio = sound
-            try:
-                self.audio_exists = True
-                self.save()
-                return True
-            except:
-                return False
-        else:
-            return False

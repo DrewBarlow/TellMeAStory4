@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="Update add Node image html to accept image files">
-      <change beforePath="$PROJECT_DIR$/.idea/TellMeAStory4.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TellMeAStory4.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/views.py" afterDir="false" />
-    </list>
+    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="Added profile_pic and audio implementation" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -131,13 +122,6 @@
       <workItem from="1648598423522" duration="35030000" />
       <workItem from="1649785611902" duration="13679000" />
       <workItem from="1649813969817" duration="21239000" />
-    </task>
-    <task id="LOCAL-00008" summary="Heroku Settings">
-      <created>1648481351429</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1648481351429</updated>
     </task>
     <task id="LOCAL-00009" summary="Heroku Settings">
       <created>1648481385801</created>
@@ -475,7 +459,14 @@
       <option name="project" value="LOCAL" />
       <updated>1649880427975</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="Added profile_pic and audio implementation">
+      <created>1651136395643</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1651136395643</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -505,7 +496,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Put tellmeastory tests back" />
     <MESSAGE value="Added create a tag html form" />
     <MESSAGE value="Update create a tag html form" />
     <MESSAGE value="Update urls for creating tag" />
@@ -530,6 +520,7 @@
     <MESSAGE value="Add test image for running tests" />
     <MESSAGE value="Add Node model add image functions and add image view" />
     <MESSAGE value="Update add Node image html to accept image files" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update add Node image html to accept image files" />
+    <MESSAGE value="Added profile_pic and audio implementation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added profile_pic and audio implementation" />
   </component>
 </project>

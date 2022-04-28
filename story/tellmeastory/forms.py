@@ -39,6 +39,34 @@ class AudioForm(Form):
     node_id: IntegerField = IntegerField(required=True)
 
 class ProfileForm(ModelForm):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+class AudioForm(Form):
+    class Meta:
+        model=Node
+        fields = ['node_audio']
+    # If no audio is given then no audio is added
+    audio_file: FileField = FileField(required=False)
+    node_audio: FileField = FileField(required=False)
+    node_id: IntegerField = IntegerField(required=True)
+
+class ProfileForm(ModelForm):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+class AudioForm(Form):
+    class Meta:
+        model=Node
+        fields = ['node_audio']
+    # If no audio is given then no audio is added
+    audio_file: FileField = FileField(required=False)
+    node_audio: FileField = FileField(required=False)
+    node_id: IntegerField = IntegerField(required=True)
+
+class ProfileForm(ModelForm):
     profile_pic: ImageField = ImageField(required=True)
     class Meta:
         model = User
