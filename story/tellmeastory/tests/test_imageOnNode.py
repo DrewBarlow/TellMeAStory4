@@ -15,7 +15,7 @@ class NodeImageTests(TestCase):
         self.assertIsNotNone(AddImageForm(data={"image_file": "storyimages/test_image.jpeg", "id": 1}))
         self.assertIsNotNone(AddImageForm(data={"image_url": "www.google.com", "id": 1}))
         # Add an image from a valid file
-        test_image_path = "story/media/storyimages/test_image.jpeg"
+        test_image_path = "media/storyimages/test_image.jpeg"
         test_image_file = SimpleUploadedFile(name='test_image.jpeg',
                                              content=open(test_image_path, 'rb').read(),
                                              content_type='image/jpeg')
@@ -51,7 +51,7 @@ class NodeImageTests(TestCase):
         errors and properties must be updated.
         """
         # Test image file
-        test_image_path = "story/media/storyimages/test_image.jpeg"
+        test_image_path = "media/storyimages/test_image.jpeg"
         test_image_file = SimpleUploadedFile(name='test_image.jpeg',
                                              content=open(test_image_path, 'rb').read(),
                                              content_type='image/jpeg')
@@ -76,7 +76,7 @@ class NodeImageTests(TestCase):
         to the add image to a node view.
         '''
         # Test image file
-        test_image_path = "story/media/storyimages/test_image.jpeg"
+        test_image_path = "media/storyimages/test_image.jpeg"
         test_image_file = SimpleUploadedFile(name='test_image.jpeg',
                                              content=open(test_image_path, 'rb').read(),
                                              content_type='image/jpeg')
