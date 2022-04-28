@@ -1,4 +1,4 @@
-from django.forms import BooleanField, IntegerField, CharField, ImageField, Form
+from django.forms import BooleanField, IntegerField, FloatField, CharField, ImageField, Form
 from .models import Node, User
 
 class LoginForm(Form):
@@ -28,3 +28,14 @@ class AddImageForm(Form):
     image_file: ImageField = ImageField(required=False)
     image_url: CharField = CharField(max_length=200, required=False)
     node_id: IntegerField = IntegerField(required=True)
+
+class PostStoryForm(Form):
+    # If no image is given, then no image is added.
+    node_title: CharField = CharField(max_length=200, required=True)
+    node_content: CharField = CharField(max_length=10_000, required=True)
+    image_file: ImageField = ImageField(required=False)
+    image_url: CharField = CharField(max_length=200, required=False)
+    main_tag_id: IntegerField = IntegerField(required=True)
+    mature_node: BooleanField = BooleanField(label="Is this story mature?", required=False)
+    latitude: FloatField = FloatField(required=True)
+    longitude: FloatField = FloatField(required=True)

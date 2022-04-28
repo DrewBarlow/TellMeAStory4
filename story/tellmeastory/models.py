@@ -4,6 +4,7 @@ from django.urls import resolve, Resolver404
 from re import fullmatch, Match
 from validators import url
 from managetags.models import Tag
+from typing import Any, Dict
 
 # Create your models here.
 class User(Model):
@@ -60,6 +61,66 @@ class User(Model):
         Returns True if self.mature is True.
         """
         return self.is_mature
+
+    def post_node(self, contentDict) -> str:
+        """
+        Returns True if node is posted correctly.
+        contentDict contains:
+            "node_title" -> CharField
+            "node_content" -> CharField
+            "image_file" -> ImageField
+            "image_url" -> CharField
+            "main_tag_id" -> IntegerField
+            "mature_node" -> Bool (true when mature)
+            "latitude" -> Float
+            "longitude" -> Float
+        """
+        # Add title, content, and author to a new Node to insert
+        node_args: Dict[str, Any] = {
+            "node_title": contentDict["node_title"],
+            "node_content": contentDict["node_content"],
+            "node_author": self
+        }
+        newNode: Node = Node(**node_args)
+        # Check title and content for validity
+        if not newNode.is_valid_title():
+            return "Invalid title"
+        if not newNode.is_valid_content():
+            return "Content is limited to 10,000 characters"
+        # Add image to node (if present) and check validity
+        is_not_one_image = contentDict["image_file"] is not None and contentDict["image_url"] is not None
+        is_image_not_added = False
+        if not newNode.add_image(newURL=contentDict["image_url"]):
+            if not newNode.add_image(newFile=contentDict["image_file"]):
+                is_image_not_added = True
+        if is_not_one_image:
+            return "Invalid Image. You may add one image to each story."
+        newNode.save()  # Every return after this MUST delete newNode, it was saved to create its id for ManyToMany
+        # Add main tag to story and validate that it exists
+        if int(contentDict["main_tag_id"]) < 0 or (not newNode.attach_main_tag(Tag.objects.get(id=int(contentDict["main_tag_id"])).add_tag_to_node())):
+            newNode.delete()
+            return "Main Tag not found. Please select a valid main tag."
+        # Add mature rating is node contains mature content
+        if contentDict["mature_node"]:
+            newNode.attach_mature_tag()
+        # Verify longitude and latitude
+        MAX_LONG = 180
+        MIN_LONG = -180
+        MAX_LAT = 90
+        MIN_LAT = -90
+        if not (float(contentDict["latitude"]) <= MAX_LAT and float(contentDict["latitude"]) >= MIN_LAT):
+            newNode.delete()
+            return "Invalid latitude"
+        elif not (float(contentDict["longitude"]) <= MAX_LONG and float(contentDict["longitude"]) >= MIN_LONG):
+            newNode.delete()
+            return "Invalid longitude"
+        # Update long/lat
+        newNode.latitude = float(contentDict["latitude"])
+        newNode.longitude = float(contentDict["longitude"])
+        # Now that everything has been verified. The node can be successfully
+        # saved to the database and the user can receive a success message.
+        newNode.save()
+        return "Successfully Added your Story! Please refresh page to see changes."
 
 class Post(models.Model):
 
