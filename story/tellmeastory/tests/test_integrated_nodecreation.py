@@ -6,6 +6,7 @@ from django.test import LiveServerTestCase
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from hashlib import sha512
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 class AddNodeFromUserTests(LiveServerTestCase):
 
@@ -78,7 +79,7 @@ class AddNodeFromUserTests(LiveServerTestCase):
         self.assertFalse(Node.objects.filter(node_author__username=username).first().has_image_file)  # Check image (should only have url, not file)
         return
 
-    def test_add_invalid_story_fields(self):
+    def test_add_invalid_and_valid_story_fields(self):
         """
         Tests invalid input for all story fields. The correct error
         message should appear and no additional nodes should exist.
@@ -144,6 +145,23 @@ class AddNodeFromUserTests(LiveServerTestCase):
                     "longitude": 90
                 }
         self.assertTrue(invalid_title_err, user.post_node(invalid_node_dict))
+        # Test valid image response
+        test_image_path = "media/storyimages/test_image.jpeg"
+        test_image_file = SimpleUploadedFile(name='test_image.jpeg',
+                                             content=open(test_image_path, 'rb').read(),
+                                             content_type='image/jpeg')
+        valid_response = "Successfully Added your Story! Please refresh page to see changes."
+        invalid_node_dict = {
+                    "node_title": "titletitle",
+                    "node_content": "content",
+                    "image_file": test_image_file,
+                    "image_url": None,
+                    "main_tag_id": TagToInsert.id,
+                    "mature_node": False,
+                    "latitude": 90,
+                    "longitude": 90
+                }
+        self.assertTrue(valid_response, user.post_node(invalid_node_dict))
         return
 
     def test_existing_stories_and_tags_present(self):
