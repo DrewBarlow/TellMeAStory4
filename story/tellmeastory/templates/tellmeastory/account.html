@@ -89,18 +89,21 @@
                     <div class="container">
                         {% block content %}
                             <div class="row justify-content-center">
-                                {% if change_message %}
-                                    {% if change_message == "Successfully changed display name." %}
+                                {% if message_type != 0 %}
+
+                                    {% if message_type == 1 %}
 
                                         <div class="alert alert-success"
-                                             style="width:50%; text-align: center">{{ change_message }}</div>
+                                             style="width:50%; text-align: center">{{ change_message }}
+                                        </div>
 
-                                    {% else %}
+                                    {% elif message_type == -1 %}
+
                                         <div class="alert alert-danger"
-                                             style="width:50%; text-align: center">{{ change_message }}</div>
-
-                                    {% endif %}
-                                {% endif %}
+                                             style="width:50%; text-align: center">{{ change_message }}
+                                        </div>
+                                  {% endif %}
+                            {% endif %}
                             </div>
 
                             {% for field in form %}
@@ -112,21 +115,15 @@
                                             <label class="col col-form-label" style="text-align: center"
                                                    for="id_{{ field.name }}">{{ field.label }}</label>
                                             <div class="col">
-                                                <input
-                                                        type="{{ field.field.widget.input_type }}"
-                                                        class="form-control"
-                                                        style="text-align: center; width:400px"
-                                                        name="{{ field.name }}"
-                                                        id="id_{{ field.name }}"
-                                                        value="{{ field.value|default:'' }}"
-                                                        style="width:300px"
-                                                >
+                                                 <textarea class=form-control rows="6" style="width:500px;"
+                                                 name="{{ field.name }}"
+                                                 id="id_{{ field.name }}">{{user.user_blurb}}</textarea>
                                             </div>
                                         </div>
                                     </div>
 
 
-                                {% else %}
+                                {% elif field.label == "New display name" %}
                                     <div class="row justify-content-center">
 
                                         <div class="form-group">
@@ -136,10 +133,10 @@
                                                 <input
                                                         type="{{ field.field.widget.input_type }}"
                                                         class="form-control"
-                                                        style="text-align: center; width:400px"
+                                                        style="text-align: center; width:500px"
                                                         name="{{ field.name }}"
                                                         id="id_{{ field.name }}"
-                                                        value="{{ field.value|default:'' }}"
+                                                        value="{{ user.display_name}}"
                                                         style="width:300px"
                                                 >
                                             </div>

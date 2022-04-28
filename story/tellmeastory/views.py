@@ -3,7 +3,7 @@ import json
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
-from .forms import LoginForm, NameChangeForm, AddImageForm, NodeCreationForm, RegisterForm, PostStoryForm
+from .forms import LoginForm, AccountForm, AddImageForm, NodeCreationForm, RegisterForm, PostStoryForm
 from .models import User, Post, Node
 from managetags.models import Tag
 from typing import Any, Dict
@@ -24,36 +24,54 @@ def index(req: HttpRequest) -> HttpResponse:
 # account stub for now
 def account(req: HttpRequest, username: str) -> HttpResponse:
     user: User = get_object_or_404(User, username=username)
-    form: NameChangeForm = None
-    form_msg: str = None
+    form: AccountForm = None
+    form_msg: str = ""
+
+    # 0 = No message
+    # 1 = Success
+    # -1 = Error
+    msg_type = 0;
 
     logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
 
     if req.COOKIES.get(COOKIE_NAME) == username:
         if req.method == "POST":
-            form = NameChangeForm(req.POST)
+            form = AccountForm(req.POST)
 
             # update the User model and check if the new
             # display name is valid
             old_dname: str = user.display_name
-            user.display_name = form["new_display_name"].value().strip()
 
-            if user.is_valid_display_name():
+            if form["edit_blurb"].value() != user.user_blurb and form["edit_blurb"].value() != None:
+                user.user_blurb = form["edit_blurb"].value().strip()
                 user.save()
-                form_msg = "Successfully changed display name."
-            else:
-                user.display_name = old_dname
-                form_msg = "Failed to change display name."
+                msg_type = 1
+                form_msg = form_msg + "Successfully changed user blurb."
+
+
+            if form["new_display_name"].value() != user.display_name and form["new_display_name"].value() != None:
+                old_dname: str = user.display_name
+                user.display_name = form["new_display_name"].value().strip()
+
+                if user.is_valid_display_name():
+                    user.save()
+                    msg_type = 1;
+                    form_msg = form_msg + "Successfully changed display name."
+                else:
+                    user.display_name = old_dname
+                    msg_type = -1;
+                    form_msg = form_msg + "Failed to change display name."
 
         else:
             # just display the form if the cookie is present and
             # we aren't trying to post data
-            form = NameChangeForm()
+            form = AccountForm()
 
     return render(req, "tellmeastory/account.html", {
         "user": user,
         "form": form,
         "change_message": form_msg,
+        "message_type": msg_type,
         "logged_in_username": logged_user
     })
 

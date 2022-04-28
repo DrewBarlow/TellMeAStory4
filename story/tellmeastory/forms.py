@@ -14,9 +14,10 @@ class RegisterForm(Form):
 
     maturity: BooleanField = BooleanField(label="Are you over 18?", required=False)
 
-class NameChangeForm(Form):
+class AccountForm(Form):
     # this may not need to be required?
     new_display_name: CharField = CharField(max_length=200, required=True)
+    edit_blurb: CharField = CharField(max_length=1000, required=True)
 
 class NodeCreationForm(Form):
     node_title: CharField = CharField(max_length=200, required=True)
