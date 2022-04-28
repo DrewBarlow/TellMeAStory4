@@ -1,13 +1,13 @@
 import json
 import uuid
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, HttpResponseForbidden, Http404
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
 from typing import Any, Dict
 from .forms import LoginForm, NameChangeForm, RegisterForm, PostForm, ReportForm, AddImageForm, NodeCreationForm
 from .models import User, Report, Ban, Node
 from .constants import *
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
 import uuid
 
@@ -24,22 +24,22 @@ def index(req: HttpRequest) -> HttpResponse:
         "logged_in_username": logged_user
     })
 
+
 # account stub for now
 def account(req: HttpRequest, username) -> HttpResponse:
-
-    #get the current username
+    # get the current username
     username = req.COOKIES.get(COOKIE_NAME)
 
-    #check if the person logged in has been banned already
+    # check if the person logged in has been banned already
     checkBan = Ban.objects.filter(bannedUser=username)
     if checkBan.exists():
         return HttpResponseRedirect("/banned/")
 
-    #get the current user object from the database
+    # get the current user object from the database
     user: User = get_object_or_404(User, username=username)
 
-    #get all the post from the current user
-    user_posts =  Node.objects.all().filter(node_author__username__istartswith = username)
+    # get all the post from the current user
+    user_posts = Node.objects.all().filter(node_author__username__istartswith=username)
 
     form: NameChangeForm = None
     form_msg: str = None
@@ -71,6 +71,7 @@ def account(req: HttpRequest, username) -> HttpResponse:
         "change_message": form_msg,
         "user_posts": user_posts,
     })
+
 
 # https://docs.djangoproject.com/en/4.0/topics/forms/
 def login(req: HttpRequest) -> HttpResponse:
@@ -119,6 +120,7 @@ def login(req: HttpRequest) -> HttpResponse:
         "error_message": err_msg
     })
 
+
 # https://docs.djangoproject.com/en/4.0/topics/forms/
 def register(req: HttpRequest) -> HttpResponse:
     form: RegisterForm = None
@@ -135,7 +137,7 @@ def register(req: HttpRequest) -> HttpResponse:
             if display_name is None or not len(display_name):
                 display_name = form["username"].value()
 
-            #check if the username was banned
+            # check if the username was banned
             checkBan = Ban.objects.filter(bannedUser=str(form["username"].value()))
 
             # hash the user's password for at least a bit of security
@@ -169,6 +171,7 @@ def register(req: HttpRequest) -> HttpResponse:
         "error_message": err_msg
     })
 
+
 # may need location data as args, not sure
 def create_node(req: HttpRequest) -> HttpResponse:
     form: NodeCreationForm = None
@@ -194,20 +197,19 @@ def create_node(req: HttpRequest) -> HttpResponse:
                 # ISSUE: I have no idea why, but I get kwarg issues
                 #   on longitude and latitude...
 
-                #create a post id
+                # create a post id
                 create_post_id = uuid.uuid1()
                 checkID = Node.objects.filter(post_id=create_post_id)
                 while (checkID.count() != 0):
                     create_post_id = uuid.uuid1()
                     checkID = Node.objects.filter(post_id=create_post_id)
 
-
                 node_args: Dict[str, Any] = {
                     "image": None,
                     "node_title": form["node_title"].value().strip(),
                     "node_content": form["node_content"].value().strip(),
-                    #"longitude": 0,
-                    #"latitude": 0,
+                    # "longitude": 0,
+                    # "latitude": 0,
                     "node_author": user,
                     "post_id": create_post_id
                 }
@@ -236,17 +238,18 @@ def create_node(req: HttpRequest) -> HttpResponse:
         "error_message": err_message
     })
 
+
 # need some node id
 """def view_node(req: HttpRequest, node_id: int) -> HttpResponse:
     # get id or 404, display node
     return"""
 
-def map(req: HttpRequest) -> HttpResponse:
 
-    #get the current user logged in
+def map(req: HttpRequest) -> HttpResponse:
+    # get the current user logged in
     username = req.COOKIES.get(COOKIE_NAME)
 
-    #check if the current user logged in has been banned
+    # check if the current user logged in has been banned
     checkBan = Ban.objects.filter(bannedUser=username)
     if checkBan.exists():
         return HttpResponseRedirect("/banned/")
@@ -260,7 +263,6 @@ def map(req: HttpRequest) -> HttpResponse:
     DATA_TO_INSERT.insert(0, [[-80.13701, 25.901808], "Story 4 Location"])
     DATA_TO_INSERT.insert(0, [[-97.6889, 30.32606], "Story 5 Location"])
 
-
     # Converts our data to JSON format
     CONVERT_JSON = json.dumps(DATA_TO_INSERT);
 
@@ -269,20 +271,24 @@ def map(req: HttpRequest) -> HttpResponse:
         "map_data": CONVERT_JSON,
     })
 
-#Remove a post then redirect to all the posts of the current user (needs a confirm prompt)
-def deletePost(req: HttpRequest, post_id)-> HttpResponse:
 
-    #get the current user logged in
+# Remove a post then redirect to all the posts of the current user (needs a confirm prompt)
+def deletePost(req: HttpRequest, post_id) -> HttpResponse:
+    # get the current user logged in
     username = req.COOKIES.get(COOKIE_NAME)
 
-    #if the current user has been banned
+    # if the current user has been banned
     checkBan = Ban.objects.filter(bannedUser=username)
     if checkBan.exists():
         return HttpResponseRedirect("/banned/")
 
+    # get the current post
+    post = Node.objects.filter(post_id=post_id)
 
+    # if the post does not exists raise a 404 error for now
+    if post.exists() == False:
+        raise Http404
 
-    #get the current post
     post = Node.objects.get(post_id=post_id)
 
     # if another user is trying to edit someone else's post
@@ -292,16 +298,15 @@ def deletePost(req: HttpRequest, post_id)-> HttpResponse:
 
     get_user = str(post.node_author)
 
-    #delete current post
+    # delete current post
     post.delete()
 
-    #redirect to the users page
+    # redirect to the users page
     return redirect("/profile/{0}/".format(get_user))
 
 
-#Editing a post chosen by the current user redirect to all the posts of the current user (includes input validation based off the model)
-def editPost(req: HttpRequest, post_id)-> HttpResponse:
-
+# Editing a post chosen by the current user redirect to all the posts of the current user (includes input validation based off the model)
+def editPost(req: HttpRequest, post_id) -> HttpResponse:
     # get the current user logged in
     username = req.COOKIES.get(COOKIE_NAME)
 
@@ -310,32 +315,37 @@ def editPost(req: HttpRequest, post_id)-> HttpResponse:
     if checkBan.exists():
         return HttpResponseRedirect("/banned/")
 
-    #get current post
+    # get current post
+    post = Node.objects.filter(post_id=post_id)
+
+    # if the post does not exists raise a 404 error for now
+    if post.exists() == False:
+        raise Http404
+
     post = Node.objects.get(post_id=post_id)
 
-    #if another user is trying to edit someone else's post
+    # if another user is trying to edit someone else's post
     current_post_user = str(post.node_author)
     if (current_post_user != username):
         return HttpResponseRedirect("/allPosts/")
 
-    #get the form for posting
+    # get the form for posting
     form = PostForm(req.POST or None, instance=post)
 
     get_user = str(post.node_author)
 
-    #if the fields are valid, save and redirect
+    # if the fields are valid, save and redirect
     if form.is_valid():
         form.save()
         return redirect("/profile/{0}/".format(get_user))
 
-    #form is a form specified by forms.py, post becomes the Post object specified by the post_id
+    # form is a form specified by forms.py, post becomes the Post object specified by the post_id
     return render(req, 'tellmeastory/editPost.html',
-                  {'form':form,'post':post})
+                  {'form': form, 'post': post})
 
 
-#Viewing all the post's in the database
-def viewPost(req: HttpRequest)-> HttpResponse:
-
+# Viewing all the post's in the database
+def viewPost(req: HttpRequest) -> HttpResponse:
     # get the current user logged in
     username = req.COOKIES.get(COOKIE_NAME)
 
@@ -344,45 +354,40 @@ def viewPost(req: HttpRequest)-> HttpResponse:
     if checkBan.exists():
         return HttpResponseRedirect("/banned/")
 
-
-    #posts are all the posts in the database
+    # posts are all the posts in the database
     posts = Node.objects.all()
 
-
-
-    #pass all the objects to the html page
+    # pass all the objects to the html page
     return render(req, 'tellmeastory/viewAllPosts.html',
                   {
                       'posts': posts,
                       'username': str(username),
                   })
 
-def reportPost(req: HttpRequest, post_id) -> HttpResponse:
 
-    #get the current user
+def reportPost(req: HttpRequest, post_id) -> HttpResponse:
+    # get the current user
     currentUser = req.COOKIES.get(COOKIE_NAME)
 
-
-    #check if the current user is banned first
+    # check if the current user is banned first
     checkBan = Ban.objects.filter(bannedUser=currentUser)
     if checkBan.exists():
         return HttpResponseRedirect("/banned/")
 
-    #get the current post and the form we need
+    # get the current post and the form we need
     post = Node.objects.get(post_id=post_id)
     form = ReportForm(req.POST or None, instance=post)
 
-
-    #get the current user
+    # get the current user
     getUser = User.objects.get(username=currentUser)
 
     # if the fields are valid, save and redirect
     if form.is_valid():
 
-        #get a report id
+        # get a report id
         taken_id = True
 
-        #get a random id
+        # get a random id
         getId = None
         while (taken_id == True):
             getId = str(uuid.uuid4())
@@ -391,10 +396,12 @@ def reportPost(req: HttpRequest, post_id) -> HttpResponse:
             except Report.DoesNotExist:
                 taken_id = False
 
-        #get a report object
-        new_report = Report(reporting_username = getUser,reported_id = str(post.node_author),report_reason = form.cleaned_data.get('report_reason'), id_for_report = getId, post = Node.objects.get(post_id=post_id))
+        # get a report object
+        new_report = Report(reporting_username=getUser, reported_id=str(post.node_author),
+                            report_reason=form.cleaned_data.get('report_reason'), id_for_report=getId,
+                            post=Node.objects.get(post_id=post_id))
 
-        #save the new report to the database and redirect to all the posts
+        # save the new report to the database and redirect to all the posts
         Report.save(new_report)
         return redirect("/allPosts")
 
@@ -406,25 +413,24 @@ def reportPost(req: HttpRequest, post_id) -> HttpResponse:
 
                    })
 
-#Admin view for viewing reports
-def adminReportPage(req: HttpRequest)-> HttpResponse:
 
-    #get current user
+# Admin view for viewing reports
+def adminReportPage(req: HttpRequest) -> HttpResponse:
+    # get current user
     username = req.COOKIES.get(COOKIE_NAME)
 
-    #check if the current user is banned
+    # check if the current user is banned
     checkBan = Ban.objects.filter(bannedUser=username)
     if checkBan.exists():
         return HttpResponseRedirect("/banned/")
 
-
-    #posts are all the posts in the database
+    # posts are all the posts in the database
     reports = Report.objects.all()
 
-    #get the current user to check privileges
+    # get the current user to check privileges
     user = User.objects.get(username=username)
 
-    #if the user is not an admin, deny permission to view the website
+    # if the user is not an admin, deny permission to view the website
     if (user.admin == False):
         raise PermissionDenied
     else:
@@ -436,60 +442,55 @@ def adminReportPage(req: HttpRequest)-> HttpResponse:
                       })
 
 
-
 def adminReportPost(req: HttpRequest, report_id) -> HttpResponse:
-
     username = req.COOKIES.get(COOKIE_NAME)
 
     checkBan = Ban.objects.filter(bannedUser=username)
     if checkBan.exists():
         return HttpResponseRedirect("/banned/")
 
-
     # get the current user to check privileges
     user = User.objects.get(username=username)
 
-
-    #get the report from the database
+    # get the report from the database
     report = Report.objects.get(id_for_report=report_id)
-
-
 
     reported_username = str(report.reporting_username)
 
-    #if the user is not an admin, deny permission to view the website
+    # if the user is not an admin, deny permission to view the website
     if (user.admin == False):
         raise PermissionDenied
     else:
-        #if a dropdown option is saved
+        # if a dropdown option is saved
         if req.method == "POST":
 
-            #get the dropdown option (Ban or Delete)
+            # get the dropdown option (Ban or Delete)
             getChoice = req.POST["choice"]
 
-            #Ban the offender
+            # Ban the offender
             if (getChoice) == "Ban":
                 reportedUser = str(report.post.node_author)
                 Ban.save(Ban(bannedUser=str(reportedUser)))
                 User.objects.get(username=reportedUser).delete()
-            #Delete the report
+            # Delete the report
             else:
                 Report.delete(report)
 
-            #redirect to a list of the reports
+            # redirect to a list of the reports
             return HttpResponseRedirect("/adminReportList/")
         else:
             # pass all the objects to the html page
             return render(req, 'tellmeastory/adminReportPost.html',
-                        {
-                            'report': report,
-                            'reported_username': reported_username,
-                        })
+                          {
+                              'report': report,
+                              'reported_username': reported_username,
+                          })
 
 
-#Ban page
-def banned(req: HttpRequest)-> HttpResponse:
+# Ban page
+def banned(req: HttpRequest) -> HttpResponse:
     return render(req, 'tellmeastory/ban.html')
+
 
 # Takes an existing node to add an image onto it
 def add_image(req: HttpRequest) -> HttpResponse:
@@ -560,17 +561,16 @@ def add_image(req: HttpRequest) -> HttpResponse:
     # Otherwise, prompt for image source info to add to node
     else:
         return render(req, "tellmeastory/addnodeimage.html", {
-                    "form": AddImageForm,
-                    "err_msg": err_msg,
-                    "image_file": None,
-                    "image_url": None,
-                    "id": None,
-                    "nodes": all_nodes
-                })
+            "form": AddImageForm,
+            "err_msg": err_msg,
+            "image_file": None,
+            "image_url": None,
+            "id": None,
+            "nodes": all_nodes
+        })
 
 
-def profile(req: HttpRequest, username:str) -> HttpResponse:
-
+def profile(req: HttpRequest, username: str) -> HttpResponse:
     logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
     user: User = None
 
@@ -578,21 +578,20 @@ def profile(req: HttpRequest, username:str) -> HttpResponse:
         user = User.objects.get(username=username)
 
     except User.DoesNotExist:
-        return render(req , "tellmeastory/profileNotFound.html" , {
-            "logged_in_username": logged_user ,
+        return render(req, "tellmeastory/profileNotFound.html", {
+            "logged_in_username": logged_user,
         })
 
-    #check if another user is trying to go to someone else's profile
-    if (username != req.COOKIES.get(COOKIE_NAME)):
+    # check if another user is trying to go to someone else's profile
+    if username != logged_user:
         raise PermissionDenied
-
 
     storiesFromUser = Node.objects.filter(node_author=user)
     storyCount = storiesFromUser.count()
 
-    return render(req , "tellmeastory/profile.html" , {
-        "user": user ,
-        "logged_in_username": logged_user ,
+    return render(req, "tellmeastory/profile.html", {
+        "user": user,
+        "logged_in_username": logged_user,
         "stories": storiesFromUser,
         "story_count": storyCount,
     })

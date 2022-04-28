@@ -1,7 +1,16 @@
 from django.http import HttpResponse
 from django.test import TestCase
 from hashlib import sha512
-from tellmeastory.models import Node, User, Post, Report, Ban
+from tellmeastory.models import Node, User, Report, Ban
+
+def insert_story_node(post_id: str, node_title: str, node_content: str, node_author: User) -> Node:
+    return Node.objects.create(
+        post_id=post_id,
+        node_title=node_title,
+        node_content=node_content,
+        node_author=node_author
+
+    )
 
 class UserRegistrationViewTests(TestCase):
     def test_blank_registration_page(self) -> None:

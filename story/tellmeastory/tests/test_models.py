@@ -1,11 +1,21 @@
 from django.test import TestCase
-from tellmeastory.models import User, Post, Report, Ban, Node
+from tellmeastory.models import User, Report, Ban, Node
 from managetags.models import Tag
 
 RND_USERNAME: str = "RandomUser"
 
+def insert_story_node(post_id: str, node_title: str, node_content: str, node_author: User) -> Node:
+    return Node.objects.create(
+        post_id=post_id,
+        node_title=node_title,
+        node_content=node_content,
+        node_author=node_author
+
+    )
 
 class UserModelTests(TestCase):
+
+
     def test_valid_username(self) -> None:
         """
         is_valid_username() should return False if the desired
@@ -87,7 +97,7 @@ def insert_node_w_author(author: User, title: str, content: str) -> Node:
 
 class testDatabaseRetrieval(TestCase):
     #testing Post database functionality
-    def test_get_retrieval_post(self):
+    def test_get_retrieval_node(self):
 
         # create objects
         user1 = User.objects.create(username="user1", password="test", display_name = "Warrior", admin = False )
@@ -95,16 +105,17 @@ class testDatabaseRetrieval(TestCase):
 
 
         # create some objects
-        Post.objects.create(username=user1, post_id="4ad56262a25", postText="My first post!")
-        Post.objects.create(username=user2, post_id="26q2aa263a2", postText="My second post!")
+        insert_story_node(post_id="4ad56262a25", node_title="My first post!", node_content="First Story", node_author=user1)
+        insert_story_node(post_id="26q2aa263a2", node_title="My second post!", node_content="Second Story", node_author=user2)
+
 
         # get by the post_id (primary key)
-        first_post = Post.objects.get(post_id="4ad56262a25",)
-        second_post = Post.objects.get(post_id="26q2aa263a2")
+        first_post = Node.objects.get(post_id="4ad56262a25")
+        second_post = Node.objects.get(post_id="26q2aa263a2")
 
         #check if the text is equal in the database
-        self.assertEqual(first_post.postText, "My first post!")
-        self.assertEqual(second_post.postText, "My second post!")
+        self.assertEqual(first_post.node_title, "My first post!")
+        self.assertEqual(second_post.node_title, "My second post!")
 
         return
 
@@ -134,12 +145,13 @@ class testReporting(TestCase):
         user2 = User.objects.create(username="user2", password="test", display_name="Gunner", admin=False)
 
         # create some objects
-        post = Post.objects.create(username=user2, post_id="4ad56262a25", postText="My first post!")
+        newNode = insert_story_node(post_id="4ad56262a25", node_title="My first post!", node_content="First Story", node_author=user2)
 
-        report = Report.objects.create(reporting_username=user1,reported_id="9205a925",report_reason="Racism",id_for_report="6a92agh0aw",post=post)
+        Report.objects.create(reporting_username=user1,reported_id="9205a925",report_reason="Racism",id_for_report="6a92agh0aw",post=newNode)
 
-
-        self.assertEqual(report.report_reason, "Racism")
+        getReports = Report.objects.filter(reporting_username=user1)
+        reportCount = getReports.count()
+        self.assertEqual(reportCount, 1)
 
         return
 
@@ -148,7 +160,7 @@ class testReporting(TestCase):
         # create some objects
         user = User.objects.create(username="user2", password="test", display_name="Gunner", admin=False)
 
-        Post.objects.create(username=user, post_id="4ad56262a25", postText="My first post!")
+        insert_story_node(post_id="4ad56262a25", node_title="My first post!", node_content="First Story", node_author=user)
 
         #simulate a ban
         Ban.objects.create(bannedUser=str(user))
@@ -158,6 +170,7 @@ class testReporting(TestCase):
         #check if the current user is in the User table and Ban table
         get_user = User.objects.filter(username=str(user))
         get_banned_user = Ban.objects.filter(bannedUser=str(user))
+
 
         self.assertEqual(get_user.exists(),False)
         self.assertNotEqual(get_banned_user, None)
