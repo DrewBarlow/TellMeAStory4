@@ -3,7 +3,8 @@ import uuid
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, HttpResponseForbidden, Http404
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
-from .forms import LoginForm, AccountForm, AddImageForm, NodeCreationForm, RegisterForm, PostStoryForm, ReportForm, NameChangeForm, PostForm
+from .forms import LoginForm, AccountForm, AddImageForm, NodeCreationForm, RegisterForm, PostStoryForm, ReportForm, PostForm
+from managetags.models import Tag
 from typing import Any, Dict
 from .models import User, Report, Ban, Node
 from .constants import *
@@ -41,7 +42,7 @@ def account(req: HttpRequest, username) -> HttpResponse:
     # get all the post from the current user
     user_posts = Node.objects.all().filter(node_author__username__istartswith=username)
 
-    form: NameChangeForm = None
+    form: AccountForm = None
     form_msg: str = None
 
     # 0 = No message
