@@ -97,7 +97,7 @@ class User(Model):
             return "Invalid Image. You may add one image to each story."
         newNode.save()  # Every return after this MUST delete newNode, it was saved to create its id for ManyToMany
         # Add main tag to story and validate that it exists
-        if int(contentDict["main_tag_id"]) < 0 or (not newNode.attach_main_tag(Tag.objects.get(id=int(contentDict["main_tag_id"])).add_tag_to_node())):
+        if (not Tag.objects.count()) or (int(contentDict["main_tag_id"]) < 0) or (not newNode.attach_main_tag(Tag.objects.get(id=int(contentDict["main_tag_id"])).add_tag_to_node())):
             newNode.delete()
             return "Main Tag not found. Please select a valid main tag."
         # Add mature rating is node contains mature content

@@ -376,11 +376,23 @@ def author_story(req: HttpRequest, username: str) -> HttpResponse:
                         "error_message": err_msg
                     })
                 # CREATE STORY NODE FROM PROVIDED INFORMATION
+                # Null image if empty
+                try:
+                    image_file = req.FILES.get('image_file', None)
+                except:
+                    # Image_file should be none if no files given.
+                    # Failsafe if get throws an exception instead
+                    # of setting image_file to None for no files.
+                    image_file = None
+                image_url = form["image_url"].value()
+                # Null url if blank
+                if image_url == "":
+                    image_url = None
                 err_msg = user.post_node({
                     "node_title": form["node_title"].value().strip(),
                     "node_content": form["node_content"].value().strip(),
-                    "image_file": form["image_file"].value(),
-                    "image_url": form["image_url"].value(),
+                    "image_file": image_file,
+                    "image_url": image_url,
                     "main_tag_id": form["main_tag_id"].value(),
                     "mature_node": form["mature_node"].value(),
                     "latitude": form["latitude"].value(),
