@@ -3,7 +3,7 @@ import json
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
-from .forms import LoginForm, NameChangeForm, AddImageForm, NodeCreationForm, RegisterForm
+from .forms import LoginForm, NameChangeForm, AddImageForm, NodeCreationForm, RegisterForm, ProfileForm, AudioForm
 from .models import User, Post, Node
 from typing import Any, Dict
 from .constants import *
@@ -326,3 +326,63 @@ def profile(req: HttpRequest, username:str) -> HttpResponse:
         "stories": storiesFromUser,
         "story_count": storyCount,
     })
+
+
+def Audio_store(req: HttpRequest) -> HttpResponse:
+    msg: str = "choose audio file"
+    all_nodes = Node.objects.filter()
+    # if this is a POST request process form data
+    if req.method == 'POST':
+        # create form instance for text data
+        form = AudioForm(req.POST, req.FILES or None)
+        # check whether it is valid
+        if form.is_valid():
+            # process data as required
+            node: Node = form["node_id"].value()
+            node = Node.objects.get(id=node)
+            if node is None:
+                msg = "cannot attach audio to node"
+            # attach new audio
+            else:
+                try:
+                    audio_file = req.FILES.get('node_audio', None)
+                except:
+                    audio_file = None
+                # if audio is read save
+                if audio_file is not None:
+                    if node.add_audio(sound=audio_file):
+                        node.save()
+                        msg = "audio update"
+                    else:
+                        msg = "Unknown audio, try again"
+
+        # go through stages with new change and leave msg     [form.save()]
+        return render(req, "tellmeastory/audio.html", {
+            "form": form,
+            "msg": msg,
+            "audio_file": None,
+            "id": None,
+            "nodes": all_nodes
+        })
+    else: # ask for audio to be added
+        return render(req, "tellmeastory/audio.html", {
+                    "form": AudioForm,
+                    "msg": msg,
+                    "audio_file": None,
+                    "id": None,
+                    "nodes": all_nodes
+        })
+
+
+
+def accountSettings(req: HttpRequest, username:str) -> HttpResponse:
+    user = User.objects.get(username=username)#user = req.user
+    form = ProfileForm(instance=user)
+
+    if req.method == 'POST':
+        form = ProfileForm(req.POST, req.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+
+    context = {'form': form}
+    return render(req, 'tellmeastory/accountimg_settings.html', context)
