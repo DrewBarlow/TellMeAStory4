@@ -28,8 +28,6 @@ def index(req: HttpRequest) -> HttpResponse:
 
 # account stub for now
 def account(req: HttpRequest, username) -> HttpResponse:
-    # get the current username
-    username = req.COOKIES.get(COOKIE_NAME)
 
     # check if the person logged in has been banned already
     checkBan = Ban.objects.filter(bannedUser=username)
@@ -39,11 +37,10 @@ def account(req: HttpRequest, username) -> HttpResponse:
     # get the current user object from the database
     user: User = get_object_or_404(User, username=username)
 
-    # get all the post from the current user
-    user_posts = Node.objects.all().filter(node_author__username__istartswith=username)
+
 
     form: AccountForm = None
-    form_msg: str = None
+    form_msg: str = ""
 
     # 0 = No message
     # 1 = Success
@@ -74,7 +71,7 @@ def account(req: HttpRequest, username) -> HttpResponse:
                 if user.is_valid_display_name():
                     user.save()
                     msg_type = 1;
-                    form_msg = form_msg + "Successfully changed display name."
+                    form_msg =  form_msg + "Successfully changed display name."
                 else:
                     user.display_name = old_dname
                     msg_type = -1;
@@ -351,7 +348,7 @@ def editPost(req: HttpRequest, post_id) -> HttpResponse:
     # if another user is trying to edit someone else's post
     current_post_user = str(post.node_author)
     if (current_post_user != username):
-        return HttpResponseRedirect("/allPosts/")
+        return HttpResponseRedirect("/profile/{0}/".format(current_post_user))
 
     # get the form for posting
     form = PostForm(req.POST or None, instance=post)
@@ -606,9 +603,7 @@ def profile(req: HttpRequest, username: str) -> HttpResponse:
             "logged_in_username": logged_user,
         })
 
-    # check if another user is trying to go to someone else's profile
-    if username != logged_user:
-        raise PermissionDenied
+
 
     storiesFromUser = Node.objects.filter(node_author=user)
     storyCount = storiesFromUser.count()
