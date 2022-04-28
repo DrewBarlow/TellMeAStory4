@@ -12,7 +12,7 @@ from selenium.webdriver.common.by import By
 
 URL_PROFILE = "/profile/"
 TEST_ACCOUNT = "tellme1"
-
+COOKIE_NAME: str = "StoryUserLoggedIn"
 
 def insertUser(usern: str , pw: str , dname: str) -> User:
     return User.objects.create(
@@ -35,6 +35,7 @@ class navBarTests(TestCase):
 
         res: HttpResponse = self.client.get(URL_PROFILE + TEST_ACCOUNT + "/")
 
+
         # Checks to make sure the page loaded correctly
         self.assertEqual(res.status_code , 200)
 
@@ -55,6 +56,7 @@ class navBarTests(TestCase):
             "password": pw
         })
 
+        self.client.cookies[COOKIE_NAME] = uName
         res: HttpResponse = self.client.get("/story/account/" + TEST_ACCOUNT + "/")
 
         # Checks to make sure the page loaded correctly
@@ -78,6 +80,7 @@ class navBarTests(TestCase):
             "password": pw
         })
 
+        self.client.cookies[COOKIE_NAME] = uName
         res: HttpResponse = self.client.get("/story/account/" + TEST_ACCOUNT + "/")
 
 
@@ -102,7 +105,10 @@ class navBarTests(TestCase):
             "password": pw
         })
 
+
         res: HttpResponse = self.client.get("/story/account/" + extraAccount + "/")
+
+
 
         # Checks to make sure the page loaded correctly
         self.assertEqual(res.status_code , 200)

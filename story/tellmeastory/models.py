@@ -1,12 +1,12 @@
-from django.db import models
-from django.db.models import ManyToManyField, BooleanField, ImageField, TextField, CharField, FloatField, ForeignKey, Model, CASCADE
-from django.urls import resolve, Resolver404
+from django.db.models import ManyToManyField, BooleanField, ImageField, TextField, CharField, ForeignKey, Model, CASCADE
+
 from re import fullmatch, Match
 from validators import url
+
+from django.db import models
 from managetags.models import Tag
 from typing import Any, Dict
 
-# Create your models here.
 class User(Model):
     username: CharField = CharField(max_length=200)
     password: CharField = CharField(max_length=512)
@@ -55,7 +55,7 @@ class User(Model):
         Returns True if self.display_name has a length of >= 5 and <= 20.
         """
         return 5 <= len(self.display_name) <= 20
-
+      
     def is_mature(self) -> bool:
         """
         Returns True if self.mature is True.
@@ -122,31 +122,25 @@ class User(Model):
         newNode.save()
         return "Successfully Added your Story! Please refresh page to see changes."
 
-class Post(models.Model):
-
-    #hold user's id
-    username = models.ForeignKey(User,on_delete=models.CASCADE)
 
 
-    #hold the id of a post
-    post_id = models.CharField(max_length=72,primary_key=True, default="")
 
-    #hold the text that a user enters
-    postText = models.CharField(max_length=200, default="")
 
-    #add more fields for soundclips, pictures
 
-    #this field would be for current date time
-    #postTime = models.DateTimeField()
+class Ban(models.Model):
+    # the id of the user who put in the report (set null so we can keep the reports)
+    bannedUser = models.CharField(max_length=200)
 
     def __str__(self):
-        return "%s " % self.username
+        return self.bannedUser
+      
 
 class Node(Model):
     """ Story Node class. Holds a story's contents to present
     to users that select the respective story node. """
     image: ImageField = ImageField(upload_to="storyimages" ,
                                    default=None)  # File for an image if a file is given by user
+    post_id : CharField = CharField(max_length=200, default="")
     image_url: TextField = TextField()  # URL to source an image from if URL is given by user
     node_title: CharField = CharField(max_length=200)  # Title of the story stored in the Node
     node_content: CharField = CharField(max_length=10_000)  # Story content (text) of node
@@ -157,7 +151,7 @@ class Node(Model):
     latitude: float = 0
     node_author: ForeignKey = ForeignKey(User , on_delete=CASCADE , null=True)  # Account/user who created the Node
     main_tag_id: int = 0  # Primary story content Tag's id. One main Tag can relate to many story Nodes.
-    other_tags: ManyToManyField = ManyToManyField(Tag)  # A Node can have many tags for further filtering
+    other_tags: ManyToManyField = ManyToManyField(Tag, blank=True)  # A Node can have many tags for further filtering
 
     def __str__(self):
         """
@@ -297,7 +291,7 @@ class Node(Model):
         self.save()
 
         return
-
+      
     def add_reaction(self, emoji: str, user: User) -> bool:
         """
         Adds a reaction to this node.
@@ -319,9 +313,30 @@ class Node(Model):
         """
         Returns True if the current user has reacted to this Node.
         """
-        return Reaction.objects.filter(node=self, emoji=emoji, owner=user).exists()
+        return Reaction.objects.filter(node=self, emoji=emoji, owner=user).exists() 
 
+class Report(models.Model):
+    #the id of the user who put in the report (set null so we can keep the reports)
+    reporting_username = models.ForeignKey(User,on_delete=models.DO_NOTHING, null=False, primary_key=True)
+
+    #the id of the reported posts
+    reported_id = models.CharField(max_length=400)
+
+    #the reason the user was reported (text field)
+    report_reason = models.CharField(max_length=600)
+
+    #hold the id for a report
+    id_for_report = models.CharField(max_length=100, default="")
+
+    #an id for a report
+    post = models.ForeignKey(Node,on_delete=models.CASCADE, default=None)
+
+    def __str__(self):
+        return self.id_for_report
+
+   
 class Reaction(Model):
     emoji: CharField = CharField(max_length=1)
     node: ForeignKey = ForeignKey(Node, on_delete=CASCADE, null=True)
     owner: ForeignKey = ForeignKey(User, on_delete=CASCADE, null=True)
+

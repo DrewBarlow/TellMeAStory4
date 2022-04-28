@@ -28,6 +28,7 @@ class UserNameChangeViewTests(TestCase):
         With a cookie, a form should be present that allows the user
         to change their display name.
         """
+
         self.client.cookies[COOKIE_NAME] = USERNAME
         res: HttpResponse = self.client.get(ACC_URL)
         self.assertEqual(res.status_code, 200)
@@ -45,6 +46,7 @@ class UserNameChangeViewTests(TestCase):
         Without a cookie, no form prompting the user to change
         their display name should be present.
         """
+        self.client.cookies[COOKIE_NAME] = USERNAME
         res: HttpResponse = self.client.get(ACC_URL)
         self.assertEqual(res.status_code, 200)
         self.assertContains(res, DISPLAY_NAME)

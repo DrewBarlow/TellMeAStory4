@@ -5,7 +5,7 @@ from tellmeastory.models import User
 
 URL_ACCOUNT = "/account/"
 TEST_ACCOUNT = "tellme18"
-
+COOKIE_NAME: str = "StoryUserLoggedIn"
 
 def insertUser(usern: str , pw: str , dname: str) -> User:
     return User.objects.create(
@@ -58,10 +58,12 @@ class userBlurbTests(TestCase):
 
         insertUser(uName , pw , dName)
 
+
         resLogin: HttpResponse = self.client.post("/story/login/" , data={
             "username": uName ,
             "password": pw
         })
+
 
         # Checks to make sure we logged in correctly and were redirected
         self.assertEqual(resLogin.status_code , 302)
@@ -95,6 +97,7 @@ class userBlurbTests(TestCase):
             "password": pw
         })
 
+
         # Checks to make sure we logged in correctly and were redirected
         self.assertEqual(resLogin.status_code , 302)
 
@@ -126,6 +129,7 @@ class userBlurbTests(TestCase):
             "username": uName ,
             "password": pw
         })
+
 
         # Checks to make sure we logged in correctly and were redirected
         self.assertEqual(resLogin.status_code , 302)
@@ -159,6 +163,8 @@ class userBlurbTests(TestCase):
             "password": pw
         })
 
+        self.client.cookies[COOKIE_NAME] = uName
+
         # Checks to make sure we logged in correctly and were redirected
         self.assertEqual(resLogin.status_code , 302)
 
@@ -166,6 +172,7 @@ class userBlurbTests(TestCase):
             "new_display_name": "Bill Tester" ,
             "edit_blurb": testUserBlurb
         })
+
 
         # Checks to make sure an error message is displayed
         self.assertContains(res , "alert alert-success")
