@@ -1,0 +1,24 @@
+{% block content %}
+
+<h1>Update Post</h1>
+
+<center>
+
+    <p>Post ID: {{post.post_id}}</p><!--display the id of the current post-->
+
+<form action ="" method=POST>
+    {% csrf_token %}
+
+
+    {{form.as_p}} <!--display the form through forms.py to connect straight into the Post database-->
+    <input type = "submit" value = "Save">
+
+
+</form>
+
+
+</center>
+
+
+{% endblock %}
+

@@ -1,8 +1,8 @@
 from django.http import HttpResponse
 from django.test import TestCase
 from hashlib import sha512
-from tellmeastory.models import User
-from tellmeastory.models import Post
+from tellmeastory.models import User, Node
+
 
 
 def insertUser(usern: str , pw: str , dname: str) -> User:
@@ -13,11 +13,15 @@ def insertUser(usern: str , pw: str , dname: str) -> User:
     )
 
 
-def insertStory(post_content: str , user_id: int) -> Post:
-    return Post.objects.create(
-        postText=post_content ,
-        username_id=user_id ,
+def insert_story_node(post_id: str, node_title: str, node_content: str, node_author: User) -> Node:
+    return Node.objects.create(
+        post_id=post_id,
+        node_title=node_title,
+        node_content=node_content,
+        node_author=node_author
+
     )
+
 
 
 URL_PROFILE = "/profile/"
@@ -42,6 +46,7 @@ class ProfilePageTests(TestCase):
 
         insertUser(uName , pw , dName)
 
+        self.client.cookies["StoryUserLoggedIn"] = TEST_ACCOUNT
         res: HttpResponse = self.client.get(URL_PROFILE + TEST_ACCOUNT + "/")
         # Checks that it loaded correctly
         self.assertEqual(res.status_code , 200)
@@ -60,12 +65,14 @@ class ProfilePageTests(TestCase):
         userID = userDB.id
 
         sampleStoryText = "This is a sample story test"
-        insertStory(sampleStoryText , userID)
+        insert_story_node("9250-520a520-2a50", "Story title", sampleStoryText, userDB)
 
+        self.client.cookies['StoryUserLoggedIn'] = uName
         res: HttpResponse = self.client.get(URL_PROFILE + TEST_ACCOUNT + "/")
         # Checks that it loaded correctly
         self.assertEqual(res.status_code , 200)
         # Checks that our story has successfully loaded
+
         self.assertContains(res , sampleStoryText)
 
 
@@ -81,10 +88,12 @@ class ProfilePageTests(TestCase):
         userID = userDB.id
 
         sampleStoryText = "This is a sample story test"
-        insertStory(sampleStoryText , userID)
-        countStories = Post.objects.filter(username_id=userID).count()
+        insert_story_node("9250-520a520-2a50", "Story title", sampleStoryText, userDB)
+        countStories = Node.objects.filter(node_author=userDB).count()
 
+        self.client.cookies['StoryUserLoggedIn'] = uName
         res: HttpResponse = self.client.get(URL_PROFILE + TEST_ACCOUNT + "/")
+
         # Checks that it loaded correctly
         self.assertEqual(res.status_code , 200)
 
@@ -106,8 +115,9 @@ class ProfilePageTests(TestCase):
             id = userID,
         ).update(user_blurb = blurb)
 
-
+        self.client.cookies['StoryUserLoggedIn'] = uName
         res: HttpResponse = self.client.get(URL_PROFILE + TEST_ACCOUNT + "/")
+
         # Checks that it loaded correctly
         self.assertEqual(res.status_code , 200)
 
