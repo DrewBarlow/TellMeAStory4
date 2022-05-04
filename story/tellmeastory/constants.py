@@ -1,1 +1,1 @@
-APIKEY = "API Key Goes Here"
+APIKEY = "test"
