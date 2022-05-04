@@ -87,13 +87,13 @@
 </div>
 
 <div id='map' width='100%' style='margin-top:100px; height:800px'></div>
-   <script>
+<script>
     mapboxgl.accessToken = "{{mapbox_token}}";
     const map = new mapboxgl.Map({
-    container: 'map', // container ID
-    style: 'mapbox://styles/mapbox/streets-v11', // style URL
-    center: [-76.611, 39.301], // starting position [lng, lat]
-    zoom: 4 // starting zoom
+        container: 'map', // container ID
+        style: 'mapbox://styles/mapbox/streets-v11', // style URL
+        center: [-76.611, 39.301], // starting position [lng, lat]
+        zoom: 4 // starting zoom
     });
 
     var data_set = {{map_data|safe}}
@@ -101,6 +101,24 @@
     for(let i = 0; i < Object.keys(data_set).length; i++){
         insertMarker(data_set[i][0], data_set[i][1])
     }
+
+    // listener for click events
+    map.on("click", event => {
+        let longitude = event.lngLat.lng;
+        let latitude = event.lngLat.lat;
+
+        // pass the coordinates of where the user clicked to create-story
+        $.ajax({
+            url: '/story/create-story',
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                latitude: latitude,
+                longitude: longitude
+            },
+            success: data => { console.log(data); }
+        });
+    });
 
     // Heat map features could be used by
     // https://docs.mapbox.com/mapbox-gl-js/example/heatmap-layer/
@@ -114,6 +132,7 @@
             .setPopup(popup)
             .addTo(map);
     }
+
     function insertStory(){
         var long1 = document.getElementById("long").value
         var lat1 = document.getElementById("lat").value
@@ -124,8 +143,7 @@
         insertMarker(coord, storyName);
 
     }
-   </script>
-
+</script>
 </body>
 </html>
 
