@@ -106,16 +106,18 @@
     map.on("click", event => {
         let longitude = event.lngLat.lng;
         let latitude = event.lngLat.lat;
+        let username = "{{logged_in_username}}";
 
-        // pass the coordinates of where the user clicked to create-story
+        if (username) {}
+        // pass the coordinates of where the user clicked to author-story
         $.ajax({
-            url: '/story/create-story',
-            type: 'POST',
-            data: {
+            url: `/story/author-story/${username}/${longitude}/${latitude}/`,
+            type: "GET",
+            /*data: {
                 csrfmiddlewaretoken: "{{ csrf_token }}",
                 latitude: latitude,
                 longitude: longitude
-            },
+            },*/
             success: data => { console.log(data); }
         });
     });

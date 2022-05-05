@@ -616,13 +616,20 @@ def profile(req: HttpRequest, username: str) -> HttpResponse:
     })
 
 
-def author_story(req: HttpRequest, username: str) -> HttpResponse:
+def author_story(
+    req: HttpRequest,
+    username: str,
+    longitude: str="0.0",
+    latitude: str="0.0"
+) -> HttpResponse:
     user: User = get_object_or_404(User, username=username)
     err_msg = None
     all_nodes = Node.objects.filter()
     my_nodes = []
     all_tags = Tag.objects.filter()
     form = PostStoryForm()
+    form.latitude = float(latitude)
+    form.longitude = float(longitude)
     logged_user: str = req.COOKIES.get(COOKIE_NAME)
 
     # Find all of a user's stories
