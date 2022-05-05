@@ -1,9 +1,11 @@
+from decimal import Decimal
 from django.http import HttpResponse
 from django.test import LiveServerTestCase, TestCase
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
+from tellmeastory.models import Node
 
 USERNAME: str = "namename"
 PASSWORD: str = "password"
@@ -47,7 +49,11 @@ class CreateStoryFromMap(LiveServerTestCase):
 
         return
 
-    def test_create_story_from_map(self) -> None:
+    def test_double_click_redirects(self) -> None:
+        """
+        Double clicking a location on the map should redirect the user
+        to the author-story page with the location as args in the URL.
+        """
         # redirect to map page and click in the middle of the screen
         self.selenium_browser.get(f"{self.live_server_url}{URL_MAPS}")
         map = self.selenium_browser.find_element(By.XPATH, value='//div[@id="map"]')
@@ -58,3 +64,25 @@ class CreateStoryFromMap(LiveServerTestCase):
             f"{self.live_server_url}/story/author-story/{USERNAME}/",
             self.selenium_browser.current_url
         )
+
+        return
+
+    def test_map_renders_nodes(self) -> None:
+        """
+        The map should have markers for nodes that have been created.
+        Note: The magic coordinates for long/lat are the starting point of the map on load.
+        """
+        node: Node = Node.objects.create(
+            node_title="Test Node",
+            longitude=Decimal(-76.611),
+            latitude=Decimal(39.301)
+        )
+
+        # redirect to map page and verify that "mapboxgl-marker mapboxgl-marker-anchor-center" is present
+        self.selenium_browser.get(f"{self.live_server_url}{URL_MAPS}")
+        self.assertIn(
+            "mapboxgl-marker mapboxgl-marker-anchor-center",
+            self.selenium_browser.page_source
+        )
+
+        return

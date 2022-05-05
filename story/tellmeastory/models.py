@@ -148,7 +148,7 @@ class Node(Model):
     has_image_file: BooleanField = BooleanField(default=False)  # True only when user gave a file for an image
     # Node coordinates on map
     longitude: DecimalField = DecimalField(max_digits=25, decimal_places=21, null=True)
-    latitude: DecimalField() = DecimalField(max_digits=25, decimal_places=21, null=True)
+    latitude: DecimalField = DecimalField(max_digits=25, decimal_places=21, null=True)
     node_author: ForeignKey = ForeignKey(User , on_delete=CASCADE , null=True)  # Account/user who created the Node
     main_tag_id: int = 0  # Primary story content Tag's id. One main Tag can relate to many story Nodes.
     other_tags: ManyToManyField = ManyToManyField(Tag, blank=True)  # A Node can have many tags for further filtering
