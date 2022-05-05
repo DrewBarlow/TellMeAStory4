@@ -629,7 +629,7 @@ def author_story(
     all_tags = Tag.objects.filter()
 
     # set default display values for form data
-    form = PostStoryForm(None, initial={
+    init_dict = {
         "node_title": "",
         "node_content": "",
         "image_file": "",
@@ -638,7 +638,8 @@ def author_story(
         "mature_node": "",
         "longitude": float(longitude),
         "latitude": float(latitude),
-    })
+    }
+    form = PostStoryForm(None, initial=init_dict)
 
     logged_user: str = req.COOKIES.get(COOKIE_NAME)
 
