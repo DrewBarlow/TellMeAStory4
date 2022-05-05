@@ -276,12 +276,10 @@ def map(req: HttpRequest) -> HttpResponse:
 
     # retrieve all of the nodes in [(long, lat), title] table format
     # this is passed to our map file
-    data = [
-        (
-            (float(node.longitude), float(node.latitude)),
-            node.node_title)
-        for node in Node.objects.all()
-    ]
+    data = [(
+        (float(node.longitude), float(node.latitude)),
+        node.node_title
+    ) for node in Node.objects.all()]
 
     # Converts our data to JSON format
     CONVERT_JSON = json.dumps(data)
