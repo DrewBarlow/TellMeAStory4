@@ -274,17 +274,17 @@ def map(req: HttpRequest) -> HttpResponse:
 
     logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
 
-    DATA_TO_INSERT = []
-
-    # THIS DATA IS TEMPORARY - Used only to visualize how stories will appear on the map - not apart of the story
-    DATA_TO_INSERT.insert(0, [[-76.611, 39.301], "Story 1 Location"])
-    DATA_TO_INSERT.insert(0, [[-76.864, 39.1935], "Story 2 Location"])
-    DATA_TO_INSERT.insert(0, [[-77.10415, 39.00532], "Story 3 Location"])
-    DATA_TO_INSERT.insert(0, [[-80.13701, 25.901808], "Story 4 Location"])
-    DATA_TO_INSERT.insert(0, [[-97.6889, 30.32606], "Story 5 Location"])
+    # retrieve all of the nodes in [(long, lat), title] table format
+    # this is passed to our map file
+    data = [
+        (
+            (float(node.longitude), float(node.latitude)),
+            node.node_title)
+        for node in Node.objects.all()
+    ]
 
     # Converts our data to JSON format
-    CONVERT_JSON = json.dumps(DATA_TO_INSERT);
+    CONVERT_JSON = json.dumps(data)
 
     return render(req, "tellmeastory/map.html", {
         "mapbox_token": API_TOKEN,
@@ -694,8 +694,8 @@ def author_story(
                     "image_url": image_url,
                     "main_tag_id": form["main_tag_id"].value(),
                     "mature_node": form["mature_node"].value(),
-                    "latitude": form["latitude"].value(),
-                    "longitude": form["longitude"].value()
+                    "latitude": float(form["latitude"].value()),
+                    "longitude": float(form["longitude"].value())
                 })
                 # Present error if any exists, update my nodes and present
                 # blank form.

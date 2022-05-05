@@ -101,8 +101,8 @@
         insertMarker(data_set[i][0], data_set[i][1])
     }
 
-    // listener for click events
-    map.on("click", event => {
+    // listener for click events (double click!)
+    map.on("dblclick", event => {
         let longitude = event.lngLat.lng;
         let latitude = event.lngLat.lat;
         let username = "{{logged_in_username}}";

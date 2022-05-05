@@ -1,4 +1,4 @@
-from django.db.models import ManyToManyField, BooleanField, ImageField, TextField, CharField, ForeignKey, Model, CASCADE
+from django.db.models import DecimalField, ManyToManyField, BooleanField, ImageField, TextField, CharField, ForeignKey, Model, CASCADE
 
 from re import fullmatch, Match
 from validators import url
@@ -72,16 +72,19 @@ class User(Model):
             "image_url" -> CharField
             "main_tag_id" -> IntegerField
             "mature_node" -> Bool (true when mature)
-            "latitude" -> Float
-            "longitude" -> Float
+            "latitude" -> DecimalField
+            "longitude" -> DecimalField
         """
         # Add title, content, and author to a new Node to insert
         node_args: Dict[str, Any] = {
             "node_title": contentDict["node_title"],
             "node_content": contentDict["node_content"],
-            "node_author": self
+            "node_author": self,
+            "latitude": contentDict["latitude"],
+            "longitude": contentDict["longitude"]
         }
         newNode: Node = Node(**node_args)
+        print(node_args)
         # Check title and content for validity
         if not newNode.is_valid_title():
             return "Invalid title"
@@ -114,9 +117,6 @@ class User(Model):
         elif not (float(contentDict["longitude"]) <= MAX_LONG and float(contentDict["longitude"]) >= MIN_LONG):
             newNode.delete()
             return "Invalid longitude"
-        # Update long/lat
-        newNode.latitude = float(contentDict["latitude"])
-        newNode.longitude = float(contentDict["longitude"])
         # Now that everything has been verified. The node can be successfully
         # saved to the database and the user can receive a success message.
         newNode.save()
@@ -147,8 +147,8 @@ class Node(Model):
     # The Node has an url if False, otherwise it has an image file
     has_image_file: BooleanField = BooleanField(default=False)  # True only when user gave a file for an image
     # Node coordinates on map
-    longitude: float = 0
-    latitude: float = 0
+    longitude: DecimalField = DecimalField(max_digits=25, decimal_places=21)
+    latitude: DecimalField() = DecimalField(max_digits=25, decimal_places=21)
     node_author: ForeignKey = ForeignKey(User , on_delete=CASCADE , null=True)  # Account/user who created the Node
     main_tag_id: int = 0  # Primary story content Tag's id. One main Tag can relate to many story Nodes.
     other_tags: ManyToManyField = ManyToManyField(Tag, blank=True)  # A Node can have many tags for further filtering
