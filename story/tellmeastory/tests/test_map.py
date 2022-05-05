@@ -52,7 +52,7 @@ class CreateStoryFromMap(LiveServerTestCase):
         self.selenium_browser.find_element(By.XPATH, value='//div[@id="map"]').click()
 
         # verify that we were redirected to the story creation page
-        self.assertEqual(
-            self.selenium_browser.current_url,
-            f"{self.live_server_url}/story/create/"
+        self.assertIn(
+            f"{self.live_server_url}/story/author-story/{USERNAME}/",
+            self.selenium_browser.current_url
         )
