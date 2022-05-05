@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.test import LiveServerTestCase, TestCase
 from selenium import webdriver
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -49,7 +50,8 @@ class CreateStoryFromMap(LiveServerTestCase):
     def test_create_story_from_map(self) -> None:
         # redirect to map page and click in the middle of the screen
         self.selenium_browser.get(f"{self.live_server_url}{URL_MAPS}")
-        self.selenium_browser.find_element(By.XPATH, value='//div[@id="map"]').click()
+        map = self.selenium_browser.find_element(By.XPATH, value='//div[@id="map"]')
+        ActionChains(self.selenium_browser).double_click(map).perform()
 
         # verify that we were redirected to the story creation page
         self.assertIn(
