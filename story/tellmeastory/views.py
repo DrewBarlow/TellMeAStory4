@@ -627,9 +627,19 @@ def author_story(
     all_nodes = Node.objects.filter()
     my_nodes = []
     all_tags = Tag.objects.filter()
-    form = PostStoryForm()
-    form.latitude = float(latitude)
-    form.longitude = float(longitude)
+
+    # set default display values for form data
+    form = PostStoryForm(None, initial={
+        "node_title": "",
+        "node_content": "",
+        "image_file": "",
+        "image_url": "",
+        "main_tag_id": "",
+        "mature_node": "",
+        "longitude": float(longitude),
+        "latitude": float(latitude),
+    })
+
     logged_user: str = req.COOKIES.get(COOKIE_NAME)
 
     # Find all of a user's stories
