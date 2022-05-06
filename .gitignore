@@ -1,9 +1,6 @@
 # Image Duplication inside of media
 story/media/storyimages/test_image_*
 
-# Avoid adding the API key
-story/tellmeastory/constants.py
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
