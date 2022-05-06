@@ -84,7 +84,6 @@ class User(Model):
             "longitude": contentDict["longitude"]
         }
         newNode: Node = Node(**node_args)
-        print(node_args)
         # Check title and content for validity
         if not newNode.is_valid_title():
             return "Invalid title"
