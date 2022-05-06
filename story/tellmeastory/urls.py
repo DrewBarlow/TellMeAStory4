@@ -46,6 +46,7 @@ urlpatterns = [
     path("create-story/", views.create_node, name="create_story"),
 
     path("author-story/<str:username>/", views.author_story, name="author_story"),
+    path("author-story/<str:username>/<str:longitude>/<str:latitude>/", views.author_story, name="author_storyll"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
