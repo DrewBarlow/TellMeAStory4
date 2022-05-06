@@ -107,7 +107,7 @@
         let latitude = event.lngLat.lat;
         let username = "{{logged_in_username}}";
 
-        if (username) {
+        if (username !== "None") {
             location.href = `/story/author-story/${username}/${longitude}/${latitude}/`;
         }
     });
