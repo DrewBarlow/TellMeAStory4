@@ -14,7 +14,7 @@ class RegisterForm(Form):
     # default to the username if not specified
     display_name: CharField = CharField(max_length=200, required=False)
 
-    maturity: BooleanField = BooleanField(label="Are you over 18?", required=False)
+    maturity: CharField = CharField(max_length=3,label="Age", required=True)
 
 class AccountForm(Form):
     # this may not need to be required?
