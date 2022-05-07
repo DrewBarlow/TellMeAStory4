@@ -28,7 +28,7 @@ class PostForm(ModelForm):
         model = Node
 
         #controls what fields appear, MUST BE NAMED AFTER THE FIELDS IN THE DATABASE
-        fields = ('node_content',)
+        fields = ('node_title','node_content','image')
 
 #Create Report form
 class ReportForm(ModelForm):
