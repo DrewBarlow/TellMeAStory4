@@ -160,11 +160,27 @@ def register(req: HttpRequest) -> HttpResponse:
 
             # hash the user's password for at least a bit of security
             hashed_pw: str = sha512(form["password"].value().encode("utf-8")).hexdigest()
+
+
+
+
+            #check if the user is above 18, then assign the boolean value
+
+            #if this was realistic then we'd check for id's etc
+
+            mature = True
+
+            if (int(form["maturity"].value()) < 18):
+                mature = False
+
+
+
+
             new_user: User = User(
                 username=form["username"].value(),
                 password=hashed_pw,
                 display_name=display_name,
-                mature=form["maturity"].value()
+                mature=mature
             )
 
             form = RegisterForm()
