@@ -299,15 +299,43 @@ class AddNodeFromUserTests(LiveServerTestCase):
         # Searched for nodes should be present
         for i in range(arbitrary_num_nodes):
             self.assertTrue(selenium_browser.page_source.find(("uniquetitle" + str(i))) != -1)
-        # URL SEARCH -- Can search by story url and partial values
+        # URL SEARCH -- Can search by story url
         search_input = selenium_browser.find_element(By.XPATH, value='//input[@type="search"]')
-        search_input.send_keys("www.google" + str(0))  # Enter search query based on unique identifiers
+        search_input.send_keys("www.google.com")  # Enter search query based on unique identifiers
         selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
-        # Searched for node should be present
+        # Searched for nodes should be present
         for i in range(arbitrary_num_nodes):
             self.assertTrue(selenium_browser.page_source.find(("uniquetitle" + str(i))) != -1)
+        # CONTENT SEARCH -- Searching by content should return all matching stories with matching content
+        search_input = selenium_browser.find_element(By.XPATH, value='//input[@type="search"]')
+        search_input.send_keys("content")  # Enter search query based on unique identifiers
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
+        # Searched for nodes should be present
+        for i in range(arbitrary_num_nodes):
+            self.assertTrue(selenium_browser.page_source.find(("uniquetitle" + str(i))) != -1)
+        # PARTIAL VALUE -- Query making partial matches to stories should come up
+        search_input = selenium_browser.find_element(By.XPATH, value='//input[@type="search"]')
+        search_input.send_keys("uniquetitle")  # Enter search query with partial matches to all stories
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
+        # Searched for nodes should be present (all)
+        for i in range(arbitrary_num_nodes):
+            self.assertTrue(selenium_browser.page_source.find(("uniquetitle" + str(i))) != -1)
+        search_input = selenium_browser.find_element(By.XPATH, value='//input[@type="search"]')
+        # PARTIAL VALUE -- Tag partial value matches should not return anything
+        search_input.send_keys("name123")  # Enter search query with partial matches to all stories
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
+        # Searched for nodes should be present (all)
+        for i in range(arbitrary_num_nodes):
+            self.assertTrue(selenium_browser.page_source.find(("uniquetitle" + str(i))) == -1)
         # NO RESULT SEARCH -- No nodes should come up with an invalid match
-        invalid_query = "Armando"
+        invalid_query = "Armando1"
+        search_input = selenium_browser.find_element(By.XPATH, value='//input[@type="search"]')
+        search_input.send_keys(invalid_query)  # Enter search query based on unique identifiers
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
+        # No nodes should be present
+        for i in range(arbitrary_num_nodes):
+            self.assertTrue(selenium_browser.page_source.find(("uniquetitle" + str(i))) == -1)
+        invalid_query = "HElO41230"
         search_input = selenium_browser.find_element(By.XPATH, value='//input[@type="search"]')
         search_input.send_keys(invalid_query)  # Enter search query based on unique identifiers
         selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
