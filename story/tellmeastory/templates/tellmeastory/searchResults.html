@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Search Results</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#4fbaf7">
@@ -12,20 +12,12 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
-    <!-- Form to submit search queries (does nothing unless logged in) -->
-    {% if logged_in_username %}
-        <form class="form-inline my-2 my-lg-0" action="/story/search/{{ logged_in_username }}/" method="get">
-            {% csrf_token %}
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search_query" style="width:400px">
-            <button class="btn btn-success my-2 my-sm-0" value="Search" type="submit">Search</button>
-        </form>
-    {% else %}
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="width:400px">
-            <button class="btn btn-success my-2 my-sm-0" value="Search" type="submit">Search</button>
-        </form>
-    {% endif %}
+    <!-- Form to submit search queries -->
+    <form class="form-inline my-2 my-lg-0" action="/story/search/{{ logged_in_username }}/" method="get">
+        {% csrf_token %}
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search_query" style="width:400px">
+        <button class="btn btn-success my-2 my-sm-0" value="Search" type="submit">Search</button>
+    </form>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
@@ -81,66 +73,52 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col">
-                <div class="row justify-content-center">
-                    <h2>Login to your Story Account</h2>
+                <!-- Title results as "Search Results" -->
+                <div class="row justify-content-left">
+                    <h2>Search Results</h2>
                 </div>
+                <!-- Check if results were found. Output if no results found or if they were found. -->
+                {% if isResult %}
+                    <div class="row justify-content-left">
+                        <h5>Stories found matching "{{ search_query }}":</h5>
+                    </div>
+                {% else %}
+                    <div class="row justify-content-left">
+                        <h5>No stories found matching "{{ search_query }}"!</h5>
+                    </div>
+                {% endif %}
 
                 <div class="row justify-content-center">
                     {% if error_message %}
                         <div class="alert alert-danger" style="width:50%; text-align:center">{{ error_message }}</div>
                     {% endif %}
                 </div>
-
-                <div class="row justify-content-center">
-
-                    <form class=form-group" action="/story/login/" method="post">
-                        {% csrf_token %}
-
-                        {% block content %}
-                            {% for field in form %}
-
-                                {% if field.label == "Password" %}
-
-                                    <div class="form-group">
-                                        <label class="col col-form-label"
-                                               for="id_{{ field.name }}">{{ field.label }}</label>
-                                        <div class="col">
-                                            <input
-                                                    type="password"
-                                                    class="form-control"
-                                                    name="{{ field.name }}"
-                                                    id="id_{{ field.name }}"
-                                                    value="{{ field.value|default:'' }}"
-                                            >
-                                        </div>
-                                    </div>
-
-
-                                {% else %}
-
-                                    <div class="form-group">
-                                        <label class="col col-form-label"
-                                               for="id_{{ field.name }}">{{ field.label }}</label>
-                                        <div class="col">
-                                            <input
-                                                    type="{{ field.field.widget.input_type }}"
-                                                    class="form-control"
-                                                    name="{{ field.name }}"
-                                                    id="id_{{ field.name }}"
-                                                    value="{{ field.value|default:'' }}"
-                                                    style="width:300px"
-                                            >
-                                        </div>
-                                    </div>
+                <div class="row justify-content-left">
+                    <!-- Present Search Results -->
+                        <p>
+                            <ol>
+                                <!-- Print all found results with title, image, location, tags, and author (could be none) -->
+                                {% if isResult %}
+                                    {% for node_models in nodes %}
+                                        <li class="list-group-item">
+                                            <h1 class="display-5">
+                                                {{ node_models.node_title }} <br/>
+                                            </h1>
+                                            Author: {{ node_models.node_author }} <br/>
+                                            Longitude: {{ node_models.longitude }} Latitude: {{ node_models.latitude }} <br/>
+                                            Tags: {% for tag in node_models.other_tags.all %}{{ tag }} {% endfor %} <br/>
+                                            <!-- Display image from url or image from file depending on what is stored -->
+                                            {% if not node_models.has_image_file%}
+                                                <img src="{{node_models.image_url}}" height="100px">
+                                            {% else %}
+                                                <img src="{{node_models.image.url}}" height="100px">
+                                            {% endif %}
+                                            {{ node_models.image_file }}
+                                        </li> <br/>
+                                    {% endfor %}
                                 {% endif %}
-                            {% endfor %}
-                            <div class="form-group row justify-content-center">
-                                <input type="submit" value="Login" class="btn btn-primary" style="width:150px">
-                            </div>
-
-                        {% endblock %}
-                    </form>
-
+                            </ol>
+                        </p>
                 </div>
             </div>
         </div>
@@ -166,7 +144,7 @@
 
 <style>
     section {
-        margin-top: 150px;
+        margin-top: 50px;
     }
 
 </style>
