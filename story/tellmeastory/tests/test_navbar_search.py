@@ -15,7 +15,71 @@ class AddNodeFromUserTests(LiveServerTestCase):
         Tests that navbar search redirects to correct
         search results page on all modified pages.
         """
-        # Navigate to profile not found page
+        # Create a test user for login
+        username = "namename"
+        password = "password1"
+        display_name = "display"
+        # Start selenium
+        selenium_browser = webdriver.Chrome(ChromeDriverManager().install())
+        # Navigate to no profile page
+        selenium_browser.get('%s%s' % (self.live_server_url, '/profile/' + username))
+        # Test search redirect here
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
+        self.assertNotEqual("Search Results", selenium_browser.title)
+        # Register given credentials
+        selenium_browser.get('%s%s' % (self.live_server_url, '/register/'))
+        username_input = selenium_browser.find_element(By.NAME, value="username")
+        username_input.send_keys(username)  # Enter username
+        password_input = selenium_browser.find_element(By.NAME, value="password")
+        password_input.send_keys(password)  # Enter password
+        display_name_input = selenium_browser.find_element(By.NAME, value="display_name")
+        display_name_input.send_keys(display_name)  # Enter display name
+        selenium_browser.find_element(By.XPATH, value='//input[@value="Register"]').click()
+        # Login using the above credientials
+        selenium_browser.get('%s%s' % (self.live_server_url, '/login/'))
+        username_input = selenium_browser.find_element(By.NAME, value="username")
+        username_input.send_keys(username)  # Enter username
+        password_input = selenium_browser.find_element(By.NAME, value="password")
+        password_input.send_keys(password)  # Enter password
+        selenium_browser.find_element(By.XPATH, value='//input[@value="Login"]').click()
+        # Navigate to Story Posting for given user
+        selenium_browser.get('%s%s' % (self.live_server_url, '/author-story/'+username))
+        # Test search redirect here
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
+        self.assertEqual("Search Results", selenium_browser.title)
+        # Navigate to account page
+        selenium_browser.get('%s%s' % (self.live_server_url, '/account/' + username))
+        # Test search redirect here
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
+        self.assertEqual("Search Results", selenium_browser.title)
+        # Navigate to login page
+        selenium_browser.get('%s%s' % (self.live_server_url, '/login/'))
+        # Test search redirect here
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
+        self.assertNotEqual("Search Results", selenium_browser.title)
+        # Navigate to map page
+        selenium_browser.get('%s%s' % (self.live_server_url, '/map/'))
+        # Test search redirect here
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
+        self.assertEqual("Search Results", selenium_browser.title)
+        # Navigate to profile page
+        selenium_browser.get('%s%s' % (self.live_server_url, '/profile/' + username))
+        # Test search redirect here
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
+        self.assertEqual("Search Results", selenium_browser.title)
+        # Navigate to register page
+        selenium_browser.get('%s%s' % (self.live_server_url, '/register/'))
+        # Test search redirect here
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
+        self.assertNotEqual("Search Results", selenium_browser.title)
+        return
+
+    def test_content_present_in_search_results(self):
+        """
+        Test checks for the presence of all required parts
+        of a story presentation. This includes the title,
+        author, maturity, and location.
+        """
         # Test search redirect here
         # Create a test user for login
         username = "namename"
@@ -39,10 +103,10 @@ class AddNodeFromUserTests(LiveServerTestCase):
         password_input.send_keys(password)  # Enter password
         selenium_browser.find_element(By.XPATH, value='//input[@value="Login"]').click()
         # Navigate to Story Posting for given user
-        selenium_browser.get('%s%s' % (self.live_server_url, '/author-story/'+username))
+        selenium_browser.get('%s%s' % (self.live_server_url, '/author-story/' + username))
         # Enter Title, Content, One Image, and a Main Tag ID (after first creating a Tag)
         TagToInsert = Tag(name_text="name123", language="en_US")
-        TagToInsert.add_new_tag() # Create Main Tag to Add
+        TagToInsert.add_new_tag()  # Create Main Tag to Add
         title_input = selenium_browser.find_element(By.NAME, value="node_title")
         title_input.send_keys("title")  # Enter story title
         content_input = selenium_browser.find_element(By.NAME, value="node_content")
@@ -52,54 +116,202 @@ class AddNodeFromUserTests(LiveServerTestCase):
         main_tag_input = selenium_browser.find_element(By.NAME, value="main_tag_id")
         main_tag_input.send_keys(TagToInsert.id)  # Enter valid tag id
         # Enter longitude and latitude
-        title_input = selenium_browser.find_element(By.NAME, value="latitude")
-        title_input.send_keys(0)  # Enter latitude
-        title_input = selenium_browser.find_element(By.NAME, value="longitude")
-        title_input.send_keys(0)  # Enter longitude
+        loc_input = selenium_browser.find_element(By.NAME, value="latitude")
+        loc_input.send_keys(0)  # Enter latitude
+        loc_input = selenium_browser.find_element(By.NAME, value="longitude")
+        loc_input.send_keys(0)  # Enter longitude
         # Submit content entered from above
         selenium_browser.find_element(By.XPATH, value='//input[@value="Create"]').click()
-        # Test search redirect here
-        # Navigate to account page
-        # Test search redirect here
-        # Navigate to login page
-        # Test search redirect here
-        # Navigate to map page
-        # Test search redirect here
-        # Navigate to profile page
-        # Test search redirect here
-        # Navigate to register page
-        # Test search redirect here
+
+        # Check if all needed components are on the screen
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()  # Empty search matches everything
+        self.assertTrue(selenium_browser.page_source.find("title") != -1)
+        self.assertTrue(selenium_browser.page_source.find("www.google.com") != -1)
+        self.assertTrue(selenium_browser.page_source.find("name123") != -1)
+        self.assertTrue(selenium_browser.page_source.find("Longitude: 0.0") != -1)
+        self.assertTrue(selenium_browser.page_source.find("Latitude: 0.0") != -1)
         return
 
-    def test_content_present_in_search_results(self):
-        """
-        Test checks for the presence of all required parts
-        of a story presentation. This includes the title,
-        author, maturity, and location.
-        """
+    def test_many_stories_present_in_results(self):
+        # Start selenium
+        selenium_browser = webdriver.Chrome(ChromeDriverManager().install())
+        # Navigate to map page
+        selenium_browser.get('%s%s' % (self.live_server_url, '/map/'))
+        # Create a temporary Test user
+        username = "namename"
+        password = "password1"
+        display_name = "display"
+        user = User.objects.create(username=username, password=sha512(password.encode("utf-8")).hexdigest(), display_name=display_name)
+        # Insert 100 test nodes (of many different titles)
+        arbitrary_num_nodes = 100
+        for i in range(arbitrary_num_nodes):
+            # Create test tag
+            TagToInsert = Tag(name_text="name123"+str(i), language="en_US")
+            TagToInsert.add_new_tag()  # Create Main Tag to Add
+            valid_node_dict = {
+                        "node_title": "title"+str(i),
+                        "node_content": "content",
+                        "image_file": None,
+                        "image_url": "www.google.com",
+                        "main_tag_id": TagToInsert.id,
+                        "mature_node": False,
+                        "latitude": 90,
+                        "longitude": 90
+                    }
+            user.post_node(valid_node_dict)
+        # Check that search results contain all test nodes
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()  # Empty search matches everything
+        # All added titles must be present
+        for i in range(arbitrary_num_nodes):
+            self.assertTrue(selenium_browser.page_source.find("title"+str(i)) != -1)
         return
 
     def test_immature_user_cannot_search_mature_content(self):
         """
         Test checks that an immature user cannot find
-        mature story content.
+        mature story content. User registration defaults
+        to immature.
         """
+        # Test search redirect here
+        # Create a test user for login
+        username = "namename"
+        password = "password1"
+        display_name = "display"
+        # Register above credentials
+        selenium_browser = webdriver.Chrome(ChromeDriverManager().install())
+        selenium_browser.get('%s%s' % (self.live_server_url, '/register/'))
+        username_input = selenium_browser.find_element(By.NAME, value="username")
+        username_input.send_keys(username)  # Enter username
+        password_input = selenium_browser.find_element(By.NAME, value="password")
+        password_input.send_keys(password)  # Enter password
+        display_name_input = selenium_browser.find_element(By.NAME, value="display_name")
+        display_name_input.send_keys(display_name)  # Enter display name
+        selenium_browser.find_element(By.XPATH, value='//input[@value="Register"]').click()
+        # Login using the above credientials
+        selenium_browser.get('%s%s' % (self.live_server_url, '/login/'))
+        username_input = selenium_browser.find_element(By.NAME, value="username")
+        username_input.send_keys(username)  # Enter username
+        password_input = selenium_browser.find_element(By.NAME, value="password")
+        password_input.send_keys(password)  # Enter password
+        selenium_browser.find_element(By.XPATH, value='//input[@value="Login"]').click()
+        # Navigate to Story Posting for given user
+        selenium_browser.get('%s%s' % (self.live_server_url, '/author-story/' + username))
+        # Enter Title, Content, One Image, and a Main Tag ID (after first creating a Mature Tag)
+        TagToInsert = Tag(name_text="Mature", language="en_US")
+        TagToInsert.add_new_tag()  # Create Mature tag to Add
+        title_input = selenium_browser.find_element(By.NAME, value="node_title")
+        title_input.send_keys("maturenodestory")  # Enter story title
+        content_input = selenium_browser.find_element(By.NAME, value="node_content")
+        content_input.send_keys("content")  # Enter story content
+        image_input = selenium_browser.find_element(By.NAME, value="image_url")
+        image_input.send_keys("www.google.com")  # Enter valid URL
+        main_tag_input = selenium_browser.find_element(By.NAME, value="main_tag_id")
+        main_tag_input.send_keys(TagToInsert.id)  # Enter valid tag id
+        # Enter longitude and latitude
+        loc_input = selenium_browser.find_element(By.NAME, value="latitude")
+        loc_input.send_keys(0)  # Enter latitude
+        loc_input = selenium_browser.find_element(By.NAME, value="longitude")
+        loc_input.send_keys(0)  # Enter longitude
+        # Submit content entered from above
+        selenium_browser.find_element(By.XPATH, value='//input[@value="Create"]').click()
+
+        # Check that no mature nodes are present
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()  # Empty search matches everything
+        self.assertTrue(selenium_browser.page_source.find("maturenodestory") == -1)
+        self.assertTrue(selenium_browser.page_source.find("www.google.com") == -1)
+        self.assertTrue(selenium_browser.page_source.find("name123") == -1)
+        self.assertTrue(selenium_browser.page_source.find("Longitude: 0.0") == -1)
+        self.assertTrue(selenium_browser.page_source.find("Latitude: 0.0") == -1)
         return
 
-    def test_exact_search_results(self):
-        """
-        Tests the search results of a variety of
-        scenarios. This includes but is not limited
-        to no results, some results, all results.
-        TEST ONLY TESTS FOR EXACT MATCHES
-        """
-        return
+    def test_search_results(self):
+        # Test search redirect here
+        # Create a test user for login
+        username = "namename"
+        password = "password1"
+        display_name = "display"
+        # Register above credentials
+        selenium_browser = webdriver.Chrome(ChromeDriverManager().install())
+        selenium_browser.get('%s%s' % (self.live_server_url, '/register/'))
+        username_input = selenium_browser.find_element(By.NAME, value="username")
+        username_input.send_keys(username)  # Enter username
+        password_input = selenium_browser.find_element(By.NAME, value="password")
+        password_input.send_keys(password)  # Enter password
+        display_name_input = selenium_browser.find_element(By.NAME, value="display_name")
+        display_name_input.send_keys(display_name)  # Enter display name
+        selenium_browser.find_element(By.XPATH, value='//input[@value="Register"]').click()
+        # Login using the above credientials
+        selenium_browser.get('%s%s' % (self.live_server_url, '/login/'))
+        username_input = selenium_browser.find_element(By.NAME, value="username")
+        username_input.send_keys(username)  # Enter username
+        password_input = selenium_browser.find_element(By.NAME, value="password")
+        password_input.send_keys(password)  # Enter password
+        selenium_browser.find_element(By.XPATH, value='//input[@value="Login"]').click()
+        # Get to search page
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()  # Empty search matches everything
 
-    def test_partial_search_results(self):
-        """
-        Tests the search results of a variety of
-        scenarios. This includes but is not limited
-        to no results, some results, all results.
-        TEST ONLY TESTS FOR PARTIAL MATCHES
-        """
+        # Insert 9 test nodes (of many different titles)
+        arbitrary_num_nodes = 10
+        user = User.objects.get(username=username)
+        for i in range(arbitrary_num_nodes):
+            # Create test tag
+            TagToInsert = Tag(name_text="name123"+str(i), language="en_US")
+            TagToInsert.add_new_tag()  # Create Main Tag to Add
+            valid_node_dict = {
+                        "node_title": "uniquetitle"+str(i),
+                        "node_content": "content",
+                        "image_file": None,
+                        "image_url": "www.google.com",
+                        "main_tag_id": TagToInsert.id,
+                        "mature_node": False,
+                        "latitude": 90,
+                        "longitude": 90
+                    }
+            user.post_node(valid_node_dict)
+        # UNIQUE SEARCH -- All unique searches must be unique and result in a singular node
+        for i in range(arbitrary_num_nodes):
+            # Check that search results contain all searched nodes
+            search_input = selenium_browser.find_element(By.XPATH, value='//input[@type="search"]')
+            search_input.send_keys("uniquetitle"+str(i))  # Enter search query based on unique identifiers
+            selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
+            # Searched for node should be present
+            self.assertTrue(selenium_browser.page_source.find("uniquetitle"+str(i)) != -1)
+            # No other nodes should be present
+            for j in range(arbitrary_num_nodes):
+                if j != i:
+                    self.assertTrue(selenium_browser.page_source.find(("uniquetitle" + str(j))) == -1)
+        # CASE INSENSITIVE -- Case should not matter
+        search_input = selenium_browser.find_element(By.XPATH, value='//input[@type="search"]')
+        search_input.send_keys("Uniquetitle" + str(0))  # Enter search query based on unique identifiers
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
+        # Searched for node should be present
+        self.assertTrue(selenium_browser.page_source.find("uniquetitle" + str(0)) != -1)
+        # TAG SEARCH -- Can find stories by their tags
+        search_input = selenium_browser.find_element(By.XPATH, value='//input[@type="search"]')
+        search_input.send_keys("name123" + str(0))  # Enter search query based on unique identifiers
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
+        # Searched for node should be present
+        self.assertTrue(selenium_browser.page_source.find("name123" + str(0)) != -1)
+        # AUTHOR SEARCH - Can search by author
+        search_input = selenium_browser.find_element(By.XPATH, value='//input[@type="search"]')
+        search_input.send_keys(username)  # Enter search query based on unique identifiers
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
+        # Searched for nodes should be present
+        for i in range(arbitrary_num_nodes):
+            self.assertTrue(selenium_browser.page_source.find(("uniquetitle" + str(i))) != -1)
+        # URL SEARCH -- Can search by story url and partial values
+        search_input = selenium_browser.find_element(By.XPATH, value='//input[@type="search"]')
+        search_input.send_keys("www.google" + str(0))  # Enter search query based on unique identifiers
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
+        # Searched for node should be present
+        for i in range(arbitrary_num_nodes):
+            self.assertTrue(selenium_browser.page_source.find(("uniquetitle" + str(i))) != -1)
+        # NO RESULT SEARCH -- No nodes should come up with an invalid match
+        invalid_query = "Armando"
+        search_input = selenium_browser.find_element(By.XPATH, value='//input[@type="search"]')
+        search_input.send_keys(invalid_query)  # Enter search query based on unique identifiers
+        selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()
+        # No nodes should be present
+        for i in range(arbitrary_num_nodes):
+            self.assertTrue(selenium_browser.page_source.find(("uniquetitle" + str(i))) == -1)
         return
