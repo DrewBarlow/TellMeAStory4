@@ -775,6 +775,11 @@ def search_results(req: HttpRequest, username: str) -> HttpResponse:
                         # Skip duplicate stories
                         if node not in found_stories:
                             found_stories.append(node)
+                    # Search for partial matching content
+                    if str(search_query).lower() in str(node.node_content).lower():
+                        # Skip duplicate stories
+                        if node not in found_stories:
+                            found_stories.append(node)
                     # Search for exact matching tags
                     for tag in node.other_tags.all():
                         if str(tag.name_text) == search_query:
