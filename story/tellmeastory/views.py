@@ -283,11 +283,10 @@ def map(req: HttpRequest) -> HttpResponse:
 
     # Converts our data to JSON format
     CONVERT_JSON = json.dumps(data)
-
     return render(req, "tellmeastory/map.html", {
         "mapbox_token": API_TOKEN,
         "map_data": CONVERT_JSON,
-        "logged_in_username": logged_user
+        "logged_in_username": logged_user,
     })
 
 
@@ -740,3 +739,120 @@ def author_story(
                 "logged_in_username": logged_user
             })
 
+def search_results(req: HttpRequest, username: str) -> HttpResponse:
+    err_msg = None
+    all_nodes = Node.objects.filter()
+    all_tags = Tag.objects.filter()
+    logged_user: str = req.COOKIES.get(COOKIE_NAME)
+    found_stories = []  # all stories matching query
+    search_query = req.GET['search_query']
+    # If POST, then proceed to search using given search,
+    # else send to login.
+    if req.method == "GET":
+        # Check for a valid POST request and that
+        # the given username is what their cookie
+        # shows.
+        if logged_user == username:
+            # User account should exist, otherwise send them
+            # to the login page.
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                err_msg = "Account does not exist. Only users who sign in can search."
+                form: LoginForm = LoginForm()
+                return render(req, "tellmeastory/login.html", {
+                    "form": form,
+                    "error_message": err_msg
+                })
+            # Find all matching stories from request
+            # ACTUAL RESULTS ARE SEARCHED FOR HERE
+            # If user is signed up without being mature,
+            # account for the that in the search results.
+            if user.mature:
+                for node in all_nodes:
+                    # Search for partial matching author names
+                    if str(search_query).lower() in str(node.node_author).lower():
+                        # Skip duplicate stories
+                        if node not in found_stories:
+                            found_stories.append(node)
+                    # Search for exact matching tags
+                    for tag in node.other_tags.all():
+                        if str(tag.name_text) == search_query:
+                            # Skip duplicate stories
+                            if node not in found_stories:
+                                found_stories.append(node)
+                            break
+                    # Search for partial matching titles
+                    if str(search_query).lower() in str(node.node_title).lower():
+                        # Skip duplicate stories
+                        if node not in found_stories:
+                            found_stories.append(node)
+                    # Search for partial matching urls
+                    if str(search_query).lower() in str(node.image_url).lower():
+                        # Skip duplicate stories
+                        if node not in found_stories:
+                            found_stories.append(node)
+            # Immature users receive results that do not
+            # include mature content.
+            else:
+                for node in all_nodes:
+                    # Skip mature nodes
+                    isMature = False
+                    for tag in node.other_tags.all():
+                        if "Mature" == tag.name_text:
+                            isMature = True
+                    if isMature:
+                        continue
+                    # Search for partial matching author names
+                    if str(search_query).lower() in str(node.node_author).lower():
+                        # Skip duplicate stories
+                        if node not in found_stories:
+                            found_stories.append(node)
+                    # Search for partial matching content
+                    if str(search_query).lower() in str(node.node_content).lower():
+                        # Skip duplicate stories
+                        if node not in found_stories:
+                            found_stories.append(node)
+                    # Search for exact matching tags
+                    for tag in node.other_tags.all():
+                        if str(tag.name_text) == search_query:
+                            # Skip duplicate stories
+                            if node not in found_stories:
+                                found_stories.append(node)
+                            break
+                    # Search for partial matching titles
+                    if str(search_query).lower() in str(node.node_title).lower():
+                        # Skip duplicate stories
+                        if node not in found_stories:
+                            found_stories.append(node)
+                    # Search for partial matching urls
+                    if str(search_query).lower() in str(node.image_url).lower():
+                        # Skip duplicate stories
+                        if node not in found_stories:
+                            found_stories.append(node)
+            return render(req, "tellmeastory/searchResults.html", {
+                "logged_in_username": user,
+                "error_message": err_msg,
+                "isResult": True,
+                "nodes": found_stories,
+                "search_query": search_query
+            })
+        # If cookie does not match username, send to
+        # login page.
+        else:
+            form: LoginForm = LoginForm()
+            err_msg = "Account not found. Try searching later."
+            return render(req, "tellmeastory/login.html", {
+                "form": form,
+                "error_message": err_msg
+            })
+    # No search content was given from a valid search request.
+    # The search page cannot be reached unless the user uses
+    # the search bar.
+    else:
+        err_msg = "Please search using the search bar while logged into an account."
+        form: LoginForm = LoginForm()
+        return render(req, "tellmeastory/login.html", {
+            "form": form,
+            "error_message": err_msg
+        })
