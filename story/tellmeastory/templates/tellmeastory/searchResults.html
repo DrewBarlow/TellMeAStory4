@@ -3,17 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Profile Page</title>
+    <title>Search Results</title>
 </head>
 <body>
-
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#4fbaf7">
     <a class="navbar-brand" href="#">Tell Me A Story</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
     <!-- Form to submit search queries (does nothing unless logged in) -->
     {% if logged_in_username %}
         <form class="form-inline my-2 my-lg-0" action="/story/search/{{ logged_in_username }}/" method="get">
@@ -77,14 +75,64 @@
     </div>
 </nav>
 
-<div class="alert alert-danger center-block" role="alert"
-     style="width:90%; margin-left:5%; margin-top:5%; max-height:150px; height:150px; text-align: center;">
-    <div style="margin-top:1%"></div>
-    <h1 class="alert-heading">Oh no!</h1>
-    <div style="font-size:24px">You have tried to access an account page that does not exist.</div>
 
+<section>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col">
+                <!-- Title results as "Search Results" -->
+                <div class="row justify-content-left">
+                    <h2>Search Results</h2>
+                </div>
+                <!-- Check if results were found. Output if no results found or if they were found. -->
+                {% if isResult %}
+                    <div class="row justify-content-left">
+                        <h5>Stories found matching "{{ search_query }}":</h5>
+                    </div>
+                {% else %}
+                    <div class="row justify-content-left">
+                        <h5>No stories found matching "{{ search_query }}"!</h5>
+                    </div>
+                {% endif %}
 
-</div>
+                <div class="row justify-content-center">
+                    {% if error_message %}
+                        <div class="alert alert-danger" style="width:50%; text-align:center">{{ error_message }}</div>
+                    {% endif %}
+                </div>
+                <div class="row justify-content-left">
+                    <!-- Present Search Results -->
+                        <p>
+                            <ol>
+                                <!-- Print all found results with title, image, location, tags, and author (could be none) -->
+                                {% if isResult %}
+                                    {% for node_models in nodes %}
+                                        <li class="list-group-item">
+                                            <h1 class="display-5">
+                                                {{ node_models.node_title }} <br/>
+                                            </h1>
+                                            Author: {{ node_models.node_author }} <br/>
+                                            Longitude: {{ node_models.longitude }} Latitude: {{ node_models.latitude }} <br/>
+                                            Tags: {% for tag in node_models.other_tags.all %}{{ tag }} {% endfor %} <br/>
+                                            <!-- Display image from url or image from file depending on what is stored -->
+                                            {% if not node_models.has_image_file%}
+                                                <img src="{{node_models.image_url}}" height="100px">
+                                            {% else %}
+                                                <img src="{{node_models.image.url}}" height="100px">
+                                            {% endif %}
+                                            {{ node_models.image_file }}
+                                        </li> <br/>
+                                    {% endfor %}
+                                {% endif %}
+                            </ol>
+                        </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- https://docs.djangoproject.com/en/4.0/topics/forms/ -->
+
 
 </body>
 
@@ -100,3 +148,11 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+
+<style>
+    section {
+        margin-top: 50px;
+    }
+
+</style>
+
