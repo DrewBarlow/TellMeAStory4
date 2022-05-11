@@ -61,13 +61,17 @@
     </div>
 </nav>
 
-<h1>Reported Post: {{report.id_for_report}}</h1>
+<h1>Report ID: {{report.id_for_report}}</h1>
 
 <center>
 
-<p>Reporting ID: {{reported_username}}</p>
-<p>Reported ID: {{report.reported_id}}</p>
-<p>Reason: {{report.report_reason}}</p>
+<p style = "font-weight: bold; font-size: 30px;">Reporting ID: {{reported_username}}</p>
+<p style = "font-weight: bold; font-size: 30px;">Reported ID: {{report.reported_id}}</p>
+<p style = "font-weight: bold; font-size: 30px;" >Reason: {{report.report_reason}}</p>
+    <img src = "{{report.post.image_url}}"/>
+    <p>Story content: {{report.post.node_content}}</p>
+
+
 
 
 

@@ -450,7 +450,7 @@ def reportPost(req: HttpRequest, post_id) -> HttpResponse:
                 taken_id = False
 
         # get a report object
-        new_report = Report(reporting_username=getUser, reported_id=str(post.node_author),
+        new_report = Report(reporting_username=getUser, reported_user=post.node_author,
                             report_reason=form.cleaned_data.get('report_reason'), id_for_report=getId,
                             post=Node.objects.get(post_id=post_id))
 
@@ -525,7 +525,7 @@ def adminReportPost(req: HttpRequest, report_id) -> HttpResponse:
 
             # Ban the offender
             if (getChoice) == "Ban":
-                reportedUser = str(report.post.node_author)
+                reportedUser = str(report.reported_user)
                 Ban.save(Ban(bannedUser=str(reportedUser)))
                 User.objects.get(username=reportedUser).delete()
             # Delete the report

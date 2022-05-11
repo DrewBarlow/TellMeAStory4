@@ -63,7 +63,10 @@
     </div>
 </nav>
 
-
+{%if reports%}
+{%else%}
+<h1>There are currently no reports in the system.</h1>
+{%endif%}
 
  <!--loop through each object in the post database-->
 {%for report in reports%}

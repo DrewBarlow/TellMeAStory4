@@ -317,10 +317,12 @@ class Node(Model):
 
 class Report(models.Model):
     #the id of the user who put in the report (set null so we can keep the reports)
-    reporting_username = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    reporting_username = models.ForeignKey(User,on_delete=models.DO_NOTHING, related_name='user_reporting')
 
-    #the id of the reported posts
-    reported_id = models.CharField(max_length=400)
+    #the user of the post that was reported
+    reported_user = models.ForeignKey(User,on_delete=models.CASCADE, default=None,related_name='reported_user')
+
+    #reported_id = models.CharField(max_length=400)
 
     #the reason the user was reported (text field)
     report_reason = models.CharField(max_length=600)
