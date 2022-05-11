@@ -861,3 +861,22 @@ def search_results(req: HttpRequest, username: str) -> HttpResponse:
             "form": form,
             "error_message": err_msg
         })
+
+def post(req: HttpRequest, post_id: str) -> HttpResponse:
+    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+    postStr: Node = None;
+    post = Node.objects.filter(post_id=post_id)
+
+    # if the post does not exists raise a 404 error for now
+    if post.exists() == False:
+        return render(
+            req, "tellmeastory/storyNotFound.html"
+        )
+    postStr = Node.objects.get(post_id=post_id)
+
+    postAuthor = User.objects.get(id=postStr.node_author_id)
+
+    return render(req, "tellmeastory/post.html", {
+        "post": postStr,
+        "logged_in_username": logged_user,
+    })

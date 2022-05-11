@@ -47,6 +47,9 @@ urlpatterns = [
 
     path("author-story/<str:username>/", views.author_story, name="author_story"),
     path("author-story/<str:username>/<str:longitude>/<str:latitude>/", views.author_story, name="author_storyll"),
-    path("search/<str:username>/", views.search_results, name="search_results")
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path("search/<str:username>/", views.search_results, name="search_results"),
+
+    path('post/<post_id>/' , views.post , name="post") ,
+
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
