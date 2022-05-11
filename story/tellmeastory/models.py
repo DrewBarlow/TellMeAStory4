@@ -319,6 +319,7 @@ class Report(models.Model):
     #the id of the user who put in the report (set null so we can keep the reports)
     reporting_username = models.ForeignKey(User,on_delete=models.DO_NOTHING, related_name='user_reporting')
 
+
     #the user of the post that was reported
     reported_user = models.ForeignKey(User,on_delete=models.CASCADE, default=None,related_name='reported_user')
 
