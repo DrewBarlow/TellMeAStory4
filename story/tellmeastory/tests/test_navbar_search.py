@@ -144,6 +144,7 @@ class AddNodeFromUserTests(LiveServerTestCase):
         username = "namename"
         password = "password1"
         display_name = "display"
+
         user = User.objects.create(username=username, password=sha512(password.encode("utf-8")).hexdigest(),
                                    display_name=display_name)
         self.client.cookies["StoryUserLoggedIn"] = username
@@ -169,6 +170,8 @@ class AddNodeFromUserTests(LiveServerTestCase):
                         "longitude": 90
                     }
             user.post_node(valid_node_dict)
+
+
         # Check that search results contain all test nodes
         selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()  # Empty search matches everything
         # All added titles must be present

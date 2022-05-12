@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from tellmeastory.models import Node, User
 
+
 USERNAME: str = "namename"
 PASSWORD: str = "password"
 DIS_NAME: str = "display"
@@ -76,9 +77,6 @@ class CreateStoryFromMap(LiveServerTestCase):
         The map should have markers for nodes that have been created.
         Note: The magic coordinates for long/lat are the starting point of the map on load.
         """
-        self.client.cookies["StoryUserLoggedIn"] = USERNAME
-        User.objects.create(username=USERNAME, password=PASSWORD, display_name=DIS_NAME)
-
         selenium_browser = webdriver.Chrome(ChromeDriverManager().install())
         node: Node = Node.objects.create(
             node_title="Test Node",
@@ -102,13 +100,12 @@ class CreateStoryFromMap(LiveServerTestCase):
         If the user was not logged in, they would get a 404.
         Double clicking when not logged in should do nothing.
         """
-        self.client.cookies["StoryUserLoggedIn"] = USERNAME
-        User.objects.create(username=USERNAME, password=PASSWORD, display_name=DIS_NAME)
 
         selenium_browser = webdriver.Chrome(ChromeDriverManager().install())
 
         # redirect to map page and click in the middle of the screen
         selenium_browser.get(f"{self.live_server_url}{URL_MAPS}")
+
         map = selenium_browser.find_element(By.XPATH, value='//div[@id="map"]')
         ActionChains(selenium_browser).double_click(map).perform()
 
