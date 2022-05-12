@@ -34,6 +34,8 @@ class AddNodeFromUserTests(LiveServerTestCase):
         password_input.send_keys(password)  # Enter password
         display_name_input = selenium_browser.find_element(By.NAME, value="display_name")
         display_name_input.send_keys(display_name)  # Enter display name
+        maturity_input = selenium_browser.find_element(By.NAME, value="maturity")
+        maturity_input.send_keys(18)  # Enter display name
         selenium_browser.find_element(By.XPATH, value='//input[@value="Register"]').click()
         # Login using the above credientials
         selenium_browser.get('%s%s' % (self.live_server_url, '/login/'))
@@ -94,6 +96,8 @@ class AddNodeFromUserTests(LiveServerTestCase):
         password_input.send_keys(password)  # Enter password
         display_name_input = selenium_browser.find_element(By.NAME, value="display_name")
         display_name_input.send_keys(display_name)  # Enter display name
+        maturity_input = selenium_browser.find_element(By.NAME, value="maturity")
+        maturity_input.send_keys(18)  # Enter display name
         selenium_browser.find_element(By.XPATH, value='//input[@value="Register"]').click()
         # Login using the above credientials
         selenium_browser.get('%s%s' % (self.live_server_url, '/login/'))
@@ -135,13 +139,19 @@ class AddNodeFromUserTests(LiveServerTestCase):
     def test_many_stories_present_in_results(self):
         # Start selenium
         selenium_browser = webdriver.Chrome(ChromeDriverManager().install())
-        # Navigate to map page
-        selenium_browser.get('%s%s' % (self.live_server_url, '/map/'))
+
         # Create a temporary Test user
         username = "namename"
         password = "password1"
         display_name = "display"
-        user = User.objects.create(username=username, password=sha512(password.encode("utf-8")).hexdigest(), display_name=display_name)
+        user = User.objects.create(username=username, password=sha512(password.encode("utf-8")).hexdigest(),
+                                   display_name=display_name)
+        self.client.cookies["StoryUserLoggedIn"] = username
+
+        # Navigate to map page
+        selenium_browser.get('%s%s' % (self.live_server_url, '/map/'))
+
+
         # Insert 100 test nodes (of many different titles)
         arbitrary_num_nodes = 100
         for i in range(arbitrary_num_nodes):
@@ -186,6 +196,8 @@ class AddNodeFromUserTests(LiveServerTestCase):
         password_input.send_keys(password)  # Enter password
         display_name_input = selenium_browser.find_element(By.NAME, value="display_name")
         display_name_input.send_keys(display_name)  # Enter display name
+        maturity_input = selenium_browser.find_element(By.NAME, value="maturity")
+        maturity_input.send_keys(16)  # Enter display name
         selenium_browser.find_element(By.XPATH, value='//input[@value="Register"]').click()
         # Login using the above credientials
         selenium_browser.get('%s%s' % (self.live_server_url, '/login/'))
@@ -239,6 +251,8 @@ class AddNodeFromUserTests(LiveServerTestCase):
         password_input.send_keys(password)  # Enter password
         display_name_input = selenium_browser.find_element(By.NAME, value="display_name")
         display_name_input.send_keys(display_name)  # Enter display name
+        maturity_input = selenium_browser.find_element(By.NAME, value="maturity")
+        maturity_input.send_keys(18)  # Enter display name
         selenium_browser.find_element(By.XPATH, value='//input[@value="Register"]').click()
         # Login using the above credientials
         selenium_browser.get('%s%s' % (self.live_server_url, '/login/'))

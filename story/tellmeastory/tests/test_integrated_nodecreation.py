@@ -34,6 +34,8 @@ class AddNodeFromUserTests(LiveServerTestCase):
         password_input.send_keys(password)  # Enter password
         display_name_input = selenium_browser.find_element(By.NAME, value="display_name")
         display_name_input.send_keys(display_name)  # Enter display name
+        maturity_input = selenium_browser.find_element(By.NAME, value="maturity")
+        maturity_input.send_keys(16)  # Enter display name
         selenium_browser.find_element(By.XPATH, value='//input[@value="Register"]').click()
         # Login using the above credientials
         selenium_browser.get('%s%s' % (self.live_server_url, '/login/'))
@@ -195,6 +197,8 @@ class AddNodeFromUserTests(LiveServerTestCase):
         password_input.send_keys(password)  # Enter password
         display_name_input = selenium_browser.find_element(By.NAME, value="display_name")
         display_name_input.send_keys(display_name)  # Enter display name
+        maturity_input = selenium_browser.find_element(By.NAME, value="maturity")
+        maturity_input.send_keys(16)  # Enter display name
         selenium_browser.find_element(By.XPATH, value='//input[@value="Register"]').click()
         # Login using the above credientials
         selenium_browser.get('%s%s' % (self.live_server_url, '/login/'))
