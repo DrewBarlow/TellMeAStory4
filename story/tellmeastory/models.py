@@ -141,8 +141,8 @@ class Node(Model):
                                    default=None)  # File for an image if a file is given by user
     post_id : CharField = CharField(max_length=200, default="")
     image_url: TextField = TextField()  # URL to source an image from if URL is given by user
-    node_title: CharField = CharField(max_length=200)  # Title of the story stored in the Node
-    node_content: CharField = CharField(max_length=10_000)  # Story content (text) of node
+    node_title: CharField = CharField(max_length=200,blank=False)  # Title of the story stored in the Node
+    node_content: CharField = CharField(max_length=10_000,blank=False)  # Story content (text) of node
     # The Node has an url if False, otherwise it has an image file
     has_image_file: BooleanField = BooleanField(default=False)  # True only when user gave a file for an image
     # Node coordinates on map
@@ -316,10 +316,13 @@ class Node(Model):
 
 class Report(models.Model):
     #the id of the user who put in the report (set null so we can keep the reports)
-    reporting_username = models.ForeignKey(User,on_delete=models.DO_NOTHING, null=False, primary_key=True)
+    reporting_username = models.ForeignKey(User,on_delete=models.DO_NOTHING, related_name='user_reporting')
 
-    #the id of the reported posts
-    reported_id = models.CharField(max_length=400)
+
+    #the user of the post that was reported
+    reported_user = models.ForeignKey(User,on_delete=models.CASCADE, default=None,related_name='reported_user')
+
+    #reported_id = models.CharField(max_length=400)
 
     #the reason the user was reported (text field)
     report_reason = models.CharField(max_length=600)
