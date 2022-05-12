@@ -1,4 +1,5 @@
-from django.db.models import DecimalField, ManyToManyField, BooleanField, ImageField, TextField, CharField, ForeignKey, Model, CASCADE
+from django.db.models import DecimalField, ManyToManyField, BooleanField, ImageField, TextField, CharField, ForeignKey, \
+    Model, CASCADE
 
 from re import fullmatch, Match
 from validators import url
@@ -6,6 +7,8 @@ from validators import url
 from django.db import models
 from managetags.models import Tag
 from typing import Any, Dict
+import uuid
+
 
 class User(Model):
     username: CharField = CharField(max_length=200)
@@ -55,7 +58,7 @@ class User(Model):
         Returns True if self.display_name has a length of >= 5 and <= 20.
         """
         return 5 <= len(self.display_name) <= 20
-      
+
     def is_mature(self) -> bool:
         """
         Returns True if self.mature is True.
@@ -75,15 +78,18 @@ class User(Model):
             "latitude" -> DecimalField
             "longitude" -> DecimalField
         """
+
         # Add title, content, and author to a new Node to insert
         node_args: Dict[str, Any] = {
             "node_title": contentDict["node_title"],
             "node_content": contentDict["node_content"],
             "node_author": self,
             "latitude": contentDict["latitude"],
-            "longitude": contentDict["longitude"]
+            "longitude": contentDict["longitude"],
         }
+
         newNode: Node = Node(**node_args)
+
         # Check title and content for validity
         if not newNode.is_valid_title():
             return "Invalid title"
@@ -99,7 +105,8 @@ class User(Model):
             return "Invalid Image. You may add one image to each story."
         newNode.save()  # Every return after this MUST delete newNode, it was saved to create its id for ManyToMany
         # Add main tag to story and validate that it exists
-        if (not Tag.objects.count()) or (int(contentDict["main_tag_id"]) < 0) or (not newNode.attach_main_tag(Tag.objects.get(id=int(contentDict["main_tag_id"])).add_tag_to_node())):
+        if (not Tag.objects.count()) or (int(contentDict["main_tag_id"]) < 0) or (
+        not newNode.attach_main_tag(Tag.objects.get(id=int(contentDict["main_tag_id"])).add_tag_to_node())):
             newNode.delete()
             return "Main Tag not found. Please select a valid main tag."
         # Add mature rating is node contains mature content
@@ -116,14 +123,14 @@ class User(Model):
         elif not (float(contentDict["longitude"]) <= MAX_LONG and float(contentDict["longitude"]) >= MIN_LONG):
             newNode.delete()
             return "Invalid longitude"
+
         # Now that everything has been verified. The node can be successfully
         # saved to the database and the user can receive a success message.
         newNode.save()
+        newNode.generate_id()
+        newNode.save()
+
         return "Successfully Added your Story! Please refresh page to see changes."
-
-
-
-
 
 
 class Ban(models.Model):
@@ -132,14 +139,14 @@ class Ban(models.Model):
 
     def __str__(self):
         return self.bannedUser
-      
+
 
 class Node(Model):
     """ Story Node class. Holds a story's contents to present
     to users that select the respective story node. """
-    image: ImageField = ImageField(upload_to="storyimages" ,
+    image: ImageField = ImageField(upload_to="storyimages",
                                    default=None)  # File for an image if a file is given by user
-    post_id : CharField = CharField(max_length=200, default="")
+    post_id: CharField = CharField(max_length=200, default="")
     image_url: TextField = TextField()  # URL to source an image from if URL is given by user
     node_title: CharField = CharField(max_length=200)  # Title of the story stored in the Node
     node_content: CharField = CharField(max_length=10_000)  # Story content (text) of node
@@ -148,7 +155,7 @@ class Node(Model):
     # Node coordinates on map
     longitude: DecimalField = DecimalField(max_digits=25, decimal_places=21, null=True)
     latitude: DecimalField = DecimalField(max_digits=25, decimal_places=21, null=True)
-    node_author: ForeignKey = ForeignKey(User , on_delete=CASCADE , null=True)  # Account/user who created the Node
+    node_author: ForeignKey = ForeignKey(User, on_delete=CASCADE, null=True)  # Account/user who created the Node
     main_tag_id: int = 0  # Primary story content Tag's id. One main Tag can relate to many story Nodes.
     other_tags: ManyToManyField = ManyToManyField(Tag, blank=True)  # A Node can have many tags for further filtering
 
@@ -172,7 +179,7 @@ class Node(Model):
         sanitized: str = self.node_content.strip()
         return len(sanitized) <= 10_000
 
-    def add_image(self , newFile=None , newURL=None) -> bool:
+    def add_image(self, newFile=None, newURL=None) -> bool:
         """
         Allows for image to be attached to a Story Node.
         """
@@ -190,7 +197,7 @@ class Node(Model):
         else:
             return False
 
-    def add_image_from_file(self , file) -> bool:
+    def add_image_from_file(self, file) -> bool:
         """
         Allows for image url to be attached to a Story Node.
         Returns True if attached, otherwise false.
@@ -208,7 +215,7 @@ class Node(Model):
             # Change nothing
             return False
 
-    def add_image_from_url(self , URL) -> bool:
+    def add_image_from_url(self, URL) -> bool:
         """
         Allows for image url to be linked to a node.
         Returns True if downloaded and attached, otherwise false.
@@ -230,7 +237,7 @@ class Node(Model):
             # Change nothing
             return False
 
-    def attach_main_tag(self , properties: dict) -> bool:
+    def attach_main_tag(self, properties: dict) -> bool:
         '''
         The Node (self) is given a Foreign key to
         its main Tag. The id and properties of the
@@ -248,7 +255,7 @@ class Node(Model):
             # Invalid Tag attachment
             return False
 
-    def attach_tag(self , properties: dict) -> bool:
+    def attach_tag(self, properties: dict) -> bool:
         '''
         The Node (self) is given a relationship to
         many Tags. The id and properties of the
@@ -290,7 +297,7 @@ class Node(Model):
         self.save()
 
         return
-      
+
     def add_reaction(self, emoji: str, user: User) -> bool:
         """
         Adds a reaction to this node.
@@ -312,28 +319,39 @@ class Node(Model):
         """
         Returns True if the current user has reacted to this Node.
         """
-        return Reaction.objects.filter(node=self, emoji=emoji, owner=user).exists() 
+        return Reaction.objects.filter(node=self, emoji=emoji, owner=user).exists()
+
+    def generate_id(self) -> bool:
+        post_id = str(uuid.uuid1())
+        checkID = Node.objects.filter(post_id=post_id)
+        while (checkID.count() != 0):
+            post_id = str(uuid.uuid1())
+            checkID = Node.objects.filter(post_id=post_id)
+        self.post_id = post_id
+        self.save()
+        return True
+
 
 class Report(models.Model):
-    #the id of the user who put in the report (set null so we can keep the reports)
-    reporting_username = models.ForeignKey(User,on_delete=models.DO_NOTHING, null=False, primary_key=True)
+    # the id of the user who put in the report (set null so we can keep the reports)
+    reporting_username = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False, primary_key=True)
 
-    #the id of the reported posts
-    reported_id = models.CharField(max_length=400)
+    # the id of the reported posts
+    reported_user = models.ForeignKey(User,on_delete=models.CASCADE, default=None,related_name='reported_user')
 
-    #the reason the user was reported (text field)
+    # the reason the user was reported (text field)
     report_reason = models.CharField(max_length=600)
 
-    #hold the id for a report
+    # hold the id for a report
     id_for_report = models.CharField(max_length=100, default="")
 
-    #an id for a report
-    post = models.ForeignKey(Node,on_delete=models.CASCADE, default=None)
+    # an id for a report
+    post = models.ForeignKey(Node, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
         return self.id_for_report
 
-   
+
 class Reaction(Model):
     emoji: CharField = CharField(max_length=1)
     node: ForeignKey = ForeignKey(Node, on_delete=CASCADE, null=True)

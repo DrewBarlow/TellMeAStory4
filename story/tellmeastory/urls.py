@@ -10,9 +10,11 @@ urlpatterns = [
     path("index/", views.index, name="index"),
     path("account/<str:username>/", views.account, name="account_page"),
     path("login/", views.login, name="login"),
+    path("logout/", views.logout , name="logout") ,
     path("register/", views.register, name="register"),
     path("map/" , views.map , name="map") ,
     path("addtags/", include("managetags.urls")),
+
 
     #edit post page
     path('modify/<post_id>', views.editPost, name="editPost"),

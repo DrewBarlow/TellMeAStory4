@@ -150,7 +150,7 @@ class testReporting(TestCase):
         # create some objects
         newNode = insert_story_node(post_id="4ad56262a25", node_title="My first post!", node_content="First Story", node_author=user2)
 
-        Report.objects.create(reporting_username=user1,reported_id="9205a925",report_reason="Racism",id_for_report="6a92agh0aw",post=newNode)
+        Report.objects.create(reporting_username=user1,reported_user=user2,report_reason="Racism",id_for_report="6a92agh0aw",post=newNode)
 
         getReports = Report.objects.filter(reporting_username=user1)
         reportCount = getReports.count()
