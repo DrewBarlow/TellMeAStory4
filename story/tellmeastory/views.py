@@ -3,7 +3,8 @@ import uuid
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, HttpResponseForbidden, Http404
 from django.shortcuts import get_object_or_404, render
 from hashlib import sha512
-from .forms import LoginForm, AccountForm, AddImageForm, NodeCreationForm, RegisterForm, PostStoryForm, ReportForm, PostForm
+from .forms import LoginForm, AccountForm, AddImageForm, NodeCreationForm, RegisterForm, PostStoryForm, \
+    ReportForm, PostForm
 from managetags.models import Tag
 from typing import Any, Dict
 from .models import User, Report, Ban, Node
@@ -28,7 +29,6 @@ def index(req: HttpRequest) -> HttpResponse:
 
 # account stub for now
 def account(req: HttpRequest, username) -> HttpResponse:
-
     # check if the person logged in has been banned already
     checkBan = Ban.objects.filter(bannedUser=username)
     if checkBan.exists():
@@ -36,8 +36,6 @@ def account(req: HttpRequest, username) -> HttpResponse:
 
     # get the current user object from the database
     user: User = get_object_or_404(User, username=username)
-
-
 
     form: AccountForm = None
     form_msg: str = ""
@@ -63,7 +61,6 @@ def account(req: HttpRequest, username) -> HttpResponse:
                 msg_type = 1
                 form_msg = form_msg + "Successfully changed user blurb."
 
-
             if form["new_display_name"].value() != user.display_name and form["new_display_name"].value() != None:
                 old_dname: str = user.display_name
                 user.display_name = form["new_display_name"].value().strip()
@@ -71,7 +68,7 @@ def account(req: HttpRequest, username) -> HttpResponse:
                 if user.is_valid_display_name():
                     user.save()
                     msg_type = 1;
-                    form_msg =  form_msg + "Successfully changed display name."
+                    form_msg = form_msg + "Successfully changed display name."
                 else:
                     user.display_name = old_dname
                     msg_type = -1;
@@ -148,6 +145,7 @@ def register(req: HttpRequest) -> HttpResponse:
         form = RegisterForm(req.POST)
 
         if form.is_valid():
+
             # display_name is optional--
             # if one isn't specified, default the username
             display_name: str = form["display_name"].value()
@@ -161,12 +159,22 @@ def register(req: HttpRequest) -> HttpResponse:
 
             # hash the user's password for at least a bit of security
             hashed_pw: str = sha512(form["password"].value().encode("utf-8")).hexdigest()
+
+            # check if the user is above 18, then assign the boolean value
+
+            # if this was realistic then we'd check for id's etc
+
+            mature = True
+
+            if (int(form["maturity"].value()) < 18):
+                mature = False
+
             new_user: User = User(
                 username=form["username"].value(),
                 password=hashed_pw,
-                email=mail_e,
                 display_name=display_name,
-                mature=form["maturity"].value()
+                email=mail_e,
+                mature=mature
             )
 
             form = RegisterForm()
@@ -177,8 +185,6 @@ def register(req: HttpRequest) -> HttpResponse:
                 err_msg = "Username is already taken."
             elif not new_user.is_valid_display_name():
                 err_msg = "Invalid display name."
-            elif len(mail_e) < 5:
-                err_msg = "Email must be at least 5 char long"
             elif checkBan.exists():
                 err_msg = "That username is banned."
             else:
@@ -192,6 +198,7 @@ def register(req: HttpRequest) -> HttpResponse:
         "form": form,
         "error_message": err_msg
     })
+
 
 # may need location data as args, not sure
 def create_node(req: HttpRequest) -> HttpResponse:
@@ -315,7 +322,7 @@ def deletePost(req: HttpRequest, post_id) -> HttpResponse:
     # if another user is trying to edit someone else's post
     current_post_user = str(post.node_author)
     if (current_post_user != username):
-        return HttpResponseRedirect("/allPosts/")
+        return HttpResponseRedirect("/profile/{0}/".format(current_post_user))
 
     get_user = str(post.node_author)
 
@@ -331,6 +338,7 @@ def editPost(req: HttpRequest, post_id) -> HttpResponse:
     # get the current user logged in
     username = req.COOKIES.get(COOKIE_NAME)
 
+    user = User.objects.get(username=username)
     # if the current user has been banned
     checkBan = Ban.objects.filter(bannedUser=username)
     if checkBan.exists():
@@ -350,19 +358,26 @@ def editPost(req: HttpRequest, post_id) -> HttpResponse:
     if (current_post_user != username):
         return HttpResponseRedirect("/profile/{0}/".format(current_post_user))
 
-    # get the form for posting
-    form = PostForm(req.POST or None, instance=post)
+    form = PostForm(instance=post)
 
     get_user = str(post.node_author)
-
-    # if the fields are valid, save and redirect
-    if form.is_valid():
-        form.save()
-        return redirect("/profile/{0}/".format(get_user))
+    if req.method == "POST":
+        # get the form for posting
+        form = PostForm(data=req.POST, files=req.FILES, instance=post)
+        # if the fields are valid, save and redirect
+        if form.is_valid():
+            form.save()
+            return redirect("/profile/{0}/".format(get_user))
 
     # form is a form specified by forms.py, post becomes the Post object specified by the post_id
+
     return render(req, 'tellmeastory/editPost.html',
-                  {'form': form, 'post': post})
+                  {
+                      'form': form,
+                      'post': post,
+                      'logged_in_username': username,
+                      'user': user
+                  })
 
 
 # Viewing all the post's in the database
@@ -402,6 +417,8 @@ def reportPost(req: HttpRequest, post_id) -> HttpResponse:
     # get the current user
     getUser = User.objects.get(username=currentUser)
 
+    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+
     # if the fields are valid, save and redirect
     if form.is_valid():
 
@@ -418,20 +435,22 @@ def reportPost(req: HttpRequest, post_id) -> HttpResponse:
                 taken_id = False
 
         # get a report object
-        new_report = Report(reporting_username=getUser, reported_id=str(post.node_author),
+
+        new_report = Report(reporting_username=getUser, reported_user=post.node_author,
                             report_reason=form.cleaned_data.get('report_reason'), id_for_report=getId,
                             post=Node.objects.get(post_id=post_id))
 
         # save the new report to the database and redirect to all the posts
         Report.save(new_report)
-        return redirect("/allPosts")
+        return redirect("tellmeastory/map.html")
 
     # form is a form specified by forms.py, post becomes the Post object specified by the post_id
+
     return render(req, 'tellmeastory/reportPost.html',
                   {'form': form,
                    'post': post,
-                   'node_author': str(post.node_author)
-
+                   'node_author': str(post.node_author),
+                   'logged_in_username': logged_user
                    })
 
 
@@ -451,6 +470,8 @@ def adminReportPage(req: HttpRequest) -> HttpResponse:
     # get the current user to check privileges
     user = User.objects.get(username=username)
 
+    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+
     # if the user is not an admin, deny permission to view the website
     if (user.admin == False):
         raise PermissionDenied
@@ -459,7 +480,8 @@ def adminReportPage(req: HttpRequest) -> HttpResponse:
         return render(req, 'tellmeastory/adminReportPage.html',
                       {
                           'reports': reports,
-
+                          'user': user,
+                          'logged_in_username': logged_user
                       })
 
 
@@ -490,7 +512,7 @@ def adminReportPost(req: HttpRequest, report_id) -> HttpResponse:
 
             # Ban the offender
             if (getChoice) == "Ban":
-                reportedUser = str(report.post.node_author)
+                reportedUser = str(report.reported_user)
                 Ban.save(Ban(bannedUser=str(reportedUser)))
                 User.objects.get(username=reportedUser).delete()
             # Delete the report
@@ -505,6 +527,8 @@ def adminReportPost(req: HttpRequest, report_id) -> HttpResponse:
                           {
                               'report': report,
                               'reported_username': reported_username,
+                              'logged_in_username': username,
+                              'user': user
                           })
 
 
@@ -603,8 +627,6 @@ def profile(req: HttpRequest, username: str) -> HttpResponse:
             "logged_in_username": logged_user,
         })
 
-
-
     storiesFromUser = Node.objects.filter(node_author=user)
     storyCount = storiesFromUser.count()
 
@@ -617,10 +639,10 @@ def profile(req: HttpRequest, username: str) -> HttpResponse:
 
 
 def author_story(
-    req: HttpRequest,
-    username: str,
-    longitude: str="0.0",
-    latitude: str="0.0"
+        req: HttpRequest,
+        username: str,
+        longitude: str = "0.0",
+        latitude: str = "0.0"
 ) -> HttpResponse:
     user: User = get_object_or_404(User, username=username)
     err_msg = None
@@ -734,13 +756,14 @@ def author_story(
         # Render the page with node creation form and
         # all nodes of current user.
         return render(req, "tellmeastory/author_a_node.html", {
-                "user": user,
-                "form": form,
-                "error_message": err_msg,
-                "nodes": my_nodes,
-                "tags": all_tags,
-                "logged_in_username": logged_user
-            })
+            "user": user,
+            "form": form,
+            "error_message": err_msg,
+            "nodes": my_nodes,
+            "tags": all_tags,
+            "logged_in_username": logged_user
+        })
+
 
 def search_results(req: HttpRequest, username: str) -> HttpResponse:
     err_msg = None
@@ -864,3 +887,54 @@ def search_results(req: HttpRequest, username: str) -> HttpResponse:
             "form": form,
             "error_message": err_msg
         })
+
+
+def post(req: HttpRequest, post_id: str) -> HttpResponse:
+    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+    postStr: Node = None;
+    post = Node.objects.filter(post_id=post_id)
+
+    # if the post does not exists raise a 404 error for now
+    if post.exists() == False:
+        return render(
+            req, "tellmeastory/storyNotFound.html"
+        )
+    postStr = Node.objects.get(post_id=post_id)
+
+    postAuthor = User.objects.get(id=postStr.node_author_id)
+
+    reactions = [];
+    UserLogged = None;
+
+    if logged_user:
+        UserLogged = User.objects.get(username=logged_user)
+
+    if req.method == "POST":
+        data = req.POST
+        action = data.get("react")
+        if postStr.is_user_reacted_with_emoji(action, UserLogged) == False and UserLogged != None:
+            postStr.add_reaction(action, UserLogged)
+
+    reactions.append(postStr.num_reactions_of_emoji("heart"))
+    reactions.append(postStr.num_reactions_of_emoji("laugh"))
+    reactions.append(postStr.num_reactions_of_emoji("thumbsup"))
+    reactions.append(postStr.num_reactions_of_emoji("thumbsdown"))
+    reactions.append(postStr.num_reactions_of_emoji("angry"))
+
+    return render(req, "tellmeastory/post.html", {
+        "reactions": reactions,
+        "ismature": postStr.is_mature(),
+        "post": postStr,
+        "logged_in_username": logged_user,
+    })
+
+
+def logout(req: HttpRequest) -> HttpResponse:
+    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+
+    if logged_user:
+        res: HttpResponse = HttpResponseRedirect(req.META.get('HTTP_REFERER', '/'))
+        res.delete_cookie(
+            COOKIE_NAME
+        )
+        return res;
