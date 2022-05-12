@@ -894,6 +894,46 @@ def search_results(req: HttpRequest , username: str) -> HttpResponse:
             "error_message": err_msg
         })
 
+def post(req: HttpRequest , post_id: str) -> HttpResponse:
+     logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+     postStr: Node = None;
+     post = Node.objects.filter(post_id=post_id)
+
+     # if the post does not exists raise a 404 error for now
+     if post.exists() == False:
+         return render(
+             req , "tellmeastory/storyNotFound.html"
+         )
+     postStr = Node.objects.get(post_id=post_id)
+
+     postAuthor = User.objects.get(id=postStr.node_author_id)
+
+     reactions = [];
+     UserLogged = None;
+
+     if logged_user:
+         UserLogged = User.objects.get(username=logged_user)
+
+
+     if req.method == "POST":
+         data = req.POST
+         action = data.get("react")
+         if postStr.is_user_reacted_with_emoji(action , UserLogged) == False and UserLogged != None:
+             postStr.add_reaction(action , UserLogged)
+
+     reactions.append(postStr.num_reactions_of_emoji("heart"))
+     reactions.append(postStr.num_reactions_of_emoji("laugh"))
+     reactions.append(postStr.num_reactions_of_emoji("thumbsup"))
+     reactions.append(postStr.num_reactions_of_emoji("thumbsdown"))
+     reactions.append(postStr.num_reactions_of_emoji("angry"))
+
+     return render(req , "tellmeastory/post.html" , {
+         "reactions": reactions ,
+         "ismature": postStr.is_mature(),
+         "post": postStr ,
+         "logged_in_username": logged_user ,
+     })
+    
 def logout(req: HttpRequest) -> HttpResponse:
     logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
 
