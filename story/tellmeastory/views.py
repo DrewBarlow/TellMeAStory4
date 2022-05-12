@@ -883,7 +883,6 @@ def post(req: HttpRequest , post_id: str) -> HttpResponse:
     if req.method == "POST":
         data = req.POST
         action = data.get("react")
-        print(action)
         if postStr.is_user_reacted_with_emoji(action , UserLogged) == False and UserLogged != None:
             postStr.add_reaction(action , UserLogged)
 
