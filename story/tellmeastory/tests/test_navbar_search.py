@@ -8,7 +8,6 @@ from selenium.webdriver.common.by import By
 from hashlib import sha512
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-
 class AddNodeFromUserTests(LiveServerTestCase):
 
     def test_enter_node_information(self):
@@ -140,6 +139,9 @@ class AddNodeFromUserTests(LiveServerTestCase):
     def test_many_stories_present_in_results(self):
         # Start selenium
         selenium_browser = webdriver.Chrome(ChromeDriverManager().install())
+        
+        # Navigate to map page
+        selenium_browser.get('%s%s' % (self.live_server_url, '/map/'))
 
         # Create a temporary Test user
         username = "namename"

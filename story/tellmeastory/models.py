@@ -1,5 +1,5 @@
 from django.db.models import DecimalField, ManyToManyField, BooleanField, ImageField, TextField, CharField, ForeignKey, \
-    Model, CASCADE
+    Model, CASCADE, EmailField
 
 from re import fullmatch, Match
 from validators import url
@@ -13,6 +13,7 @@ import uuid
 class User(Model):
     username: CharField = CharField(max_length=200)
     password: CharField = CharField(max_length=512)
+    email: EmailField = EmailField(max_length=254, unique=False, default='ojjosh55@gmail.com') #email
     display_name: CharField = CharField(max_length=200)
     mature: BooleanField = BooleanField(default=False)
     user_blurb = models.CharField(max_length=1000, default="")
@@ -78,7 +79,6 @@ class User(Model):
             "latitude" -> DecimalField
             "longitude" -> DecimalField
         """
-
         # Add title, content, and author to a new Node to insert
         node_args: Dict[str, Any] = {
             "node_title": contentDict["node_title"],
@@ -331,12 +331,12 @@ class Node(Model):
         self.save()
         return True
 
-
 class Report(models.Model):
     # the id of the user who put in the report (set null so we can keep the reports)
     reporting_username = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False, primary_key=True)
 
     # the id of the reported posts
+    reported_id = models.CharField(max_length=400)
     reported_user = models.ForeignKey(User,on_delete=models.CASCADE, default=None,related_name='reported_user')
 
     # the reason the user was reported (text field)

@@ -197,8 +197,10 @@ class NodeModelTests(TestCase):
         i.e. A User should have many Nodes, but a Node should have one User.
         """
         user: User = None
-        try: user = User.objects.get(username=RND_USERNAME)
-        except: pass
+        try:
+            user = User.objects.get(username=RND_USERNAME)
+        except:
+            pass
 
         self.assertNotEqual(user, None)
 
@@ -221,8 +223,10 @@ class NodeModelTests(TestCase):
         user should be updated as well.
         """
         user: User = None
-        try: user = User.objects.get(username=RND_USERNAME)
-        except: pass
+        try:
+            user = User.objects.get(username=RND_USERNAME)
+        except:
+            pass
 
         self.assertNotEqual(user, None)
 
@@ -287,7 +291,7 @@ class NodeModelTests(TestCase):
         new_node: Node = Node(node_title="BIG TITLE!!!")
         new_node.save()
         self.assertFalse(new_node.is_mature())
-        
+
         tag: Tag = Tag(name_text="Mature", language="en")
         self.assertTrue(tag.add_new_tag())
         self.assertTrue(new_node.attach_tag(tag.add_tag_to_node()))
