@@ -873,26 +873,25 @@ def post(req: HttpRequest , post_id: str) -> HttpResponse:
 
     postAuthor = User.objects.get(id=postStr.node_author_id)
 
-    reactions = {}
+    reactions = [];
+    UserLogged = None;
 
-    UserLogged = User.objects.get(username=logged_user)
+    if logged_user:
+        UserLogged = User.objects.get(username=logged_user)
+
 
     if req.method == "POST":
-        print("it is post")
         data = req.POST
         action = data.get("react")
         print(action)
-        if postStr.is_user_reacted_with_emoji(action , UserLogged) == False:
+        if postStr.is_user_reacted_with_emoji(action , UserLogged) == False and UserLogged != None:
             postStr.add_reaction(action , UserLogged)
 
-        reactions = []
-
-        # Heart Emojis
-        reactions.append(postStr.num_reactions_of_emoji("heart"))
-        reactions.append(postStr.num_reactions_of_emoji("laugh"))
-        reactions.append(postStr.num_reactions_of_emoji("thumbsup"))
-        reactions.append(postStr.num_reactions_of_emoji("thumbsdown"))
-        reactions.append(postStr.num_reactions_of_emoji("angry"))
+    reactions.append(postStr.num_reactions_of_emoji("heart"))
+    reactions.append(postStr.num_reactions_of_emoji("laugh"))
+    reactions.append(postStr.num_reactions_of_emoji("thumbsup"))
+    reactions.append(postStr.num_reactions_of_emoji("thumbsdown"))
+    reactions.append(postStr.num_reactions_of_emoji("angry"))
 
     return render(req , "tellmeastory/post.html" , {
         "reactions": reactions ,
