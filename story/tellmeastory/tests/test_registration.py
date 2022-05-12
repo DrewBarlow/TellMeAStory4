@@ -34,10 +34,12 @@ class UserRegistrationViewTests(TestCase):
         inp_name: str = "Spongebob"
         inp_pass: str = "!1Aaaaa"
         inp_dname: str = "Spongey Boy"
+        inp_email: str = "ojjosh55@gmail.com"
         res: HttpResponse = self.client.post("/story/register/", data={
             "username": inp_name,
             "password": inp_pass,
-            "display_name": inp_dname
+            "display_name": inp_dname,
+            "email": inp_email,
         })
 
         # HTTP 302 -> Redirect (Found)
@@ -52,6 +54,7 @@ class UserRegistrationViewTests(TestCase):
         self.assertEqual(new_user.username, inp_name)
         self.assertEqual(new_user.display_name, inp_dname)
         self.assertNotEqual(new_user.password, inp_pass)
+        self.assertEqual(new_user.email, inp_email)
         self.assertEqual(new_user.password, sha512(inp_pass.encode("utf-8")).hexdigest())
 
         return
@@ -184,3 +187,5 @@ class UserRegistrationViewTests(TestCase):
         self.assertEqual(new_user, None)
 
         return
+
+

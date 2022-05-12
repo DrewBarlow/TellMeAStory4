@@ -6,3 +6,4 @@ pyenchant
 Pillow
 validators
 webdriver-manager
+playsound

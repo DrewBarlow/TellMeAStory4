@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name=viewport" content="width=device-width, initial-scale=1.0">
+    <title>audio</title>
+</head>
+<body>
+    <button onclick="location.href = '/story/login'">Back To Login</button>
+    <h1> Attach an Audio on a Node! </h1>
+    <!-- Prompt user for an image file or url -->
+    <h4> {{ err_msg }} </h4>
+    <form action="/story/audio/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Upload</button>
+    </form>
+    <!-- Display existing nodes and their respective audio -->
+    <p>
+        <br/> Existing Nodes:
+        <ol>
+            {% for node_models in nodes %}
+                <li>
+                    {{ node_models.node_title }} -- id: {{ node_models.id }} <br/>
+                    <!-- Display image from url or image from file depending on what is stored (for manual testing)-->
+                    <!-- Will be connected to story creation later on. -->
+                    {% if not node_models.audio_exists%}
+                        <audio controls autoplay>
+                            <source src="{{node_models.node_audio}}" type="audio/wav">
+                        </audio>
+                    {% else %}
+                        <audio controls autoplay>
+                            <source src="{{node_models.node_audio}}" type="audio/wav">
+                        </audio>
+                    {% endif %}
+                    {{ node.node_audio }}
+                </li> <br/>
+            {% endfor %}
+        </ol>
+    </p>
+</body>
+</html>
+

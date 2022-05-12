@@ -1,4 +1,5 @@
-from django.db.models import DecimalField, ManyToManyField, BooleanField, ImageField, TextField, CharField, ForeignKey, Model, CASCADE
+from django.db.models import DecimalField, ManyToManyField, BooleanField, ImageField, TextField, CharField, ForeignKey, \
+    Model, CASCADE, EmailField
 
 from re import fullmatch, Match
 from validators import url
@@ -10,6 +11,7 @@ from typing import Any, Dict
 class User(Model):
     username: CharField = CharField(max_length=200)
     password: CharField = CharField(max_length=512)
+    email: EmailField = EmailField(max_length=254, unique=False, default='ojjosh55@gmail.com') #email
     display_name: CharField = CharField(max_length=200)
     mature: BooleanField = BooleanField(default=False)
     user_blurb = models.CharField(max_length=1000, default="")
@@ -122,22 +124,17 @@ class User(Model):
         return "Successfully Added your Story! Please refresh page to see changes."
 
 
-
-
-
-
 class Ban(models.Model):
     # the id of the user who put in the report (set null so we can keep the reports)
     bannedUser = models.CharField(max_length=200)
 
     def __str__(self):
         return self.bannedUser
-      
 
 class Node(Model):
     """ Story Node class. Holds a story's contents to present
     to users that select the respective story node. """
-    image: ImageField = ImageField(upload_to="storyimages" ,
+    image: ImageField = ImageField(upload_to="storyimages",
                                    default=None)  # File for an image if a file is given by user
     post_id : CharField = CharField(max_length=200, default="")
     image_url: TextField = TextField()  # URL to source an image from if URL is given by user
@@ -172,7 +169,7 @@ class Node(Model):
         sanitized: str = self.node_content.strip()
         return len(sanitized) <= 10_000
 
-    def add_image(self , newFile=None , newURL=None) -> bool:
+    def add_image(self, newFile=None, newURL=None) -> bool:
         """
         Allows for image to be attached to a Story Node.
         """
@@ -190,7 +187,7 @@ class Node(Model):
         else:
             return False
 
-    def add_image_from_file(self , file) -> bool:
+    def add_image_from_file(self, file) -> bool:
         """
         Allows for image url to be attached to a Story Node.
         Returns True if attached, otherwise false.
@@ -208,7 +205,7 @@ class Node(Model):
             # Change nothing
             return False
 
-    def add_image_from_url(self , URL) -> bool:
+    def add_image_from_url(self, URL) -> bool:
         """
         Allows for image url to be linked to a node.
         Returns True if downloaded and attached, otherwise false.
@@ -230,7 +227,7 @@ class Node(Model):
             # Change nothing
             return False
 
-    def attach_main_tag(self , properties: dict) -> bool:
+    def attach_main_tag(self, properties: dict) -> bool:
         '''
         The Node (self) is given a Foreign key to
         its main Tag. The id and properties of the
@@ -248,7 +245,7 @@ class Node(Model):
             # Invalid Tag attachment
             return False
 
-    def attach_tag(self , properties: dict) -> bool:
+    def attach_tag(self, properties: dict) -> bool:
         '''
         The Node (self) is given a relationship to
         many Tags. The id and properties of the
@@ -290,7 +287,7 @@ class Node(Model):
         self.save()
 
         return
-      
+
     def add_reaction(self, emoji: str, user: User) -> bool:
         """
         Adds a reaction to this node.
@@ -333,7 +330,6 @@ class Report(models.Model):
     def __str__(self):
         return self.id_for_report
 
-   
 class Reaction(Model):
     emoji: CharField = CharField(max_length=1)
     node: ForeignKey = ForeignKey(Node, on_delete=CASCADE, null=True)
