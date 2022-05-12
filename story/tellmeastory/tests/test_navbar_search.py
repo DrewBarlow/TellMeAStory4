@@ -175,6 +175,7 @@ class AddNodeFromUserTests(LiveServerTestCase):
 
         # Check that search results contain all test nodes
         selenium_browser.find_element(By.XPATH, value='//button[@value="Search"]').click()  # Empty search matches everything
+
         # All added titles must be present
         for i in range(arbitrary_num_nodes):
             self.assertTrue(selenium_browser.page_source.find("title"+str(i)) != -1)

@@ -298,7 +298,7 @@ def map(req: HttpRequest) -> HttpResponse:
         node.node_title
     ) for node in Node.objects.all()]
 
-    getUser = User.objects.get(username=username)
+
 
     DATA_TO_INSERT = []
 
@@ -315,7 +315,6 @@ def map(req: HttpRequest) -> HttpResponse:
         "mapbox_token": API_TOKEN,
         "map_data": CONVERT_JSON,
         "logged_in_username": logged_user,
-        "user": getUser
     })
 
 
@@ -341,7 +340,7 @@ def deletePost(req: HttpRequest, post_id) -> HttpResponse:
     # if another user is trying to edit someone else's post
     current_post_user = str(post.node_author)
     if (current_post_user != username):
-        return HttpResponseRedirect("/allPosts/")
+        return HttpResponseRedirect("/profile/{0}/".format(current_post_user))
 
     get_user = str(post.node_author)
 
@@ -463,7 +462,7 @@ def reportPost(req: HttpRequest, post_id) -> HttpResponse:
 
         # save the new report to the database and redirect to all the posts
         Report.save(new_report)
-        return redirect("/allPosts")
+        return redirect("tellmeastory/map.html")
 
     # form is a form specified by forms.py, post becomes the Post object specified by the post_id
     return render(req, 'tellmeastory/reportPost.html',
