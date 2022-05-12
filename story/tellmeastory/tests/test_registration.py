@@ -40,6 +40,7 @@ class UserRegistrationViewTests(TestCase):
             "password": inp_pass,
             "display_name": inp_dname,
             "email": inp_email,
+            "maturity": 18
         })
 
         # HTTP 302 -> Redirect (Found)
@@ -72,7 +73,8 @@ class UserRegistrationViewTests(TestCase):
         res: HttpResponse = self.client.post("/story/register/", data={
             "username": inp_name,
             "password": inp_pass,
-            "email": inp_email
+            "email": inp_email,
+            "maturity": 18
         })
 
         # HTTP 302 -> Redirect (Found)
@@ -105,7 +107,8 @@ class UserRegistrationViewTests(TestCase):
         res: HttpResponse = self.client.post("/story/register/", data={
             "username": inp_name,
             "password": inp_pass,
-            "email": inp_email
+            "email": inp_email,
+            "maturity": 18
         })
 
         # we aren't redirecting in this case, so we want a 200 status code
@@ -145,7 +148,8 @@ class UserRegistrationViewTests(TestCase):
         res: HttpResponse = self.client.post("/story/register/", data={
             "username": orig_name,
             "password": password,
-            "display_name": new_dname
+            "display_name": new_dname,
+            "maturity": 18
         })
 
         # we aren't redirecting in this case, so we want a 200 status code
@@ -177,7 +181,8 @@ class UserRegistrationViewTests(TestCase):
         res: HttpResponse = self.client.post("/story/register/", data={
             "username": inp_name,
             "password": inp_pass,
-            "display_name": inp_dname
+            "display_name": inp_dname,
+            "maturity": 18
         })
 
         # we aren't redirecting in this case, so we want a 200 status code
