@@ -91,11 +91,12 @@
 
         <div class="card-body">
             <h1 class="card-title">{{ post.node_title }}</h1>
-            <h4 class="card-title">Author: {{ post.node_author }}</h4>
+            <h4 class="card-title">
+                Author<br> <h5><a href="/story/profile/{{ post.node_author }}">{{ post.node_author }}</a></h5></h4>
             <p class="card-text">{{ post.node_content }}</p>
 
             <div class="container">
-                <div class="alert alert-secondary" style="width:180%; margin-left:-40%" role="alert">
+                <div class="alert alert-secondary" role="alert">
                     <h5 style="text-align: center">Reactions</h5>
                     <hr>
                     <div>REACTIONS GO HERE</div>
@@ -104,7 +105,7 @@
 
 
             <div class="container">
-                <div class="alert alert-dark" style="width:180%; margin-left:-40%" role="alert">
+                <div class="alert alert-dark" role="alert">
                     <h5 style="text-align: center">Tags</h5>
                     <hr>
                     <div>TAGS GO HERE</div>
