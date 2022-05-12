@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="added email and anonymous and edit">
+    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="added unversioned files">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/constants.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/story/tellmeastory/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/tests/test_models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/accountimg_settings.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/audio.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_audio.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_email.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_profilepic.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_registration.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/tests/test_registration.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/story/tellmeastory/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/views.py" afterDir="false" />
     </list>
@@ -80,7 +81,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for test_profilepic.ProfilePageTests">
+  <component name="RunManager" selected="Python tests.Python tests for test_registration.UserRegistrationViewTests.test_registration_all_fields">
     <configuration name="Python tests for test_imageOnNode.NodeImageTests.test_add_image_view" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="TellMeAStory4" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -106,6 +107,20 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
       <option name="_new_target" value="&quot;test_profilepic.ProfilePageTests&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for test_registration.UserRegistrationViewTests.test_registration_all_fields" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="TellMeAStory4" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/story/tellmeastory/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_registration.UserRegistrationViewTests.test_registration_all_fields&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
@@ -139,6 +154,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests for test_registration.UserRegistrationViewTests.test_registration_all_fields" />
         <item itemvalue="Python tests.Python tests for test_profilepic.ProfilePageTests" />
         <item itemvalue="Python tests.Python tests in test_profilepic.py" />
         <item itemvalue="Python tests.Python tests in test_profile.py" />
@@ -164,20 +180,6 @@
       <workItem from="1648598423522" duration="35030000" />
       <workItem from="1649785611902" duration="13679000" />
       <workItem from="1649813969817" duration="21239000" />
-    </task>
-    <task id="LOCAL-00014" summary="Addede pyenchant in requirements.txt">
-      <created>1648609600717</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1648609600717</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Added valid Tag name test">
-      <created>1648614009678</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1648614009678</updated>
     </task>
     <task id="LOCAL-00016" summary="Added valid Tag insertion test">
       <created>1648615111272</created>
@@ -508,7 +510,21 @@
       <option name="project" value="LOCAL" />
       <updated>1652337978105</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="added email and anonymous and edit">
+      <created>1652378429038</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1652378429038</updated>
+    </task>
+    <task id="LOCAL-00064" summary="added unversioned files">
+      <created>1652378993071</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1652378993071</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -538,7 +554,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added forms for tag creation" />
     <MESSAGE value="Added views for tag creation" />
     <MESSAGE value="Added create tag html page test" />
     <MESSAGE value="Updated minor spelling and formatting in comments and tag creation html" />
@@ -563,6 +578,7 @@
     <MESSAGE value="profile_pic and audio add ons" />
     <MESSAGE value="added an acount class for profile-pic" />
     <MESSAGE value="added email and anonymous and edit" />
-    <option name="LAST_COMMIT_MESSAGE" value="added email and anonymous and edit" />
+    <MESSAGE value="added unversioned files" />
+    <option name="LAST_COMMIT_MESSAGE" value="added unversioned files" />
   </component>
 </project>

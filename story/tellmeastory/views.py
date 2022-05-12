@@ -8,7 +8,6 @@ from managetags.models import Tag
 from typing import Any, Dict
 from .models import User, Report, Ban, Node
 from .constants import *
-from .tests import test_models
 from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
 import uuid
@@ -157,6 +156,9 @@ def register(req: HttpRequest) -> HttpResponse:
 
             mail_e: str = form.cleaned_data["email"]
 
+            # check if the username was banned
+            checkBan = Ban.objects.filter(bannedUser=str(form["username"].value()))
+
             # hash the user's password for at least a bit of security
             hashed_pw: str = sha512(form["password"].value().encode("utf-8")).hexdigest()
             new_user: User = User(
@@ -177,6 +179,8 @@ def register(req: HttpRequest) -> HttpResponse:
                 err_msg = "Invalid display name."
             elif len(mail_e) < 5:
                 err_msg = "Email must be at least 5 char long"
+            elif checkBan.exists():
+                err_msg = "That username is banned."
             else:
                 new_user.save()
                 return HttpResponseRedirect("/story/login/")

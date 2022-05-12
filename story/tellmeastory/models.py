@@ -125,6 +125,12 @@ class User(Model):
         newNode.save()
         return "Successfully Added your Story! Please refresh page to see changes."
 
+    def unique_email(self) -> bool:
+        try:
+            User.objects.get(email=self.email)
+        except self.DoesNotExist:
+            return True
+        return False
 
 class Ban(models.Model):
     # the id of the user who put in the report (set null so we can keep the reports)
