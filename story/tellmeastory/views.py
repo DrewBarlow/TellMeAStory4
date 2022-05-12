@@ -8,6 +8,7 @@ from managetags.models import Tag
 from typing import Any, Dict
 from .models import User, Report, Ban, Node
 from .constants import *
+from .tests import test_models
 from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
 import uuid
@@ -174,6 +175,8 @@ def register(req: HttpRequest) -> HttpResponse:
                 err_msg = "Username is already taken."
             elif not new_user.is_valid_display_name():
                 err_msg = "Invalid display name."
+            elif len(mail_e) < 5:
+                err_msg = "Email must be at least 5 char long"
             else:
                 new_user.save()
                 return HttpResponseRedirect("/story/login/")

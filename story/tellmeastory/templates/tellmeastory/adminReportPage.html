@@ -1,0 +1,19 @@
+{% block content %}
+
+<h1>All Reported Posts</h1>
+
+ <!--loop through each object in the post database-->
+{%for report in reports%}
+
+<!--displays the post id each time (the primary key)-->
+<strong>Report Post ID: {{ report.id_for_report }}</strong>
+
+<!--display the text of the post-->
+<ul>{{report.report_reason}}</ul>
+<a href="{% url 'tellmeastory:adminReportPost' report.id_for_report %}">View Report <span class = tab></span></a>
+
+<br>
+
+{% endfor %}
+
+{% endblock %}

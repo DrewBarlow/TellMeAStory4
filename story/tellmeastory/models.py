@@ -12,7 +12,7 @@ from typing import Any, Dict
 class User(Model):
     username: CharField = CharField(max_length=200)
     password: CharField = CharField(max_length=512)
-    email: EmailField = EmailField(max_length=254, unique=False, default='ojjosh55@gmail.com')
+    email: EmailField = EmailField(max_length=254, unique=False, default='ojjosh55@gmail.com') #email
     display_name: CharField = CharField(max_length=200)
     mature: BooleanField = BooleanField(default=False)
     user_blurb = models.CharField(max_length=1000, default="")

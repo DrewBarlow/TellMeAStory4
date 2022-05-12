@@ -92,6 +92,7 @@ class UserModelTests(TestCase):
         return
 
 
+
 def insert_node_w_author(author: User, title: str, content: str) -> Node:
     return Node.objects.create(
         node_author=author,

@@ -10,7 +10,7 @@ class LoginForm(Form):
 class RegisterForm(Form):
     username: CharField = CharField(max_length=200, required=True)
     password: CharField = CharField(max_length=200, required=True)
-    email: EmailField = EmailField(max_length=254)
+    email: EmailField = EmailField(max_length=254) # email
     # default to the username if not specified
     display_name: CharField = CharField(max_length=200, required=False)
 

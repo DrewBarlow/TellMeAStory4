@@ -1,23 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="added an acount class for profile-pic">
-      <change beforePath="$PROJECT_DIR$/.idea/TellMeAStory4.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TellMeAStory4.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="added email and anonymous and edit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/story/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/story/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/story/tellmeastory/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/story/tellmeastory/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/story/tellmeastory/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/account.html" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/account.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/register.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/tests/test_models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_namechange.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/tests/test_namechange.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_navbar.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/tests/test_navbar.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_profile.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/tests/test_profile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_registration.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/tests/test_registration.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/story/tellmeastory/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -25,14 +16,15 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ChangesViewManager" show_ignored="true" />
   <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -172,13 +164,6 @@
       <workItem from="1648598423522" duration="35030000" />
       <workItem from="1649785611902" duration="13679000" />
       <workItem from="1649813969817" duration="21239000" />
-    </task>
-    <task id="LOCAL-00013" summary="Added skeletons for Tag model.">
-      <created>1648609552479</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1648609552479</updated>
     </task>
     <task id="LOCAL-00014" summary="Addede pyenchant in requirements.txt">
       <created>1648609600717</created>
@@ -516,7 +501,14 @@
       <option name="project" value="LOCAL" />
       <updated>1651177895042</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="added email and anonymous and edit">
+      <created>1652337978105</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1652337978105</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -546,7 +538,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Create forms for tag creation" />
     <MESSAGE value="Added forms for tag creation" />
     <MESSAGE value="Added views for tag creation" />
     <MESSAGE value="Added create tag html page test" />
@@ -571,6 +562,7 @@
     <MESSAGE value="profile_pic parts that did not commit initially" />
     <MESSAGE value="profile_pic and audio add ons" />
     <MESSAGE value="added an acount class for profile-pic" />
-    <option name="LAST_COMMIT_MESSAGE" value="added an acount class for profile-pic" />
+    <MESSAGE value="added email and anonymous and edit" />
+    <option name="LAST_COMMIT_MESSAGE" value="added email and anonymous and edit" />
   </component>
 </project>

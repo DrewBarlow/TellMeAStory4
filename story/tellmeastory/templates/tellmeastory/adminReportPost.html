@@ -1,0 +1,30 @@
+{% block content %}
+
+<h1>Reported Post: {{report.id_for_report}}</h1>
+
+<center>
+
+<p>Reporting ID: {{reported_username}}</p>
+<p>Reported ID: {{report.reported_id}}</p>
+<p>Reason: {{report.report_reason}}</p>
+
+
+
+<form action ="" method=POST>
+{% csrf_token %}
+
+ <select name="choice">
+    <option value="Ban">Ban Offender</option>
+    <option value="Delete">Delete Report</option>
+</select>
+
+<input type = "submit" value = "Save">
+
+</form>
+</strong><a href="{% url 'tellmeastory:adminReportPage' %}">Exit</a></strong>
+
+</center>
+
+
+{% endblock %}
+
