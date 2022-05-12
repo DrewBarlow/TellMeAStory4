@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 from hashlib import sha512
 from django.core.files.uploadedfile import SimpleUploadedFile
 
+
 class AddNodeFromUserTests(LiveServerTestCase):
 
     def test_enter_node_information(self):
