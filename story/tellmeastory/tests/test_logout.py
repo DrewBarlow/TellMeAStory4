@@ -37,7 +37,9 @@ class UserLogoutViewTests(TestCase):
         res: HttpResponse = self.client.get(URL_PROFILE + TEST_ACCOUNT + "/")
         # Checks that it loaded correctly
         self.assertEqual(res.status_code , 200)
-        # Checks that the page successfully loaded
+
+        # Checks that the user cookie exists for logged in
+        self.assertEqual(res.wsgi_request.COOKIES.get("StoryUserLoggedIn"), uName)
 
         # Checks to make sure that the user is logged in properly and has the option to logout
         self.assertContains(res , "Log Out")
@@ -46,5 +48,9 @@ class UserLogoutViewTests(TestCase):
         res2: HttpResponse = self.client.get("/story/logout/")
         res2: HttpResponse = self.client.get(URL_PROFILE + TEST_ACCOUNT + "/")
 
+        # Checks that we removed association of the user cookie
+        self.assertEqual(res2.wsgi_request.COOKIES.get("StoryUserLoggedIn"), '')
+
+        # Checks that login and register are still showing
         self.assertContains(res2, "Login")
         self.assertContains(res2, "Register")
