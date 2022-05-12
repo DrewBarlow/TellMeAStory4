@@ -861,3 +861,13 @@ def search_results(req: HttpRequest, username: str) -> HttpResponse:
             "form": form,
             "error_message": err_msg
         })
+
+def logout(req: HttpRequest) -> HttpResponse:
+    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+
+    if logged_user:
+        res: HttpResponse = HttpResponseRedirect(req.META.get('HTTP_REFERER', '/'))
+        res.delete_cookie(
+            COOKIE_NAME
+        )
+        return res;
