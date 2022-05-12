@@ -160,11 +160,27 @@ def register(req: HttpRequest) -> HttpResponse:
 
             # hash the user's password for at least a bit of security
             hashed_pw: str = sha512(form["password"].value().encode("utf-8")).hexdigest()
+
+
+
+
+            #check if the user is above 18, then assign the boolean value
+
+            #if this was realistic then we'd check for id's etc
+
+            mature = True
+
+            if (int(form["maturity"].value()) < 18):
+                mature = False
+
+
+
+
             new_user: User = User(
                 username=form["username"].value(),
                 password=hashed_pw,
                 display_name=display_name,
-                mature=form["maturity"].value()
+                mature=mature
             )
 
             form = RegisterForm()
@@ -274,12 +290,14 @@ def map(req: HttpRequest) -> HttpResponse:
 
     logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
 
+
     # retrieve all of the nodes in [(long, lat), title] table format
     # this is passed to our map file
     data = [(
         (float(node.longitude), float(node.latitude)),
         node.node_title
     ) for node in Node.objects.all()]
+
 
     # Converts our data to JSON format
     CONVERT_JSON = json.dumps(data)
@@ -312,7 +330,7 @@ def deletePost(req: HttpRequest, post_id) -> HttpResponse:
     # if another user is trying to edit someone else's post
     current_post_user = str(post.node_author)
     if (current_post_user != username):
-        return HttpResponseRedirect("/allPosts/")
+        return HttpResponseRedirect("/profile/{0}/".format(current_post_user))
 
     get_user = str(post.node_author)
 
@@ -328,6 +346,8 @@ def editPost(req: HttpRequest, post_id) -> HttpResponse:
     # get the current user logged in
     username = req.COOKIES.get(COOKIE_NAME)
 
+
+    user = User.objects.get(username=username)
     # if the current user has been banned
     checkBan = Ban.objects.filter(bannedUser=username)
     if checkBan.exists():
@@ -347,19 +367,28 @@ def editPost(req: HttpRequest, post_id) -> HttpResponse:
     if (current_post_user != username):
         return HttpResponseRedirect("/profile/{0}/".format(current_post_user))
 
-    # get the form for posting
-    form = PostForm(req.POST or None, instance=post)
+    form= PostForm(instance=post)
 
     get_user = str(post.node_author)
-
-    # if the fields are valid, save and redirect
-    if form.is_valid():
-        form.save()
-        return redirect("/profile/{0}/".format(get_user))
+    if req.method == "POST":
+        # get the form for posting
+        form = PostForm(data=req.POST, files=req.FILES, instance=post)
+        # if the fields are valid, save and redirect
+        if form.is_valid():
+            form.save()
+            return redirect("/profile/{0}/".format(get_user))
 
     # form is a form specified by forms.py, post becomes the Post object specified by the post_id
     return render(req, 'tellmeastory/editPost.html',
-                  {'form': form, 'post': post})
+                    {
+                       'form': form,
+                       'post': post,
+                       'logged_in_username': username,
+                       'user': user
+                    })
+
+
+
 
 
 # Viewing all the post's in the database
@@ -399,6 +428,8 @@ def reportPost(req: HttpRequest, post_id) -> HttpResponse:
     # get the current user
     getUser = User.objects.get(username=currentUser)
 
+    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+
     # if the fields are valid, save and redirect
     if form.is_valid():
 
@@ -415,20 +446,20 @@ def reportPost(req: HttpRequest, post_id) -> HttpResponse:
                 taken_id = False
 
         # get a report object
-        new_report = Report(reporting_username=getUser, reported_id=str(post.node_author),
+        new_report = Report(reporting_username=getUser, reported_user=post.node_author,
                             report_reason=form.cleaned_data.get('report_reason'), id_for_report=getId,
                             post=Node.objects.get(post_id=post_id))
 
         # save the new report to the database and redirect to all the posts
         Report.save(new_report)
-        return redirect("/allPosts")
+        return redirect("tellmeastory/map.html")
 
     # form is a form specified by forms.py, post becomes the Post object specified by the post_id
     return render(req, 'tellmeastory/reportPost.html',
                   {'form': form,
                    'post': post,
-                   'node_author': str(post.node_author)
-
+                   'node_author': str(post.node_author),
+                    'logged_in_username': logged_user
                    })
 
 
@@ -448,6 +479,8 @@ def adminReportPage(req: HttpRequest) -> HttpResponse:
     # get the current user to check privileges
     user = User.objects.get(username=username)
 
+    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+
     # if the user is not an admin, deny permission to view the website
     if (user.admin == False):
         raise PermissionDenied
@@ -456,7 +489,8 @@ def adminReportPage(req: HttpRequest) -> HttpResponse:
         return render(req, 'tellmeastory/adminReportPage.html',
                       {
                           'reports': reports,
-
+                          'user': user,
+                          'logged_in_username': logged_user
                       })
 
 
@@ -487,7 +521,7 @@ def adminReportPost(req: HttpRequest, report_id) -> HttpResponse:
 
             # Ban the offender
             if (getChoice) == "Ban":
-                reportedUser = str(report.post.node_author)
+                reportedUser = str(report.reported_user)
                 Ban.save(Ban(bannedUser=str(reportedUser)))
                 User.objects.get(username=reportedUser).delete()
             # Delete the report
@@ -502,6 +536,8 @@ def adminReportPost(req: HttpRequest, report_id) -> HttpResponse:
                           {
                               'report': report,
                               'reported_username': reported_username,
+                              'logged_in_username': username,
+                              'user': user
                           })
 
 

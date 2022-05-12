@@ -5,7 +5,8 @@ from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
-from tellmeastory.models import Node
+from tellmeastory.models import Node, User
+
 
 USERNAME: str = "namename"
 PASSWORD: str = "password"
@@ -17,8 +18,15 @@ class MapPageViewTests(TestCase):
     # We can use this to check if the webpage loaded. Since the
     # Map is loaded client sided. Client can view map as long as the API key is correct
     def test_map_page_loading(self) -> None:
+        self.client.cookies["StoryUserLoggedIn"] = USERNAME
+        User.objects.create(username=USERNAME,password=PASSWORD, display_name=DIS_NAME)
+
         res: HttpResponse = self.client.get(URL_MAPS)
-        print(res.items())
+
+
+
+
+
         # Checks to make sure the page loaded correctly
         self.assertEqual(res.status_code, 200)
         # Checks to make sure the map frame loaded within the HTTPResponse
@@ -39,6 +47,8 @@ class CreateStoryFromMap(LiveServerTestCase):
         password_input.send_keys(PASSWORD)  # Enter password
         display_name_input = selenium_browser.find_element(By.NAME, value="display_name")
         display_name_input.send_keys(DIS_NAME)  # Enter display name
+        maturity_input = selenium_browser.find_element(By.NAME, value="maturity")
+        maturity_input.send_keys(16)  # Enter display name
         selenium_browser.find_element(By.XPATH, value='//input[@value="Register"]').click()
 
         # Login using the above credientials
@@ -90,10 +100,12 @@ class CreateStoryFromMap(LiveServerTestCase):
         If the user was not logged in, they would get a 404.
         Double clicking when not logged in should do nothing.
         """
+
         selenium_browser = webdriver.Chrome(ChromeDriverManager().install())
 
         # redirect to map page and click in the middle of the screen
         selenium_browser.get(f"{self.live_server_url}{URL_MAPS}")
+
         map = selenium_browser.find_element(By.XPATH, value='//div[@id="map"]')
         ActionChains(selenium_browser).double_click(map).perform()
 
