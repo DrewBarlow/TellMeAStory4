@@ -299,16 +299,6 @@ def map(req: HttpRequest) -> HttpResponse:
     ) for node in Node.objects.all()]
 
 
-
-    DATA_TO_INSERT = []
-
-    # THIS DATA IS TEMPORARY - Used only to visualize how stories will appear on the map - not apart of the story
-    DATA_TO_INSERT.insert(0, [[-76.611, 39.301], "Story 1 Location"])
-    DATA_TO_INSERT.insert(0, [[-76.864, 39.1935], "Story 2 Location"])
-    DATA_TO_INSERT.insert(0, [[-77.10415, 39.00532], "Story 3 Location"])
-    DATA_TO_INSERT.insert(0, [[-80.13701, 25.901808], "Story 4 Location"])
-    DATA_TO_INSERT.insert(0, [[-97.6889, 30.32606], "Story 5 Location"])
-
     # Converts our data to JSON format
     CONVERT_JSON = json.dumps(data)
     return render(req, "tellmeastory/map.html", {
