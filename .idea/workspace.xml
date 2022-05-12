@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="Added profile_pic and audio implementation" />
+    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="added an acount class for profile-pic">
+      <change beforePath="$PROJECT_DIR$/.idea/TellMeAStory4.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TellMeAStory4.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/story/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/story/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/account.html" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/account.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/tests/test_models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_namechange.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/tests/test_namechange.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_navbar.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/tests/test_navbar.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_profile.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/tests/test_profile.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_registration.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/tests/test_registration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/story/tellmeastory/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/views.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,15 +31,15 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="feat/pic-profile" />
+        <entry key="$PROJECT_DIR$" value="feature/profile_pic" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -49,8 +67,9 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/story/tellmeastory/tests" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="two.files.diff.last.used.folder" value="$PROJECT_DIR$/../TellMeAStory4" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -62,13 +81,14 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Joshu\PycharmProjects\TellMeAStory\story\tellmeastory\tests" />
       <recent name="$PROJECT_DIR$/story/media" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests in test_profile.py">
+  <component name="RunManager" selected="Python tests.Python tests for test_profilepic.ProfilePageTests">
     <configuration name="Python tests for test_imageOnNode.NodeImageTests.test_add_image_view" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="TellMeAStory4" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -80,6 +100,20 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
       <option name="_new_target" value="&quot;test_imageOnNode.NodeImageTests.test_add_image_view&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for test_profilepic.ProfilePageTests" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="TellMeAStory4" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/story/tellmeastory/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_profilepic.ProfilePageTests&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
@@ -97,8 +131,24 @@
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
+    <configuration name="Python tests in test_profilepic.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="TellMeAStory4" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/story/tellmeastory/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/story/tellmeastory/tests/test_profilepic.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests for test_profilepic.ProfilePageTests" />
+        <item itemvalue="Python tests.Python tests in test_profilepic.py" />
         <item itemvalue="Python tests.Python tests in test_profile.py" />
         <item itemvalue="Python tests.Python tests for test_imageOnNode.NodeImageTests.test_add_image_view" />
       </list>
@@ -122,34 +172,6 @@
       <workItem from="1648598423522" duration="35030000" />
       <workItem from="1649785611902" duration="13679000" />
       <workItem from="1649813969817" duration="21239000" />
-    </task>
-    <task id="LOCAL-00009" summary="Heroku Settings">
-      <created>1648481385801</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1648481385801</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Heroku Procfile file name change">
-      <created>1648493091094</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1648493091094</updated>
-    </task>
-    <task id="LOCAL-00011" summary="Added app to manage the tags of a node">
-      <created>1648606970475</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1648606970475</updated>
-    </task>
-    <task id="LOCAL-00012" summary="Added skeletons for Tag tests.">
-      <created>1648608095410</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1648608095410</updated>
     </task>
     <task id="LOCAL-00013" summary="Added skeletons for Tag model.">
       <created>1648609552479</created>
@@ -466,7 +488,35 @@
       <option name="project" value="LOCAL" />
       <updated>1651136395643</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="Added profile_pic and audio implementation">
+      <created>1651136834341</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1651136834341</updated>
+    </task>
+    <task id="LOCAL-00059" summary="profile_pic parts that did not commit initially">
+      <created>1651137759917</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1651137759917</updated>
+    </task>
+    <task id="LOCAL-00060" summary="profile_pic and audio add ons">
+      <created>1651173778868</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1651173778868</updated>
+    </task>
+    <task id="LOCAL-00061" summary="added an acount class for profile-pic">
+      <created>1651177895042</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1651177895042</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -483,7 +533,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/develop" />
+                        <option value="origin/feature/profile_pic" />
                       </list>
                     </value>
                   </entry>
@@ -496,9 +546,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added create a tag html form" />
-    <MESSAGE value="Update create a tag html form" />
-    <MESSAGE value="Update urls for creating tag" />
     <MESSAGE value="Create forms for tag creation" />
     <MESSAGE value="Added forms for tag creation" />
     <MESSAGE value="Added views for tag creation" />
@@ -521,6 +568,9 @@
     <MESSAGE value="Add Node model add image functions and add image view" />
     <MESSAGE value="Update add Node image html to accept image files" />
     <MESSAGE value="Added profile_pic and audio implementation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added profile_pic and audio implementation" />
+    <MESSAGE value="profile_pic parts that did not commit initially" />
+    <MESSAGE value="profile_pic and audio add ons" />
+    <MESSAGE value="added an acount class for profile-pic" />
+    <option name="LAST_COMMIT_MESSAGE" value="added an acount class for profile-pic" />
   </component>
 </project>

@@ -101,6 +101,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# use address
+#FROM_EMAIL
+EMAIL_HOST_USER = "ojjosh55@gmail.com"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/

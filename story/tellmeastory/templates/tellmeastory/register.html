@@ -107,6 +107,22 @@
                                         </div>
                                     </div>
 
+                                {% elif field.label == "Email" %}
+
+                                    <div class="form-group">
+                                        <label class="col col-form-label"
+                                               for="id_{{ field.name }}">{{ field.label }}</label>
+                                        <div class="col">
+                                            <input
+                                                    type="email"
+                                                    class="form-control"
+                                                    name="{{ field.name }}"
+                                                    id="id_{{ field.name }}"
+                                                    value="{{ field.value|default:'' }}"
+                                            >
+                                        </div>
+                                    </div>
+
                                 {% elif field.field.widget.input_type == "checkbox" %}
 
                                     <div class="form-group">
