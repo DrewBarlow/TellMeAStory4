@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tellmeastory', '0002_user_mature'),
+        ('tellmeastory', '0002_remove_report_id_alter_report_reporting_username')#'0002_user_mature'),
     ]
 
     operations = [

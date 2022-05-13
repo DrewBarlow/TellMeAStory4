@@ -1,5 +1,5 @@
 from django.db.models import DecimalField, ManyToManyField, BooleanField, ImageField, TextField, CharField, ForeignKey, \
-    Model, CASCADE
+    Model, CASCADE, EmailField
 
 from re import fullmatch, Match
 from validators import url
@@ -13,6 +13,7 @@ import uuid
 class User(Model):
     username: CharField = CharField(max_length=200)
     password: CharField = CharField(max_length=512)
+    email: EmailField = EmailField(max_length=254, unique=False, default='ojjosh55@gmail.com')
     display_name: CharField = CharField(max_length=200)
     mature: BooleanField = BooleanField(default=False)
     user_blurb = models.CharField(max_length=1000, default="")
@@ -132,6 +133,12 @@ class User(Model):
 
         return "Successfully Added your Story! Please refresh page to see changes."
 
+    def unique_email(self) -> bool:
+        try:
+            User.objects.get(email=self.email)
+        except self.emailExists:
+            return True
+        return False
 
 class Ban(models.Model):
     # the id of the user who put in the report (set null so we can keep the reports)
