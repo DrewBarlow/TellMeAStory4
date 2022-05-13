@@ -34,12 +34,11 @@ class UserRegistrationViewTests(TestCase):
         inp_name: str = "Spongebob"
         inp_pass: str = "!1Aaaaa"
         inp_dname: str = "Spongey Boy"
-        inp_email: str = "ojjosh55@gmail.com"
         res: HttpResponse = self.client.post("/story/register/", data={
             "username": inp_name,
             "password": inp_pass,
             "display_name": inp_dname,
-            "email": inp_email,
+            "maturity": 18
         })
 
         # HTTP 302 -> Redirect (Found)
@@ -54,7 +53,6 @@ class UserRegistrationViewTests(TestCase):
         self.assertEqual(new_user.username, inp_name)
         self.assertEqual(new_user.display_name, inp_dname)
         self.assertNotEqual(new_user.password, inp_pass)
-        self.assertNotEqual(new_user.email, inp_email)
         self.assertEqual(new_user.password, sha512(inp_pass.encode("utf-8")).hexdigest())
 
         return
@@ -68,11 +66,10 @@ class UserRegistrationViewTests(TestCase):
         """
         inp_name: str = "Spongebob"
         inp_pass: str = "!1Aaaaa"
-        inp_email: str = "syxfamily@gmail.com"
         res: HttpResponse = self.client.post("/story/register/", data={
             "username": inp_name,
             "password": inp_pass,
-            "email": inp_email
+            "maturity": 18
         })
 
         # HTTP 302 -> Redirect (Found)
@@ -87,7 +84,6 @@ class UserRegistrationViewTests(TestCase):
         self.assertEqual(new_user.username, inp_name)
         self.assertEqual(new_user.display_name, inp_name)
         self.assertNotEqual(new_user.password, inp_pass)
-        self.assertNotEqual(new_user.email, inp_email)
         self.assertEqual(new_user.password, sha512(inp_pass.encode("utf-8")).hexdigest())
 
         return
@@ -101,11 +97,10 @@ class UserRegistrationViewTests(TestCase):
         """
         inp_name: str = "Yo"
         inp_pass: str = "!1Aaaaa"
-        inp_email: str = "ojjosh55@gmail.com"
         res: HttpResponse = self.client.post("/story/register/", data={
             "username": inp_name,
             "password": inp_pass,
-            "email": inp_email
+            "maturity": 18
         })
 
         # we aren't redirecting in this case, so we want a 200 status code
@@ -133,7 +128,6 @@ class UserRegistrationViewTests(TestCase):
         password: str = "!1Aaaaa"
         orig_dname: str = "uhhhhhhhh"
 
-
         # create an existing user in the database
         existing_user: User = User.objects.create(
             username=orig_name,
@@ -145,7 +139,8 @@ class UserRegistrationViewTests(TestCase):
         res: HttpResponse = self.client.post("/story/register/", data={
             "username": orig_name,
             "password": password,
-            "display_name": new_dname
+            "display_name": new_dname,
+            "maturity": 18
         })
 
         # we aren't redirecting in this case, so we want a 200 status code
@@ -177,7 +172,8 @@ class UserRegistrationViewTests(TestCase):
         res: HttpResponse = self.client.post("/story/register/", data={
             "username": inp_name,
             "password": inp_pass,
-            "display_name": inp_dname
+            "display_name": inp_dname,
+            "maturity": 18
         })
 
         # we aren't redirecting in this case, so we want a 200 status code
@@ -193,51 +189,3 @@ class UserRegistrationViewTests(TestCase):
         self.assertEqual(new_user, None)
 
         return
-
-    def test_dup_email(self) -> None:
-        """
-        Enter a email that is already reserved into the field.
-        Should redirect to the same page (/story/register/).
-        A message should be present indicating "email is already taken."
-        User should not be in the db.
-        """
-        orig_name: str = "Squidward"
-        password: str = "!1Aaaaa"
-        orig_dname: str = "uhhhhhhhh"
-        orig_email: str = "ojjosh55@gmail.com"
-
-        # create an existing user in the database
-        existing_user: User = User.objects.create(
-            username=orig_name,
-            password=password,
-            display_name=orig_dname,
-            email=orig_email
-        )
-
-        new_email: str = "onepiece@gmail.com"
-        res: HttpResponse = self.client.post("/story/register/", data={
-            "username": orig_name,
-            "password": password,
-            "display_name": orig_dname,
-            "email": new_email
-        })
-
-        # we aren't redirecting in this case, so we want a 200 status code
-        # this indicates we're on the same page
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.has_header("location"), False)
-        self.assertContains(res, "Email is already in use.")
-
-        old_user: User = User.objects.get(username=orig_name)
-        new_user: User = None
-        try:
-            new_user = User.objects.get(email=new_email)
-        except:
-            pass
-
-        self.assertEqual(old_user.email, orig_email)
-        self.assertEqual(new_user, None)
-
-        return
-
-

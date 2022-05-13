@@ -1,15 +1,15 @@
 import json
 import uuid
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, HttpResponseForbidden, Http404
-from django.shortcuts import get_object_or_404, render
+from django.http import HttpRequest , HttpResponse , HttpResponseRedirect , HttpResponseForbidden , Http404
+from django.shortcuts import get_object_or_404 , render
 from hashlib import sha512
-from .forms import LoginForm, AccountForm, AddImageForm, NodeCreationForm, RegisterForm, PostStoryForm, \
-    ReportForm, PostForm
+from .forms import LoginForm , AccountForm , AddImageForm , NodeCreationForm , RegisterForm , PostStoryForm , \
+    ReportForm , PostForm
 from managetags.models import Tag
-from typing import Any, Dict
-from .models import User, Report, Ban, Node
+from typing import Any , Dict
+from .models import User , Report , Ban , Node
 from .constants import *
-from django.shortcuts import render, redirect
+from django.shortcuts import render , redirect
 from django.core.exceptions import PermissionDenied
 import uuid
 
@@ -22,20 +22,20 @@ def index(req: HttpRequest) -> HttpResponse:
     # if the user has a cookie, they've already logged in
     logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
 
-    return render(req, "tellmeastory/index.html", {
+    return render(req , "tellmeastory/index.html" , {
         "logged_in_username": logged_user
     })
 
 
 # account stub for now
-def account(req: HttpRequest, username) -> HttpResponse:
+def account(req: HttpRequest , username) -> HttpResponse:
     # check if the person logged in has been banned already
     checkBan = Ban.objects.filter(bannedUser=username)
     if checkBan.exists():
         return HttpResponseRedirect("/banned/")
 
     # get the current user object from the database
-    user: User = get_object_or_404(User, username=username)
+    user: User = get_object_or_404(User , username=username)
 
     form: AccountForm = None
     form_msg: str = ""
@@ -79,11 +79,11 @@ def account(req: HttpRequest, username) -> HttpResponse:
             # we aren't trying to post data
             form = AccountForm()
 
-    return render(req, "tellmeastory/account.html", {
-        "user": user,
-        "form": form,
-        "change_message": form_msg,
-        "message_type": msg_type,
+    return render(req , "tellmeastory/account.html" , {
+        "user": user ,
+        "form": form ,
+        "change_message": form_msg ,
+        "message_type": msg_type ,
         "logged_in_username": logged_user
     })
 
@@ -119,7 +119,7 @@ def login(req: HttpRequest) -> HttpResponse:
                     # cookie will be valid until the browser is closed (i.e. max_age=None)
                     res: HttpResponse = HttpResponseRedirect(f"/story/account/{username}")
                     res.set_cookie(
-                        COOKIE_NAME,
+                        COOKIE_NAME ,
                         username
                     )
 
@@ -130,8 +130,8 @@ def login(req: HttpRequest) -> HttpResponse:
     else:
         form: LoginForm = LoginForm()
 
-    return render(req, "tellmeastory/login.html", {
-        "form": form,
+    return render(req , "tellmeastory/login.html" , {
+        "form": form ,
         "error_message": err_msg
     })
 
@@ -152,28 +152,31 @@ def register(req: HttpRequest) -> HttpResponse:
             if display_name is None or not len(display_name):
                 display_name = form["username"].value()
 
-            mail_e: str = form.cleaned_data["email"]
-
             # check if the username was banned
             checkBan = Ban.objects.filter(bannedUser=str(form["username"].value()))
 
             # hash the user's password for at least a bit of security
             hashed_pw: str = sha512(form["password"].value().encode("utf-8")).hexdigest()
 
-            # check if the user is above 18, then assign the boolean value
 
-            # if this was realistic then we'd check for id's etc
+
+
+            #check if the user is above 18, then assign the boolean value
+
+            #if this was realistic then we'd check for id's etc
 
             mature = True
 
             if (int(form["maturity"].value()) < 18):
                 mature = False
 
+
+
+
             new_user: User = User(
                 username=form["username"].value(),
                 password=hashed_pw,
                 display_name=display_name,
-                email=mail_e,
                 mature=mature
             )
 
@@ -194,8 +197,8 @@ def register(req: HttpRequest) -> HttpResponse:
     else:
         form = RegisterForm()
 
-    return render(req, "tellmeastory/register.html", {
-        "form": form,
+    return render(req , "tellmeastory/register.html" , {
+        "form": form ,
         "error_message": err_msg
     })
 
@@ -232,13 +235,13 @@ def create_node(req: HttpRequest) -> HttpResponse:
                     create_post_id = uuid.uuid1()
                     checkID = Node.objects.filter(post_id=create_post_id)
 
-                node_args: Dict[str, Any] = {
-                    "image": None,
-                    "node_title": form["node_title"].value().strip(),
-                    "node_content": form["node_content"].value().strip(),
+                node_args: Dict[str , Any] = {
+                    "image": None ,
+                    "node_title": form["node_title"].value().strip() ,
+                    "node_content": form["node_content"].value().strip() ,
                     # "longitude": 0,
                     # "latitude": 0,
-                    "node_author": user,
+                    "node_author": user ,
                     "post_id": create_post_id
                 }
 
@@ -260,9 +263,9 @@ def create_node(req: HttpRequest) -> HttpResponse:
         else:
             form = NodeCreationForm()
 
-    return render(req, "tellmeastory/make_node.html", {
-        "form": form,
-        "logged_in": logged_in,
+    return render(req , "tellmeastory/make_node.html" , {
+        "form": form ,
+        "logged_in": logged_in ,
         "error_message": err_message
     })
 
@@ -284,24 +287,26 @@ def map(req: HttpRequest) -> HttpResponse:
 
     logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
 
+
     # retrieve all of the nodes in [(long, lat), title] table format
     # this is passed to our map file
     data = [(
-        (float(node.longitude), float(node.latitude)),
+        (float(node.longitude) , float(node.latitude)) ,
         node.node_title
     ) for node in Node.objects.all()]
 
+
     # Converts our data to JSON format
     CONVERT_JSON = json.dumps(data)
-    return render(req, "tellmeastory/map.html", {
-        "mapbox_token": API_TOKEN,
-        "map_data": CONVERT_JSON,
-        "logged_in_username": logged_user,
+    return render(req , "tellmeastory/map.html" , {
+        "mapbox_token": API_TOKEN ,
+        "map_data": CONVERT_JSON ,
+        "logged_in_username": logged_user ,
     })
 
 
 # Remove a post then redirect to all the posts of the current user (needs a confirm prompt)
-def deletePost(req: HttpRequest, post_id) -> HttpResponse:
+def deletePost(req: HttpRequest , post_id) -> HttpResponse:
     # get the current user logged in
     username = req.COOKIES.get(COOKIE_NAME)
 
@@ -334,9 +339,10 @@ def deletePost(req: HttpRequest, post_id) -> HttpResponse:
 
 
 # Editing a post chosen by the current user redirect to all the posts of the current user (includes input validation based off the model)
-def editPost(req: HttpRequest, post_id) -> HttpResponse:
+def editPost(req: HttpRequest , post_id) -> HttpResponse:
     # get the current user logged in
     username = req.COOKIES.get(COOKIE_NAME)
+
 
     user = User.objects.get(username=username)
     # if the current user has been banned
@@ -358,7 +364,7 @@ def editPost(req: HttpRequest, post_id) -> HttpResponse:
     if (current_post_user != username):
         return HttpResponseRedirect("/profile/{0}/".format(current_post_user))
 
-    form = PostForm(instance=post)
+    form= PostForm(instance=post)
 
     get_user = str(post.node_author)
     if req.method == "POST":
@@ -372,12 +378,12 @@ def editPost(req: HttpRequest, post_id) -> HttpResponse:
     # form is a form specified by forms.py, post becomes the Post object specified by the post_id
 
     return render(req, 'tellmeastory/editPost.html',
-                  {
-                      'form': form,
-                      'post': post,
-                      'logged_in_username': username,
-                      'user': user
-                  })
+                    {
+                       'form': form,
+                       'post': post,
+                       'logged_in_username': username,
+                       'user': user
+                    })
 
 
 # Viewing all the post's in the database
@@ -394,14 +400,14 @@ def viewPost(req: HttpRequest) -> HttpResponse:
     posts = Node.objects.all()
 
     # pass all the objects to the html page
-    return render(req, 'tellmeastory/viewAllPosts.html',
+    return render(req , 'tellmeastory/viewAllPosts.html' ,
                   {
-                      'posts': posts,
-                      'username': str(username),
+                      'posts': posts ,
+                      'username': str(username) ,
                   })
 
 
-def reportPost(req: HttpRequest, post_id) -> HttpResponse:
+def reportPost(req: HttpRequest , post_id) -> HttpResponse:
     # get the current user
     currentUser = req.COOKIES.get(COOKIE_NAME)
 
@@ -412,7 +418,7 @@ def reportPost(req: HttpRequest, post_id) -> HttpResponse:
 
     # get the current post and the form we need
     post = Node.objects.get(post_id=post_id)
-    form = ReportForm(req.POST or None, instance=post)
+    form = ReportForm(req.POST or None , instance=post)
 
     # get the current user
     getUser = User.objects.get(username=currentUser)
@@ -450,7 +456,7 @@ def reportPost(req: HttpRequest, post_id) -> HttpResponse:
                   {'form': form,
                    'post': post,
                    'node_author': str(post.node_author),
-                   'logged_in_username': logged_user
+                    'logged_in_username': logged_user
                    })
 
 
@@ -477,7 +483,7 @@ def adminReportPage(req: HttpRequest) -> HttpResponse:
         raise PermissionDenied
     else:
         # pass all the objects to the html page
-        return render(req, 'tellmeastory/adminReportPage.html',
+        return render(req , 'tellmeastory/adminReportPage.html' ,
                       {
                           'reports': reports,
                           'user': user,
@@ -485,7 +491,7 @@ def adminReportPage(req: HttpRequest) -> HttpResponse:
                       })
 
 
-def adminReportPost(req: HttpRequest, report_id) -> HttpResponse:
+def adminReportPost(req: HttpRequest , report_id) -> HttpResponse:
     username = req.COOKIES.get(COOKIE_NAME)
 
     checkBan = Ban.objects.filter(bannedUser=username)
@@ -523,7 +529,7 @@ def adminReportPost(req: HttpRequest, report_id) -> HttpResponse:
             return HttpResponseRedirect("/adminReportList/")
         else:
             # pass all the objects to the html page
-            return render(req, 'tellmeastory/adminReportPost.html',
+            return render(req , 'tellmeastory/adminReportPost.html' ,
                           {
                               'report': report,
                               'reported_username': reported_username,
@@ -534,7 +540,7 @@ def adminReportPost(req: HttpRequest, report_id) -> HttpResponse:
 
 # Ban page
 def banned(req: HttpRequest) -> HttpResponse:
-    return render(req, 'tellmeastory/ban.html')
+    return render(req , 'tellmeastory/ban.html')
 
 
 # Takes an existing node to add an image onto it
@@ -560,7 +566,7 @@ def add_image(req: HttpRequest) -> HttpResponse:
             else:
                 # Null image if empty
                 try:
-                    image_file = req.FILES.get('image_file', None)
+                    image_file = req.FILES.get('image_file' , None)
                 except:
                     # Image_file should be none if no files given.
                     # Failsafe if get throws an exception instead
@@ -595,27 +601,27 @@ def add_image(req: HttpRequest) -> HttpResponse:
         # Reprompt for another change with applied new changes
         # Provide an error message if relevant. Otherwise,
         # provide a success message.
-        return render(req, "tellmeastory/addnodeimage.html", {
-            "form": form,
-            "err_msg": err_msg,
-            "image_file": None,
-            "image_url": None,
-            "id": None,
+        return render(req , "tellmeastory/addnodeimage.html" , {
+            "form": form ,
+            "err_msg": err_msg ,
+            "image_file": None ,
+            "image_url": None ,
+            "id": None ,
             "nodes": all_nodes
         })
     # Otherwise, prompt for image source info to add to node
     else:
-        return render(req, "tellmeastory/addnodeimage.html", {
-            "form": AddImageForm,
-            "err_msg": err_msg,
-            "image_file": None,
-            "image_url": None,
-            "id": None,
+        return render(req , "tellmeastory/addnodeimage.html" , {
+            "form": AddImageForm ,
+            "err_msg": err_msg ,
+            "image_file": None ,
+            "image_url": None ,
+            "id": None ,
             "nodes": all_nodes
         })
 
 
-def profile(req: HttpRequest, username: str) -> HttpResponse:
+def profile(req: HttpRequest , username: str) -> HttpResponse:
     logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
     user: User = None
 
@@ -623,28 +629,28 @@ def profile(req: HttpRequest, username: str) -> HttpResponse:
         user = User.objects.get(username=username)
 
     except User.DoesNotExist:
-        return render(req, "tellmeastory/profileNotFound.html", {
-            "logged_in_username": logged_user,
+        return render(req , "tellmeastory/profileNotFound.html" , {
+            "logged_in_username": logged_user ,
         })
 
     storiesFromUser = Node.objects.filter(node_author=user)
     storyCount = storiesFromUser.count()
 
-    return render(req, "tellmeastory/profile.html", {
-        "user": user,
-        "logged_in_username": logged_user,
-        "stories": storiesFromUser,
-        "story_count": storyCount,
+    return render(req , "tellmeastory/profile.html" , {
+        "user": user ,
+        "logged_in_username": logged_user ,
+        "stories": storiesFromUser ,
+        "story_count": storyCount ,
     })
 
 
 def author_story(
-        req: HttpRequest,
-        username: str,
-        longitude: str = "0.0",
+        req: HttpRequest ,
+        username: str ,
+        longitude: str = "0.0" ,
         latitude: str = "0.0"
 ) -> HttpResponse:
-    user: User = get_object_or_404(User, username=username)
+    user: User = get_object_or_404(User , username=username)
     err_msg = None
     all_nodes = Node.objects.filter()
     my_nodes = []
@@ -652,16 +658,16 @@ def author_story(
 
     # set default display values for form data
     init_dict = {
-        "node_title": "",
-        "node_content": "",
-        "image_file": "",
-        "image_url": "",
-        "main_tag_id": "",
-        "mature_node": "",
-        "longitude": float(longitude),
-        "latitude": float(latitude),
+        "node_title": "" ,
+        "node_content": "" ,
+        "image_file": "" ,
+        "image_url": "" ,
+        "main_tag_id": "" ,
+        "mature_node": "" ,
+        "longitude": float(longitude) ,
+        "latitude": float(latitude) ,
     }
-    form = PostStoryForm(None, initial=init_dict)
+    form = PostStoryForm(None , initial=init_dict)
 
     logged_user: str = req.COOKIES.get(COOKIE_NAME)
 
@@ -692,14 +698,14 @@ def author_story(
                 except User.DoesNotExist:
                     err_msg = "Account does not exist."
                     form: LoginForm = LoginForm()
-                    return render(req, "tellmeastory/login.html", {
-                        "form": form,
+                    return render(req , "tellmeastory/login.html" , {
+                        "form": form ,
                         "error_message": err_msg
                     })
                 # CREATE STORY NODE FROM PROVIDED INFORMATION
                 # Null image if empty
                 try:
-                    image_file = req.FILES.get('image_file', None)
+                    image_file = req.FILES.get('image_file' , None)
                 except:
                     # Image_file should be none if no files given.
                     # Failsafe if get throws an exception instead
@@ -710,24 +716,24 @@ def author_story(
                 if image_url == "":
                     image_url = None
                 err_msg = user.post_node({
-                    "node_title": form["node_title"].value().strip(),
-                    "node_content": form["node_content"].value().strip(),
-                    "image_file": image_file,
-                    "image_url": image_url,
-                    "main_tag_id": form["main_tag_id"].value(),
-                    "mature_node": form["mature_node"].value(),
-                    "latitude": float(form["latitude"].value()),
+                    "node_title": form["node_title"].value().strip() ,
+                    "node_content": form["node_content"].value().strip() ,
+                    "image_file": image_file ,
+                    "image_url": image_url ,
+                    "main_tag_id": form["main_tag_id"].value() ,
+                    "mature_node": form["mature_node"].value() ,
+                    "latitude": float(form["latitude"].value()) ,
                     "longitude": float(form["longitude"].value())
                 })
                 # Present error if any exists, update my nodes and present
                 # blank form.
                 form = PostStoryForm()
-                return render(req, "tellmeastory/author_a_node.html", {
-                    "user": user,
-                    "form": form,
-                    "error_message": err_msg,
-                    "nodes": my_nodes,
-                    "tags": all_tags,
+                return render(req , "tellmeastory/author_a_node.html" , {
+                    "user": user ,
+                    "form": form ,
+                    "error_message": err_msg ,
+                    "nodes": my_nodes ,
+                    "tags": all_tags ,
                     "logged_in_username": logged_user
                 })
             # If cookie does not match username, send to
@@ -735,37 +741,37 @@ def author_story(
             else:
                 form: LoginForm = LoginForm()
                 err_msg = "Account not found. Try adding a story later."
-                return render(req, "tellmeastory/login.html", {
-                    "form": form,
+                return render(req , "tellmeastory/login.html" , {
+                    "form": form ,
                     "error_message": err_msg
                 })
         else:
             # Reprompt when invalid form is submitted
             form = PostStoryForm(req.POST)
             err_msg = "Invalid Story. All fields are required except the image. Only one image is allowed."
-            return render(req, "tellmeastory/author_a_node.html", {
-                "user": user,
-                "form": form,
-                "error_message": err_msg,
-                "nodes": my_nodes,
-                "tags": all_tags,
+            return render(req , "tellmeastory/author_a_node.html" , {
+                "user": user ,
+                "form": form ,
+                "error_message": err_msg ,
+                "nodes": my_nodes ,
+                "tags": all_tags ,
                 "logged_in_username": logged_user
             })
     # Prompt with node creation page.
     else:
         # Render the page with node creation form and
         # all nodes of current user.
-        return render(req, "tellmeastory/author_a_node.html", {
-            "user": user,
-            "form": form,
-            "error_message": err_msg,
-            "nodes": my_nodes,
-            "tags": all_tags,
+        return render(req , "tellmeastory/author_a_node.html" , {
+            "user": user ,
+            "form": form ,
+            "error_message": err_msg ,
+            "nodes": my_nodes ,
+            "tags": all_tags ,
             "logged_in_username": logged_user
         })
 
 
-def search_results(req: HttpRequest, username: str) -> HttpResponse:
+def search_results(req: HttpRequest , username: str) -> HttpResponse:
     err_msg = None
     all_nodes = Node.objects.filter()
     all_tags = Tag.objects.filter()
@@ -786,8 +792,8 @@ def search_results(req: HttpRequest, username: str) -> HttpResponse:
             except User.DoesNotExist:
                 err_msg = "Account does not exist. Only users who sign in can search."
                 form: LoginForm = LoginForm()
-                return render(req, "tellmeastory/login.html", {
-                    "form": form,
+                return render(req , "tellmeastory/login.html" , {
+                    "form": form ,
                     "error_message": err_msg
                 })
             # Find all matching stories from request
@@ -861,11 +867,11 @@ def search_results(req: HttpRequest, username: str) -> HttpResponse:
                         # Skip duplicate stories
                         if node not in found_stories:
                             found_stories.append(node)
-            return render(req, "tellmeastory/searchResults.html", {
-                "logged_in_username": user,
-                "error_message": err_msg,
-                "isResult": True,
-                "nodes": found_stories,
+            return render(req , "tellmeastory/searchResults.html" , {
+                "logged_in_username": user ,
+                "error_message": err_msg ,
+                "isResult": True ,
+                "nodes": found_stories ,
                 "search_query": search_query
             })
         # If cookie does not match username, send to
@@ -873,8 +879,8 @@ def search_results(req: HttpRequest, username: str) -> HttpResponse:
         else:
             form: LoginForm = LoginForm()
             err_msg = "Account not found. Try searching later."
-            return render(req, "tellmeastory/login.html", {
-                "form": form,
+            return render(req , "tellmeastory/login.html" , {
+                "form": form ,
                 "error_message": err_msg
             })
     # No search content was given from a valid search request.
@@ -883,52 +889,51 @@ def search_results(req: HttpRequest, username: str) -> HttpResponse:
     else:
         err_msg = "Please search using the search bar while logged into an account."
         form: LoginForm = LoginForm()
-        return render(req, "tellmeastory/login.html", {
-            "form": form,
+        return render(req , "tellmeastory/login.html" , {
+            "form": form ,
             "error_message": err_msg
         })
 
+def post(req: HttpRequest , post_id: str) -> HttpResponse:
+     logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
+     postStr: Node = None;
+     post = Node.objects.filter(post_id=post_id)
 
-def post(req: HttpRequest, post_id: str) -> HttpResponse:
-    logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
-    postStr: Node = None;
-    post = Node.objects.filter(post_id=post_id)
+     # if the post does not exists raise a 404 error for now
+     if post.exists() == False:
+         return render(
+             req , "tellmeastory/storyNotFound.html"
+         )
+     postStr = Node.objects.get(post_id=post_id)
 
-    # if the post does not exists raise a 404 error for now
-    if post.exists() == False:
-        return render(
-            req, "tellmeastory/storyNotFound.html"
-        )
-    postStr = Node.objects.get(post_id=post_id)
+     postAuthor = User.objects.get(id=postStr.node_author_id)
 
-    postAuthor = User.objects.get(id=postStr.node_author_id)
+     reactions = [];
+     UserLogged = None;
 
-    reactions = [];
-    UserLogged = None;
-
-    if logged_user:
-        UserLogged = User.objects.get(username=logged_user)
-
-    if req.method == "POST":
-        data = req.POST
-        action = data.get("react")
-        if postStr.is_user_reacted_with_emoji(action, UserLogged) == False and UserLogged != None:
-            postStr.add_reaction(action, UserLogged)
-
-    reactions.append(postStr.num_reactions_of_emoji("heart"))
-    reactions.append(postStr.num_reactions_of_emoji("laugh"))
-    reactions.append(postStr.num_reactions_of_emoji("thumbsup"))
-    reactions.append(postStr.num_reactions_of_emoji("thumbsdown"))
-    reactions.append(postStr.num_reactions_of_emoji("angry"))
-
-    return render(req, "tellmeastory/post.html", {
-        "reactions": reactions,
-        "ismature": postStr.is_mature(),
-        "post": postStr,
-        "logged_in_username": logged_user,
-    })
+     if logged_user:
+         UserLogged = User.objects.get(username=logged_user)
 
 
+     if req.method == "POST":
+         data = req.POST
+         action = data.get("react")
+         if postStr.is_user_reacted_with_emoji(action , UserLogged) == False and UserLogged != None:
+             postStr.add_reaction(action , UserLogged)
+
+     reactions.append(postStr.num_reactions_of_emoji("heart"))
+     reactions.append(postStr.num_reactions_of_emoji("laugh"))
+     reactions.append(postStr.num_reactions_of_emoji("thumbsup"))
+     reactions.append(postStr.num_reactions_of_emoji("thumbsdown"))
+     reactions.append(postStr.num_reactions_of_emoji("angry"))
+
+     return render(req , "tellmeastory/post.html" , {
+         "reactions": reactions ,
+         "ismature": postStr.is_mature(),
+         "post": postStr ,
+         "logged_in_username": logged_user ,
+     })
+    
 def logout(req: HttpRequest) -> HttpResponse:
     logged_user: str = req.COOKIES.get("StoryUserLoggedIn")
 

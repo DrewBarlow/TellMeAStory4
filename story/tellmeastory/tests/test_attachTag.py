@@ -1,5 +1,5 @@
 from django.test import TestCase
-from tellmeastory.models import Node, User
+from tellmeastory.models import Node
 from managetags.models import Tag
 
 class AttachTagTests(TestCase):

@@ -1,5 +1,5 @@
 from django.db.models import DecimalField, ManyToManyField, BooleanField, ImageField, TextField, CharField, ForeignKey, \
-    Model, CASCADE, EmailField
+    Model, CASCADE
 
 from re import fullmatch, Match
 from validators import url
@@ -7,12 +7,12 @@ from validators import url
 from django.db import models
 from managetags.models import Tag
 from typing import Any, Dict
+import uuid
 
 
 class User(Model):
     username: CharField = CharField(max_length=200)
     password: CharField = CharField(max_length=512)
-    email: EmailField = EmailField(max_length=254, unique=False, default='ojjosh55@gmail.com') #email
     display_name: CharField = CharField(max_length=200)
     mature: BooleanField = BooleanField(default=False)
     user_blurb = models.CharField(max_length=1000, default="")
@@ -78,15 +78,18 @@ class User(Model):
             "latitude" -> DecimalField
             "longitude" -> DecimalField
         """
+
         # Add title, content, and author to a new Node to insert
         node_args: Dict[str, Any] = {
             "node_title": contentDict["node_title"],
             "node_content": contentDict["node_content"],
             "node_author": self,
             "latitude": contentDict["latitude"],
-            "longitude": contentDict["longitude"]
+            "longitude": contentDict["longitude"],
         }
+
         newNode: Node = Node(**node_args)
+
         # Check title and content for validity
         if not newNode.is_valid_title():
             return "Invalid title"
@@ -120,17 +123,15 @@ class User(Model):
         elif not (float(contentDict["longitude"]) <= MAX_LONG and float(contentDict["longitude"]) >= MIN_LONG):
             newNode.delete()
             return "Invalid longitude"
+
         # Now that everything has been verified. The node can be successfully
         # saved to the database and the user can receive a success message.
         newNode.save()
+        newNode.generate_id()
+        newNode.save()
+
         return "Successfully Added your Story! Please refresh page to see changes."
 
-    def unique_email(self) -> bool:
-        try:
-            User.objects.get(email=self.email)
-        except self.DoesNotExist:
-            return True
-        return False
 
 class Ban(models.Model):
     # the id of the user who put in the report (set null so we can keep the reports)
@@ -320,13 +321,23 @@ class Node(Model):
         """
         return Reaction.objects.filter(node=self, emoji=emoji, owner=user).exists()
 
+    def generate_id(self) -> bool:
+        post_id = str(uuid.uuid1())
+        checkID = Node.objects.filter(post_id=post_id)
+        while (checkID.count() != 0):
+            post_id = str(uuid.uuid1())
+            checkID = Node.objects.filter(post_id=post_id)
+        self.post_id = post_id
+        self.save()
+        return True
+
 
 class Report(models.Model):
     # the id of the user who put in the report (set null so we can keep the reports)
     reporting_username = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False, primary_key=True)
 
     # the id of the reported posts
-    reported_id = models.CharField(max_length=400)
+    reported_user = models.ForeignKey(User,on_delete=models.CASCADE, default=None,related_name='reported_user')
 
     # the reason the user was reported (text field)
     report_reason = models.CharField(max_length=600)

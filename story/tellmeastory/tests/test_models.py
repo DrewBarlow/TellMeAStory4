@@ -7,7 +7,6 @@ HEART: str = "💙"
 SMILE: str = "🙂"
 IMP: str = "😈"
 
-
 def insert_story_node(post_id: str, node_title: str, node_content: str, node_author: User) -> Node:
     return Node.objects.create(
         post_id=post_id,
@@ -17,8 +16,8 @@ def insert_story_node(post_id: str, node_title: str, node_content: str, node_aut
 
     )
 
-
 class UserModelTests(TestCase):
+
 
     def test_valid_username(self) -> None:
         """
@@ -80,7 +79,7 @@ class UserModelTests(TestCase):
         self.assertIs(good.is_valid_display_name(), True)
 
         return
-
+      
     def test_can_view_mature(self) -> None:
         """
         is_mature() should return True if the user has marked
@@ -92,7 +91,6 @@ class UserModelTests(TestCase):
         return
 
 
-
 def insert_node_w_author(author: User, title: str, content: str) -> Node:
     return Node.objects.create(
         node_author=author,
@@ -100,59 +98,59 @@ def insert_node_w_author(author: User, title: str, content: str) -> Node:
         node_content=content
     )
 
-
 class testDatabaseRetrieval(TestCase):
-    # testing Post database functionality
+    #testing Post database functionality
     def test_get_retrieval_node(self):
+
         # create objects
-        user1 = User.objects.create(username="user1", password="test", display_name="Warrior", admin=False)
+        user1 = User.objects.create(username="user1", password="test", display_name = "Warrior", admin = False )
         user2 = User.objects.create(username="user2", password="test", display_name="Gunner", admin=False)
 
+
         # create some objects
-        insert_story_node(post_id="4ad56262a25", node_title="My first post!", node_content="First Story",
-                          node_author=user1)
-        insert_story_node(post_id="26q2aa263a2", node_title="My second post!", node_content="Second Story",
-                          node_author=user2)
+        insert_story_node(post_id="4ad56262a25", node_title="My first post!", node_content="First Story", node_author=user1)
+        insert_story_node(post_id="26q2aa263a2", node_title="My second post!", node_content="Second Story", node_author=user2)
+
 
         # get by the post_id (primary key)
         first_post = Node.objects.get(post_id="4ad56262a25")
         second_post = Node.objects.get(post_id="26q2aa263a2")
 
-        # check if the text is equal in the database
+        #check if the text is equal in the database
         self.assertEqual(first_post.node_title, "My first post!")
         self.assertEqual(second_post.node_title, "My second post!")
 
         return
 
-    # testing UserTable database functionality
+    #testing UserTable database functionality
     def test_get_retrieval_user(self):
+
         # create objects
         User.objects.create(username="user1", password="test", display_name="Warrior", admin=False)
         User.objects.create(username="user2", password="test", display_name="Gunner", admin=False)
 
-        # get by the user_id (primary key)
+
+        #get by the user_id (primary key)
         first_user = User.objects.get(username="user1")
         second_user = User.objects.get(username="user2")
 
-        # check if the passwords are equal
+        #check if the passwords are equal
         self.assertEqual(first_user.password, "test")
         self.assertEqual(second_user.password, "test")
 
         return
 
-
 class testReporting(TestCase):
     def test_report(self):
-        # create objects
+
+        #create objects
         user1 = User.objects.create(username="user1", password="test", display_name="Warrior", admin=False)
         user2 = User.objects.create(username="user2", password="test", display_name="Gunner", admin=False)
 
         # create some objects
-        newNode = insert_story_node(post_id="4ad56262a25", node_title="My first post!", node_content="First Story",
-                                    node_author=user2)
+        newNode = insert_story_node(post_id="4ad56262a25", node_title="My first post!", node_content="First Story", node_author=user2)
 
-        Report.objects.create(reporting_username=user1, reported_id="9205a925", report_reason="Racism",
-                              id_for_report="6a92agh0aw", post=newNode)
+        Report.objects.create(reporting_username=user1,reported_user=user2,report_reason="Racism",id_for_report="6a92agh0aw",post=newNode)
 
         getReports = Report.objects.filter(reporting_username=user1)
         reportCount = getReports.count()
@@ -161,22 +159,23 @@ class testReporting(TestCase):
         return
 
     def test_ban(self):
+
         # create some objects
         user = User.objects.create(username="user2", password="test", display_name="Gunner", admin=False)
 
-        insert_story_node(post_id="4ad56262a25", node_title="My first post!", node_content="First Story",
-                          node_author=user)
+        insert_story_node(post_id="4ad56262a25", node_title="My first post!", node_content="First Story", node_author=user)
 
-        # simulate a ban
+        #simulate a ban
         Ban.objects.create(bannedUser=str(user))
 
         User.delete(User.objects.get(username=str(user)))
 
-        # check if the current user is in the User table and Ban table
+        #check if the current user is in the User table and Ban table
         get_user = User.objects.filter(username=str(user))
         get_banned_user = Ban.objects.filter(bannedUser=str(user))
 
-        self.assertEqual(get_user.exists(), False)
+
+        self.assertEqual(get_user.exists(),False)
         self.assertNotEqual(get_banned_user, None)
 
         return
@@ -198,10 +197,8 @@ class NodeModelTests(TestCase):
         i.e. A User should have many Nodes, but a Node should have one User.
         """
         user: User = None
-        try:
-            user = User.objects.get(username=RND_USERNAME)
-        except:
-            pass
+        try: user = User.objects.get(username=RND_USERNAME)
+        except: pass
 
         self.assertNotEqual(user, None)
 
@@ -224,10 +221,8 @@ class NodeModelTests(TestCase):
         user should be updated as well.
         """
         user: User = None
-        try:
-            user = User.objects.get(username=RND_USERNAME)
-        except:
-            pass
+        try: user = User.objects.get(username=RND_USERNAME)
+        except: pass
 
         self.assertNotEqual(user, None)
 
@@ -292,7 +287,7 @@ class NodeModelTests(TestCase):
         new_node: Node = Node(node_title="BIG TITLE!!!")
         new_node.save()
         self.assertFalse(new_node.is_mature())
-
+        
         tag: Tag = Tag(name_text="Mature", language="en")
         self.assertTrue(tag.add_new_tag())
         self.assertTrue(new_node.attach_tag(tag.add_tag_to_node()))
@@ -308,10 +303,8 @@ class NodeModelTests(TestCase):
         Also tests is_user_reacted_with_emoji().
         """
         user: User = None
-        try:
-            user = User.objects.get(username=RND_USERNAME)
-        except:
-            pass
+        try: user = User.objects.get(username=RND_USERNAME)
+        except: pass
 
         self.assertNotEqual(user, None)
 
@@ -329,10 +322,8 @@ class NodeModelTests(TestCase):
         to display on a Node's view.
         """
         user: User = None
-        try:
-            user = User.objects.get(username=RND_USERNAME)
-        except:
-            pass
+        try: user = User.objects.get(username=RND_USERNAME)
+        except: pass
 
         self.assertNotEqual(user, None)
 
@@ -349,7 +340,6 @@ class NodeModelTests(TestCase):
         self.assertEqual(node.num_reactions_of_emoji(HEART), 1)
 
         return
-
 
 class ReactionModelTests(TestCase):
     def setUp(self):
@@ -368,10 +358,8 @@ class ReactionModelTests(TestCase):
         User.
         """
         user: User = None
-        try:
-            user = User.objects.get(username=RND_USERNAME)
-        except:
-            pass
+        try: user = User.objects.get(username=RND_USERNAME)
+        except: pass
 
         self.assertNotEqual(user, None)
 

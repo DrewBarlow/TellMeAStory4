@@ -13,10 +13,19 @@
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="width:400px">
-        <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+    <!-- Form to submit search queries (does nothing unless logged in) -->
+    {% if logged_in_username %}
+        <form class="form-inline my-2 my-lg-0" action="/story/search/{{ logged_in_username }}/" method="get">
+            {% csrf_token %}
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search_query" style="width:400px">
+            <button class="btn btn-success my-2 my-sm-0" value="Search" type="submit">Search</button>
+        </form>
+    {% else %}
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="width:400px">
+            <button class="btn btn-success my-2 my-sm-0" value="Search" type="submit">Search</button>
+        </form>
+    {% endif %}
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
@@ -42,7 +51,7 @@
                         <a class="dropdown-item" href="/story/account/{{ logged_in_username }}">My Account</a>
                         {% if user.admin %}
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Administration</a>
+                        <a class="dropdown-item" href="/story/adminReportList/">Administration</a>
                             {% endif %}
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Log Out</a>
@@ -98,8 +107,8 @@
                 </div>
                 <div class="col col-sm-3 my-auto">
                     <div style="padding-left:40%; padding-right:40%">
-                        <img src="https://i.ibb.co/MnjnjFL/profile-pic.jpg" class="rounded-circle"
-                             style="max-height:151px">
+                        <img src="https://i.ibb.co/89Pq3PF/Default-Image.png" class="rounded-circle"
+                             style="max-height:150px">
                     </div>
                 </div>
             </div>
@@ -130,7 +139,7 @@
                         <div class="col col-md1">
                             <div class="card text-center my-auto">
                                 <div class="card-body">
-                                    <h5 class="card-title">Story {{ post.post_id }}</h5>
+                                    <h5 class="card-title">Story ID: {{ post.post_id }}</h5>
                                     <p class="card-text">{{ post.node_content }}</p>
 
                                     <a href="#" class="btn btn-primary">View Story</a>

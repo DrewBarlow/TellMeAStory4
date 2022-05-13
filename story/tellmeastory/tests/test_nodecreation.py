@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.test import TestCase
-from tellmeastory.models import Node, User
+from tellmeastory.models import User, Node
 
 COOKIE_NAME: str = "StoryUserLoggedIn"
 USERNAME: str = "SomeUser"
