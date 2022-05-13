@@ -10,9 +10,11 @@ urlpatterns = [
     path("index/", views.index, name="index"),
     path("account/<str:username>/", views.account, name="account_page"),
     path("login/", views.login, name="login"),
+    path("logout/", views.logout , name="logout") ,
     path("register/", views.register, name="register"),
     path("map/" , views.map , name="map") ,
     path("addtags/", include("managetags.urls")),
+
 
     #edit post page
     path('modify/<post_id>', views.editPost, name="editPost"),
@@ -46,6 +48,10 @@ urlpatterns = [
     path("create-story/", views.create_node, name="create_story"),
 
     path("author-story/<str:username>/", views.author_story, name="author_story"),
+    path("author-story/<str:username>/<str:longitude>/<str:latitude>/", views.author_story, name="author_storyll"),
+    path("search/<str:username>/", views.search_results, name="search_results"),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('post/<post_id>/' , views.post , name="post") ,
+
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -34,6 +34,8 @@ class AddNodeFromUserTests(LiveServerTestCase):
         password_input.send_keys(password)  # Enter password
         display_name_input = selenium_browser.find_element(By.NAME, value="display_name")
         display_name_input.send_keys(display_name)  # Enter display name
+        maturity_input = selenium_browser.find_element(By.NAME, value="maturity")
+        maturity_input.send_keys(16)  # Enter display name
         selenium_browser.find_element(By.XPATH, value='//input[@value="Register"]').click()
         # Login using the above credientials
         selenium_browser.get('%s%s' % (self.live_server_url, '/login/'))
@@ -57,9 +59,9 @@ class AddNodeFromUserTests(LiveServerTestCase):
         main_tag_input.send_keys(TagToInsert.id)  # Enter valid tag id
         # Enter longitude and latitude
         title_input = selenium_browser.find_element(By.NAME, value="latitude")
-        title_input.send_keys(90)  # Enter latitude
+        title_input.send_keys(0)  # Enter latitude
         title_input = selenium_browser.find_element(By.NAME, value="longitude")
-        title_input.send_keys(90)  # Enter longitude
+        title_input.send_keys(0)  # Enter longitude
         """
         Section 2 of Function
         Tests submitting a node with various data
@@ -195,6 +197,8 @@ class AddNodeFromUserTests(LiveServerTestCase):
         password_input.send_keys(password)  # Enter password
         display_name_input = selenium_browser.find_element(By.NAME, value="display_name")
         display_name_input.send_keys(display_name)  # Enter display name
+        maturity_input = selenium_browser.find_element(By.NAME, value="maturity")
+        maturity_input.send_keys(16)  # Enter display name
         selenium_browser.find_element(By.XPATH, value='//input[@value="Register"]').click()
         # Login using the above credientials
         selenium_browser.get('%s%s' % (self.live_server_url, '/login/'))
@@ -219,8 +223,8 @@ class AddNodeFromUserTests(LiveServerTestCase):
                     "image_url": "www.google.com",
                     "main_tag_id": NewTagToInsert.id,
                     "mature_node": False,
-                    "latitude": 90,
-                    "longitude": 90
+                    "latitude": 0,
+                    "longitude": 0
                 }
         newuser.post_node(valid_node_dict)
         present_story = "ID: " + str(Node.objects.filter(node_author__username=newusername).first().id)\
@@ -240,9 +244,9 @@ class AddNodeFromUserTests(LiveServerTestCase):
         main_tag_input.send_keys(TagToInsert.id)  # Enter valid tag id
         # Enter longitude and latitude
         title_input = selenium_browser.find_element(By.NAME, value="latitude")
-        title_input.send_keys(90)  # Enter latitude
+        title_input.send_keys(0)  # Enter latitude
         title_input = selenium_browser.find_element(By.NAME, value="longitude")
-        title_input.send_keys(90)  # Enter longitude
+        title_input.send_keys(0)  # Enter longitude
         # Submit content entered from above
         selenium_browser.find_element(By.XPATH, value='//input[@value="Create"]').click()
         """ Now the stories should be present as well as the tags on the posting page. """
