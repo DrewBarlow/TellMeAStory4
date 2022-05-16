@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="added unversioned files">
+    <list default="true" id="f09aaa6a-a509-4e5c-9f41-dc387bfcd7b0" name="Changes" comment="Redone proj file due to commit issues in prev">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/accountimg_settings.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/templates/tellmeastory/audio.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_audio.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_email.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_profilepic.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/tests/test_registration.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/tests/test_registration.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/story/tellmeastory/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/story/tellmeastory/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +52,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/story/tellmeastory/tests" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/story/tellmeastory" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="two.files.diff.last.used.folder" value="$PROJECT_DIR$/../TellMeAStory4" />
   </component>
@@ -74,6 +66,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Joshu\PycharmProjects\TellMeAStory\story\tellmeastory" />
       <recent name="C:\Users\Joshu\PycharmProjects\TellMeAStory\story\tellmeastory\tests" />
       <recent name="$PROJECT_DIR$/story/media" />
     </key>
@@ -180,13 +173,6 @@
       <workItem from="1648598423522" duration="35030000" />
       <workItem from="1649785611902" duration="13679000" />
       <workItem from="1649813969817" duration="21239000" />
-    </task>
-    <task id="LOCAL-00016" summary="Added valid Tag insertion test">
-      <created>1648615111272</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1648615111272</updated>
     </task>
     <task id="LOCAL-00017" summary="Added valid Tag ID after insertion check test">
       <created>1648615612269</created>
@@ -524,7 +510,14 @@
       <option name="project" value="LOCAL" />
       <updated>1652378993071</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="Redone proj file due to commit issues in prev">
+      <created>1652407139227</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1652407139227</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -554,7 +547,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added views for tag creation" />
     <MESSAGE value="Added create tag html page test" />
     <MESSAGE value="Updated minor spelling and formatting in comments and tag creation html" />
     <MESSAGE value="Updated launch page to registration page" />
@@ -579,6 +571,7 @@
     <MESSAGE value="added an acount class for profile-pic" />
     <MESSAGE value="added email and anonymous and edit" />
     <MESSAGE value="added unversioned files" />
-    <option name="LAST_COMMIT_MESSAGE" value="added unversioned files" />
+    <MESSAGE value="Redone proj file due to commit issues in prev" />
+    <option name="LAST_COMMIT_MESSAGE" value="Redone proj file due to commit issues in prev" />
   </component>
 </project>
