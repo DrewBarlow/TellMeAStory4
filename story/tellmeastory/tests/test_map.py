@@ -10,6 +10,7 @@ from tellmeastory.models import Node, User
 
 USERNAME: str = "namename"
 PASSWORD: str = "password"
+EMAIL: str = "ojjosh55@gmail.com"
 DIS_NAME: str = "display"
 
 URL_MAPS = "/story/map/"
@@ -45,6 +46,8 @@ class CreateStoryFromMap(LiveServerTestCase):
         username_input.send_keys(USERNAME)  # Enter username
         password_input = selenium_browser.find_element(By.NAME, value="password")
         password_input.send_keys(PASSWORD)  # Enter password
+        email_input = selenium_browser.find_element(By.NAME, value="email")
+        email_input.send_keys(EMAIL)  # Enter username
         display_name_input = selenium_browser.find_element(By.NAME, value="display_name")
         display_name_input.send_keys(DIS_NAME)  # Enter display name
         maturity_input = selenium_browser.find_element(By.NAME, value="maturity")

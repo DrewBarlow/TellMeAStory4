@@ -152,6 +152,9 @@ def register(req: HttpRequest) -> HttpResponse:
             if display_name is None or not len(display_name):
                 display_name = form["username"].value()
 
+            # email needed
+            mail_e: str = form.cleaned_data["email"]
+
             # check if the username was banned
             checkBan = Ban.objects.filter(bannedUser=str(form["username"].value()))
 
@@ -177,6 +180,7 @@ def register(req: HttpRequest) -> HttpResponse:
                 username=form["username"].value(),
                 password=hashed_pw,
                 display_name=display_name,
+                email=mail_e,
                 mature=mature
             )
 
@@ -188,6 +192,10 @@ def register(req: HttpRequest) -> HttpResponse:
                 err_msg = "Username is already taken."
             elif not new_user.is_valid_display_name():
                 err_msg = "Invalid display name."
+            elif len(mail_e) < 5:
+                err_msg = "Email must be at least 5 char long."
+            elif not new_user.unique_email():
+                err_msg = "Email is already taken."
             elif checkBan.exists():
                 err_msg = "That username is banned."
             else:

@@ -3,6 +3,7 @@ from django.test import TestCase
 from hashlib import sha512
 from tellmeastory.models import Node, User, Report, Ban
 
+
 def insert_story_node(post_id: str, node_title: str, node_content: str, node_author: User) -> Node:
     return Node.objects.create(
         post_id=post_id,
@@ -33,10 +34,12 @@ class UserRegistrationViewTests(TestCase):
         """
         inp_name: str = "Spongebob"
         inp_pass: str = "!1Aaaaa"
+        inp_email: str = "ojjosh55@gmail.com"
         inp_dname: str = "Spongey Boy"
         res: HttpResponse = self.client.post("/story/register/", data={
             "username": inp_name,
             "password": inp_pass,
+            "email": inp_email,
             "display_name": inp_dname,
             "maturity": 18
         })
@@ -53,6 +56,7 @@ class UserRegistrationViewTests(TestCase):
         self.assertEqual(new_user.username, inp_name)
         self.assertEqual(new_user.display_name, inp_dname)
         self.assertNotEqual(new_user.password, inp_pass)
+        self.assertEqual(new_user.email, inp_email)
         self.assertEqual(new_user.password, sha512(inp_pass.encode("utf-8")).hexdigest())
 
         return
@@ -66,9 +70,11 @@ class UserRegistrationViewTests(TestCase):
         """
         inp_name: str = "Spongebob"
         inp_pass: str = "!1Aaaaa"
+        inp_email: str = "ojjosh55@gmail.com"
         res: HttpResponse = self.client.post("/story/register/", data={
             "username": inp_name,
             "password": inp_pass,
+            "email": inp_email,
             "maturity": 18
         })
 
@@ -84,6 +90,7 @@ class UserRegistrationViewTests(TestCase):
         self.assertEqual(new_user.username, inp_name)
         self.assertEqual(new_user.display_name, inp_name)
         self.assertNotEqual(new_user.password, inp_pass)
+        self.assertEqual(new_user.email, inp_email)
         self.assertEqual(new_user.password, sha512(inp_pass.encode("utf-8")).hexdigest())
 
         return
@@ -97,9 +104,11 @@ class UserRegistrationViewTests(TestCase):
         """
         inp_name: str = "Yo"
         inp_pass: str = "!1Aaaaa"
+        inp_email: str = "ojjosh55@gmail.com"
         res: HttpResponse = self.client.post("/story/register/", data={
             "username": inp_name,
             "password": inp_pass,
+            "email": inp_email,
             "maturity": 18
         })
 
@@ -126,12 +135,14 @@ class UserRegistrationViewTests(TestCase):
         """
         orig_name: str = "Squidward"
         password: str = "!1Aaaaa"
+        email: str = "ojjosh55@gmail.com"
         orig_dname: str = "uhhhhhhhh"
 
         # create an existing user in the database
         existing_user: User = User.objects.create(
             username=orig_name,
             password=password,
+            email=email,
             display_name=orig_dname
         )
 
@@ -139,6 +150,7 @@ class UserRegistrationViewTests(TestCase):
         res: HttpResponse = self.client.post("/story/register/", data={
             "username": orig_name,
             "password": password,
+            "email": email,
             "display_name": new_dname,
             "maturity": 18
         })
@@ -168,10 +180,12 @@ class UserRegistrationViewTests(TestCase):
         """
         inp_name: str = "Patrick"
         inp_pass: str = "!1Aaaaa"
+        inp_email: str = "ojjosh55@gmail.com"
         inp_dname: str = "jj"
         res: HttpResponse = self.client.post("/story/register/", data={
             "username": inp_name,
             "password": inp_pass,
+            "email": inp_email,
             "display_name": inp_dname,
             "maturity": 18
         })
@@ -186,6 +200,51 @@ class UserRegistrationViewTests(TestCase):
         try: new_user = User.objects.get(username=inp_name)
         except: pass
 
+        self.assertEqual(new_user, None)
+
+        return
+
+    def test_dup_email(self) -> None:
+        """
+        Enter an email that is already reserved into the field.
+        Should redirect to the same page (/story/register/).
+        A message should be present indicating "Username is already taken."
+        User should not be in the db.
+        """
+        orig_name: str = "Squidward"
+        password: str = "!1Aaaaa"
+        orig_dname: str = "uhhhhhhhh"
+        orig_email: str = "ojjosh55@gmail.com"
+
+        # create an existing user in the database
+        existing_user: User = User.objects.create(
+            username=orig_name,
+            password=password,
+            display_name=orig_dname,
+            email=orig_email
+        )
+
+        new_email: str = "onepiece@gmail.com"
+        res: HttpResponse = self.client.post("/story/register/", data={
+            "username": orig_name,
+            "password": password,
+            "display_name": orig_dname,
+            "email": orig_email,
+            "maturity": 18
+        })
+
+        # we aren't redirecting in this case, so we want a 200 status code
+        # this indicates we're on the same page
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.has_header("location"), False)
+        self.assertNotContains(res, "Email is already taken.")
+
+        old_user: User = User.objects.get(email=orig_email)
+        new_user: User = None
+        try: new_user = User.objects.get(email=new_email)
+        except: pass
+
+        self.assertEqual(old_user.email, orig_email)
         self.assertEqual(new_user, None)
 
         return
