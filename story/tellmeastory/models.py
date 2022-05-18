@@ -136,7 +136,7 @@ class User(Model):
     def unique_email(self) -> bool:
         try:
             User.objects.get(email=self.email)
-        except self.emailExists:
+        except self.DoesNotExist:
             return True
         return False
 

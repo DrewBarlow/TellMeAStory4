@@ -24,6 +24,7 @@ class AddNodeFromUserTests(LiveServerTestCase):
         # Create a test user for login
         username = "namename"
         password = "password1"
+        email = "ojjosh55@gmail.com"
         display_name = "display"
         # Register above credentials
         selenium_browser = webdriver.Chrome(ChromeDriverManager().install())
@@ -32,6 +33,8 @@ class AddNodeFromUserTests(LiveServerTestCase):
         username_input.send_keys(username)  # Enter username
         password_input = selenium_browser.find_element(By.NAME, value="password")
         password_input.send_keys(password)  # Enter password
+        password_input = selenium_browser.find_element(By.NAME, value="email")
+        password_input.send_keys(email)  # Enter email
         display_name_input = selenium_browser.find_element(By.NAME, value="display_name")
         display_name_input.send_keys(display_name)  # Enter display name
         maturity_input = selenium_browser.find_element(By.NAME, value="maturity")
@@ -187,6 +190,7 @@ class AddNodeFromUserTests(LiveServerTestCase):
         # Create a test user for login
         username = "namename"
         password = "password1"
+        email = "ojjosh55@gmail.com"
         display_name = "display"
         # Register above credentials
         selenium_browser = webdriver.Chrome(ChromeDriverManager().install())
@@ -195,6 +199,8 @@ class AddNodeFromUserTests(LiveServerTestCase):
         username_input.send_keys(username)  # Enter username
         password_input = selenium_browser.find_element(By.NAME, value="password")
         password_input.send_keys(password)  # Enter password
+        password_input = selenium_browser.find_element(By.NAME, value="email")
+        password_input.send_keys(email)  # Enter email
         display_name_input = selenium_browser.find_element(By.NAME, value="display_name")
         display_name_input.send_keys(display_name)  # Enter display name
         maturity_input = selenium_browser.find_element(By.NAME, value="maturity")

@@ -194,6 +194,8 @@ def register(req: HttpRequest) -> HttpResponse:
                 err_msg = "Invalid display name."
             elif len(mail_e) < 5:
                 err_msg = "Email must be at least 5 char long."
+            elif not new_user.unique_email():
+                err_msg = "Email is already taken."
             elif checkBan.exists():
                 err_msg = "That username is banned."
             else:
